@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    <script
+
+  src="http://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+  <link href="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.css" %}" rel="stylesheet">
+  <script src="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.js" %}"></script>
+  </head>
+  <body>
+    <textarea id="one" readonly="true">
+</textarea>
+<br/>
+<button id="yellow">Yellow</button>
+<button id='export'>Export</button>
+  </body>
+<script src="{% static "js/classes/annotation.js" %}"></script>
+<script src="{% static "js/classes/annotation-collection.js" %}"></script>
+<script src="{% static "js/classes/document.js" %}"></script>
+<script src="{% static "js/app.js" %}"></script>
+</html>

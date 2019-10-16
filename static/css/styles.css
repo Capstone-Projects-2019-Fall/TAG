@@ -1,0 +1,19 @@
+.hwt-content {
+  width : 720px;
+  height: 480px;
+}
+
+.hwt-content .red {
+  background-color: #ffc9c9;
+}
+
+.hwt-content .blue {
+	background-color: #a3daff;
+}
+
+.hwt-content .yellow {
+	background-color: #ffec99;
+}
+.hwt-content .green {
+  background-color: #39ff14;
+}
