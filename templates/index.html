@@ -3,8 +3,9 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>TAG Annotator</title>
     <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script
 
   src="http://code.jquery.com/jquery-3.4.1.js"
@@ -15,14 +16,23 @@
   <script src="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.js" %}"></script>
   </head>
   <body>
-    <textarea id="one" readonly="true">
-</textarea>
-<br/>
-<button id="yellow">Yellow</button>
-<button id='export'>Export</button>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm">
+          <h1>Labels go here</h1>
+        </div>
+        <div class="col-md">
+          <textarea id="one" readonly="true"></textarea>
+          <br/>
+          <button id="yellow">Yellow</button>
+          <button id='export'>Export</button>
+        </div>
+      </div>
+    </div>
   </body>
 <script src="{% static "js/classes/annotation.js" %}"></script>
 <script src="{% static "js/classes/annotation-collection.js" %}"></script>
 <script src="{% static "js/classes/document.js" %}"></script>
 <script src="{% static "js/app.js" %}"></script>
+
 </html>
