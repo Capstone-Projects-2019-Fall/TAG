@@ -18,11 +18,25 @@
   <body>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm">
-          <h1>Labels go here</h1>
+        <div class="left_panel">
+
+          <h1 id="labels">Labels</h1>
+            <div class="labels">
+                <input type="radio" name="category" value="lorem"> lorem<br>
+                <input type="radio" name="category" value="ipsum"> ipsum<br>
+                <input type="radio" name="category" value="dolor"> dolor<br>
+                <input type="radio" name="category" value="sit"> sit<br>
+            </div>
+
+          <h1 id="labels">Highlighter</h1>
+            <div class="highlighter">
+                <p>Please select a color</p>
+                <input name="palette" type="color"/>
+            </div>
+
         </div>
-        <div class="col-md">
-          <textarea id="one" readonly="true"></textarea>
+        <div class="middle_panel">
+          <textarea id="doc_view" readonly="true" rows="100" cols="60"></textarea>
           <br/>
           <button id="yellow">Yellow</button>
           <button id='export'>Export</button>
@@ -31,8 +45,7 @@
     </div>
   </body>
 <script src="{% static "js/classes/annotation.js" %}"></script>
-<script src="{% static "js/classes/annotation-collection.js" %}"></script>
-<script src="{% static "js/classes/document.js" %}"></script>
+<script src="{% static "js/classes/doc.js" %}"></script>
 <script src="{% static "js/app.js" %}"></script>
 
 </html>
