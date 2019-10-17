@@ -17,3 +17,8 @@
 .hwt-content .green {
   background-color: #39ff14;
 }
+
+.label_list {
+    border-style: solid;
+    border-color: black;
+}
