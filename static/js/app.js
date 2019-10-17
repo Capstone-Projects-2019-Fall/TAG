@@ -22,9 +22,6 @@ $("button").click(function(){
 });
 
 $(textArea).val(currentDocument.text);
-$(textArea).ready(function(){
-  renderTextareaHighlights();
-});
 
 //When the user releases the mouse,
 //highlight the selected text
@@ -39,7 +36,7 @@ function handleHighlight(){
   let range = getRangeOfSelectedText();
 
   if(selectedInputRangeIsValid(range)){
-    renderTextareaHighlights();
+    renderTextareaHighlights(range);
 
     //build the annotation
     let notation = new Annotation(
@@ -74,24 +71,12 @@ function extractHighlight(range){
 }
 
 //Actually draws the highlights on the textarea.
-renderTextareaHighlights = function(){
+renderTextareaHighlights = function(range){
   $('textarea').highlightWithinTextarea({
     highlight: [
       {
-        highlight: [0, 0],
-        className: "yellow"
-      },
-      {
-        highlight: [0, 0],
-        className: "yellow"
-      },
-      {
-        highlight: [0, 0],
-        className: "yellow"
-      },
-      {
-        highlight: [0, 0],
-        className: "yellow"
+        highlight: [range["startPosition"], range["endPosition"]],
+        className: currentHighlighterColor
       }
     ]
   });
@@ -104,6 +89,10 @@ $('input[type=radio]').change(function() {
 });
 
 //change document's highlighter color context
-$('input[type=color]').change(function() {
-  currentHighlighterColor = this.value;
+$('.highlight_color').click(function() {
+    if (currentHighlighterColor) {
+        $("#" + currentHighlighterColor).css('border-width', "thin");
+    }
+    currentHighlighterColor = this.id;
+    $(this).css('border-width', "medium")
 });

@@ -31,15 +31,19 @@
           <h1 id="labels">Highlighter</h1>
             <div class="highlighter">
                 <p>Please select a color</p>
-                <input name="palette" type="color"/>
+                <div class=highlight_color style="background-color: red" id="red"><p></p></div>
+                <div class=highlight_color style="background-color: orange" id="orange"><p></p></div>
+                <div class=highlight_color style="background-color: yellow" id="yellow"><p></p></div>
+                <div class=highlight_color style="background-color: green" id="green"><p></div>
+                <div class=highlight_color style="background-color: blue" id="blue"><p></p>
+                </div>
             </div>
 
         </div>
         <div class="middle_panel">
           <textarea id="doc_view" readonly="true" rows="100" cols="60"></textarea>
           <br/>
-          <button id="yellow">Yellow</button>
-          <button id='export'>Export</button>
+          <button id='export'>Download</button>
         </div>
       </div>
     </div>

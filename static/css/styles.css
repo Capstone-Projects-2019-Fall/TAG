@@ -4,18 +4,22 @@
 }
 
 .hwt-content .red {
-  background-color: #ffc9c9;
+  background-color: red;
 }
 
 .hwt-content .blue {
-	background-color: #a3daff;
+	background-color: skyblue;
 }
 
 .hwt-content .yellow {
-	background-color: #ffec99;
+	background-color: yellow;
 }
 .hwt-content .green {
-  background-color: #39ff14;
+  background-color: limegreen;
+}
+
+.hwt-content .orange {
+    background-color: orange;
 }
 
 .left_panel {
@@ -33,6 +37,7 @@
 .left_panel div {
     border-style: solid;
     border-color: black;
+    border-width: thin;
 }
 
 .highlighter {
