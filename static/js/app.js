@@ -12,8 +12,7 @@ var currentCategory = 0;
 
 //Get Selected Color
 $("button").click(function(e){
-  var buttonId = e.target.id;
-  if(buttonId == 'export'){
+  if(e.target.id === 'export'){
     console.log(JSON.stringify(currentDocument));
   }
 });
@@ -42,17 +41,20 @@ function handleHighlight(){
 getRangeOfSelectedText = function(){
   var start = textArea.selectionStart;
   var end = textArea.selectionEnd;
-  return [start, end];
+  return {
+    "startIndex": start,
+    "endIndex": end
+  }
 };
 
 function selectedInputRangeIsValid(range){
-  return (range[0] != range[1]);
+  return range["startIndex"] !== range["endIndex"];
 }
 
 
 function addAnnotationToCollection(range){
-  var selectedText = textArea.value.substring(range[0], range[1]);
-  var annotation = new Annotation(range[0], range[1], selectedText, labels[currentCategory]);
+  var selectedText = textArea.value.substring(range["startIndex"], range["endIndex"]);
+  var annotation = new Annotation(range["startIndex"], range["endIndex"], selectedText, labels[currentCategory]);
   currentDocument.addAnnotation(currentCategory, annotation);
 
 }
