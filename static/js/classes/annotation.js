@@ -1,14 +1,14 @@
 //jshint esversion:6
 
 class Annotation {
-  constructor(startPosition, endPosition, content, label){
-    this.startPosition = startPosition;
-    this.endPosition = endPosition;
+  range = {};
+  content;
+  label;
+
+  constructor(range, content, label){
+    this.range.startPosition = range["startPosition"];
+    this.range.endPosition = range["endPosition"];
     this.content = content;
     this.label = label;
-  }
-
-  getRange(){
-    return [this.startPosition, this.endPosition];
   }
 }
