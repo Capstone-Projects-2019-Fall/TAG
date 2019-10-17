@@ -18,7 +18,23 @@
   background-color: #39ff14;
 }
 
-.label_list {
+.left_panel {
+    margin-right: 50px;
+}
+
+.labels {
+    margin-bottom: 50px;
+}
+
+.left_panel h1 {
+    text-align: center;
+}
+
+.left_panel div {
     border-style: solid;
     border-color: black;
+}
+
+.highlighter {
+    text-align: center;
 }
