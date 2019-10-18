@@ -11,14 +11,14 @@ var openDocuments = [];
 var currentLabel;
 
 //download highlights
-$("button").click(function(){
-  if(this.target.id === 'export'){
-      if (openDocuments.length === 0) {
-          alert("Error: No data to download!");
-          return;
-      }
-      console.log(JSON.stringify(openDocuments));
-  }
+$("button").click(function () {
+    if (this.target.id === 'export') {
+        if (openDocuments.length === 0) {
+            alert("Error: No data to download!");
+            return;
+        }
+        console.log(JSON.stringify(openDocuments));
+    }
 });
 
 $(textArea).val(currentDocument.text);
@@ -27,69 +27,79 @@ $(textArea).val(currentDocument.text);
 //highlight the selected text
 textArea.addEventListener("dblclick", handleHighlight);
 
-function handleHighlight(){
-    if(currentLabel == null || currentHighlighterColor == null) {
+function handleHighlight() {
+    if (currentLabel == null || currentHighlighterColor == null) {
         alert("Error: Please select a label and highlighter color first");
         return;
     }
-  let scrollPosition = textArea.scrollTop;
-  let range = getRangeOfSelectedText();
+    let scrollPosition = textArea.scrollTop;
+    let range = getRangeOfSelectedText();
 
-  if(selectedInputRangeIsValid(range)){
-    renderTextareaHighlights(range);
+    if (selectedInputRangeIsValid(range)) {
+        //build the annotation
+        let notation = new Annotation(
+            range,
+            extractHighlight(range),
+            currentHighlighterColor,
+            currentLabel
+        );
 
-    //build the annotation
-    let notation = new Annotation(
-        range,
-        extractHighlight(range),
-        currentLabel
-    );
+        //then add this annotation to the current document
+        currentDocument.annotations.push(notation);
 
-    //then add this annotation to the current document
-    currentDocument.annotations.push(notation);
-
-    textArea.scrollTop = scrollPosition;
-  }
+        renderTextareaHighlights(range);
+        textArea.scrollTop = scrollPosition;
+    }
 }
+
 //returns the starting and ending position of the currently
 //selected text
-getRangeOfSelectedText = function(){
-  let start = textArea.selectionStart;
-  let end = textArea.selectionEnd;
-  return {
-    "startPosition": start,
-    "endPosition": end
-  }
+getRangeOfSelectedText = function () {
+    let start = textArea.selectionStart;
+    let end = textArea.selectionEnd;
+    return {
+        "startPosition": start,
+        "endPosition": end
+    }
 };
 
-function selectedInputRangeIsValid(range){
+function selectedInputRangeIsValid(range) {
     return range["startIndex"] === range["endIndex"];
 }
 
-function extractHighlight(range){
+function extractHighlight(range) {
     return textArea.value.substring(range["startPosition"], range["endPosition"]);
 }
 
 //Actually draws the highlights on the textarea.
-renderTextareaHighlights = function(range){
-  $('textarea').highlightWithinTextarea({
-    highlight: [
-      {
-        highlight: [range["startPosition"], range["endPosition"]],
-        className: currentHighlighterColor
-      }
-    ]
-  });
+renderTextareaHighlights = function (range) {
+    //array to hold everything that needs to be highlighted in doc
+    let highlights = [];
+
+    //loop through the stored annotations and append to the array as a dictionary
+    currentDocument.annotations.forEach(function(annotation) {
+        let single_highlight = {};
+
+        single_highlight.highlight = [annotation.range.startPosition, annotation.range.endPosition];
+        single_highlight.className = annotation.highlighter_color;
+
+        highlights.push(single_highlight);
+    });
+
+    //then highlight based on that array
+    $('textarea').highlightWithinTextarea({
+        highlight: highlights
+    });
 };
 
 
 //change the document's label context
-$('input[type=radio]').change(function() {
-  currentLabel = this.value;
+$('input[type=radio]').change(function () {
+    currentLabel = this.value;
 });
 
 //change document's highlighter color context
-$('.highlight_color').click(function() {
+$('.highlight_color').click(function () {
     if (currentHighlighterColor) {
         $("#" + currentHighlighterColor).css('border-width', "thin");
     }
