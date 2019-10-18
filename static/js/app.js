@@ -6,95 +6,99 @@ var testContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
 var textArea = document.querySelector('#doc_view');
 var currentDocument = new Doc("test", testContent);
 var currentHighlighterColor;
-// //future implementation
-// var openDocuments = [];
+// future implementation
+var openDocuments = [];
 var currentLabel;
 
 //download highlights
-$('button').click(function(e){
-  if(e.target.id === 'export'){
-      if (openDocuments.length === 0) {
-          alert("Error: No data to download!");
-          return;
-      }
-      console.log(JSON.stringify(currentDocument));
-  }
+$("button").click(function () {
+    if (this.target.id === 'export') {
+        if (openDocuments.length === 0) {
+            alert("Error: No data to download!");
+            return;
+        }
+        console.log(JSON.stringify(openDocuments));
+    }
 });
 
-//Configure the text area for highlighting.
-//NOTE this will change some the layout using properties
-//IN CSS from .hwt container.  To change size / properties do it there!
 $(textArea).val(currentDocument.text);
-$(textArea).ready(function(){
-  renderTextareaHighlights();
-});
-//When the user releases the mouse,
-//highlight the selected text
+
+//When the user releases the mouse, highlight the selected text
 textArea.addEventListener("mouseup", handleHighlight);
 
-function handleHighlight(){
-    if(currentLabel == null || currentHighlighterColor == null) {
+function handleHighlight() {
+    if (currentLabel == null || currentHighlighterColor == null) {
         alert("Error: Please select a label and highlighter color first");
         return;
     }
-  let range = getRangeOfSelectedText();
-  if(selectedInputRangeIsValid(range)){
-    let content = extractSelectedContent(range);
-    //build the annotation
-    let notation = new Annotation(range, content, currentLabel);
+    let scrollPosition = textArea.scrollTop;
+    let range = getRangeOfSelectedText();
 
-    //then add this annotation to the current document
-    currentDocument.annotations.push(notation);
-    console.log(currentDocument.getAnnotationRanges());
-    renderTextareaHighlights(range);
-  }
+    if (selectedInputRangeIsValid(range)) {
+        //build the annotation
+        let content = extractSelectedContent(range);
+        let notation = new Annotation(
+            range,
+            content,
+            currentHighlighterColor,
+            currentLabel
+        );
+
+        //then add this annotation to the current document
+        currentDocument.annotations.push(notation);
+
+        renderTextareaHighlights();
+        textArea.scrollTop = scrollPosition;
+    }
 }
-//returns the starting and ending position of the currently
-//selected text
-getRangeOfSelectedText = function(){
-  let start = textArea.selectionStart;
-  let end = textArea.selectionEnd;
-  return {
-    "startPosition": start,
-    "endPosition": end
-  };
+
+//returns the starting and ending position of the currently selected text
+getRangeOfSelectedText = function () {
+    let start = textArea.selectionStart;
+    let end = textArea.selectionEnd;
+    return {
+        "startPosition": start,
+        "endPosition": end
+    }
 };
 
 function selectedInputRangeIsValid(range){
   console.log(range.startPosition, range.endPosition);
-    return range.startPosition != range.endPosition;
+    return range.startPosition !== range.endPosition;
 }
-
 
 function extractSelectedContent(range){
     return textArea.value.substring(range.startPosition, range.endPosition);
 }
 
 //Actually draws the highlights on the textarea.
-function renderTextareaHighlights(){
-  //Log the current scroll position to return to after the highlights
-  let scrollPosition = textArea.scrollTop;
-  $('textarea').highlightWithinTextarea({
-    highlight: [
-      {
-        highlight: currentDocument.getAnnotationRanges(),
-        className: currentHighlighterColor
-      }
-    ]
-  });
+renderTextareaHighlights = function () {
+    //array to hold everything that needs to be highlighted in doc
+    let highlights = [];
 
-  //Return to the right scroll position
-  textArea.scrollTop = scrollPosition;
-}
+    //loop through the stored annotations and append to the array as a dictionary
+    currentDocument.annotations.forEach(function(annotation) {
+        let single_highlight = {};
 
+        single_highlight.highlight = [annotation.range.startPosition, annotation.range.endPosition];
+        single_highlight.className = annotation.highlighter_color;
+
+        highlights.push(single_highlight);
+    });
+
+    //then highlight based on that array
+    $('textarea').highlightWithinTextarea({
+        highlight: highlights
+    });
+};
 
 //change the document's label context
-$('input[type=radio]').change(function() {
-  currentLabel = this.value;
+$('input[type=radio]').change(function () {
+    currentLabel = this.value;
 });
 
 //change document's highlighter color context
-$('.highlight_color').click(function() {
+$('.highlight_color').click(function () {
     if (currentHighlighterColor) {
         $("#" + currentHighlighterColor).css('border-width', "thin");
     }
