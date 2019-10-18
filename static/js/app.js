@@ -64,7 +64,7 @@ getRangeOfSelectedText = function () {
 
 function selectedInputRangeIsValid(range){
   console.log(range.startPosition, range.endPosition);
-    return range.startPosition === range.endPosition;
+    return range.startPosition !== range.endPosition;
 }
 
 function extractSelectedContent(range){
