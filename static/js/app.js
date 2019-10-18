@@ -23,47 +23,38 @@ $('button').click(function (e) {
 });
 console.log(currentLabel);
 
-//Configure the text area for highlighting.
-//NOTE this will change some the layout using properties
-//IN CSS from .hwt container.  To change size / properties do it there!
 $(textArea).val(currentDocument.text);
-$(textArea).ready(function () {
-  renderTextareaHighlights();
-});
-// $(textArea).width($('#content').parent().width()-40);
-// console.log($('#content').parent().width());
 
-//When the user releases the mouse,
-//highlight the selected text
+//When the user releases the mouse, highlight the selected text
 textArea.addEventListener("mouseup", handleHighlight);
 
 function handleHighlight() {
-  if (currentLabel == null || currentHighlighterColor == null) {
-    alert("Error: Please select a label and highlighter color first");
-    return;
-  }
-  let scrollPosition = textArea.scrollTop;
-  let range = getRangeOfSelectedText();
+    if (currentLabel == null || currentHighlighterColor == null) {
+        alert("Error: Please select a label and highlighter color first");
+        return;
+    }
+    let scrollPosition = textArea.scrollTop;
+    let range = getRangeOfSelectedText();
 
-  if (selectedInputRangeIsValid(range)) {
-    //build the annotation
-    let notation = new Annotation(
-      range,
-      extractHighlight(range),
-      currentHighlighterColor,
-      currentLabel
-    );
+    if (selectedInputRangeIsValid(range)) {
+        //build the annotation
+        let content = extractSelectedContent(range);
+        let notation = new Annotation(
+            range,
+            content,
+            currentHighlighterColor,
+            currentLabel
+        );
 
-    //then add this annotation to the current document
-    currentDocument.annotations.push(notation);
+        //then add this annotation to the current document
+        currentDocument.annotations.push(notation);
 
-    renderTextareaHighlights(range);
-    textArea.scrollTop = scrollPosition;
-  }
+        renderTextareaHighlights();
+        textArea.scrollTop = scrollPosition;
+    }
 }
 
-//returns the starting and ending position of the currently
-//selected text
+//returns the starting and ending position of the currently selected text
 getRangeOfSelectedText = function () {
     let start = textArea.selectionStart;
     let end = textArea.selectionEnd;
@@ -73,16 +64,17 @@ getRangeOfSelectedText = function () {
     }
 };
 
-function selectedInputRangeIsValid(range) {
-    return range["startIndex"] === range["endIndex"];
+function selectedInputRangeIsValid(range){
+  console.log(range.startPosition, range.endPosition);
+    return range.startPosition !== range.endPosition;
 }
 
-function extractHighlight(range) {
-    return textArea.value.substring(range["startPosition"], range["endPosition"]);
+function extractSelectedContent(range){
+    return textArea.value.substring(range.startPosition, range.endPosition);
 }
 
 //Actually draws the highlights on the textarea.
-renderTextareaHighlights = function (range) {
+renderTextareaHighlights = function () {
     //array to hold everything that needs to be highlighted in doc
     let highlights = [];
 
@@ -101,7 +93,6 @@ renderTextareaHighlights = function (range) {
         highlight: highlights
     });
 };
-
 
 //change the document's label context
 $('.label').on('click', function (e) {

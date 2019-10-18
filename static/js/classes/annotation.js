@@ -11,8 +11,4 @@ class Annotation {
     this.highlighter_color = highlighter_color;
     this.label = label;
   }
-
-  getRangeAsArray(){
-    return [this.range.startPosition, this.range.endPosition];
-  }
 }
