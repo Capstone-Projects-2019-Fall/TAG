@@ -6,7 +6,7 @@ var testContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
 var textArea = document.querySelector('#doc_view');
 var currentDocument = new Doc("test", testContent);
 var currentHighlighterColor;
-//future implementation
+// future implementation
 var openDocuments = [];
 var currentLabel;
 
@@ -23,9 +23,8 @@ $("button").click(function () {
 
 $(textArea).val(currentDocument.text);
 
-//When the user releases the mouse,
-//highlight the selected text
-textArea.addEventListener("dblclick", handleHighlight);
+//When the user releases the mouse, highlight the selected text
+textArea.addEventListener("mouseup", handleHighlight);
 
 function handleHighlight() {
     if (currentLabel == null || currentHighlighterColor == null) {
@@ -37,9 +36,10 @@ function handleHighlight() {
 
     if (selectedInputRangeIsValid(range)) {
         //build the annotation
+        let content = extractSelectedContent(range);
         let notation = new Annotation(
             range,
-            extractHighlight(range),
+            content,
             currentHighlighterColor,
             currentLabel
         );
@@ -47,13 +47,12 @@ function handleHighlight() {
         //then add this annotation to the current document
         currentDocument.annotations.push(notation);
 
-        renderTextareaHighlights(range);
+        renderTextareaHighlights();
         textArea.scrollTop = scrollPosition;
     }
 }
 
-//returns the starting and ending position of the currently
-//selected text
+//returns the starting and ending position of the currently selected text
 getRangeOfSelectedText = function () {
     let start = textArea.selectionStart;
     let end = textArea.selectionEnd;
@@ -63,16 +62,17 @@ getRangeOfSelectedText = function () {
     }
 };
 
-function selectedInputRangeIsValid(range) {
-    return range["startIndex"] === range["endIndex"];
+function selectedInputRangeIsValid(range){
+  console.log(range.startPosition, range.endPosition);
+    return range.startPosition === range.endPosition;
 }
 
-function extractHighlight(range) {
-    return textArea.value.substring(range["startPosition"], range["endPosition"]);
+function extractSelectedContent(range){
+    return textArea.value.substring(range.startPosition, range.endPosition);
 }
 
 //Actually draws the highlights on the textarea.
-renderTextareaHighlights = function (range) {
+renderTextareaHighlights = function () {
     //array to hold everything that needs to be highlighted in doc
     let highlights = [];
 
@@ -92,7 +92,6 @@ renderTextareaHighlights = function (range) {
     });
 };
 
-
 //change the document's label context
 $('input[type=radio]').change(function () {
     currentLabel = this.value;
@@ -104,5 +103,6 @@ $('.highlight_color').click(function () {
         $("#" + currentHighlighterColor).css('border-width', "thin");
     }
     currentHighlighterColor = this.id;
-    $(this).css('border-width', "medium")
+    $(this).css('border-width', "medium");
+    renderTextareaHighlights();
 });
