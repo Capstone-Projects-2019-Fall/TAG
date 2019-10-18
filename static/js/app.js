@@ -5,10 +5,10 @@ var testContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
 
 var textArea = document.querySelector('#doc_view');
 var currentDocument = new Doc("test", testContent);
-var currentHighlighterColor;
+var currentHighlighterColor =  $('.color-selected')[0].id;
 // //future implementation
 // var openDocuments = [];
-var currentLabel;
+var currentLabel = $('.label-selected')[0].getAttribute('value');
 
 //download highlights
 $('button').click(function(e){
@@ -20,6 +20,7 @@ $('button').click(function(e){
       console.log(JSON.stringify(currentDocument));
   }
 });
+console.log(currentLabel);
 
 //Configure the text area for highlighting.
 //NOTE this will change some the layout using properties
@@ -28,6 +29,9 @@ $(textArea).val(currentDocument.text);
 $(textArea).ready(function(){
   renderTextareaHighlights();
 });
+// $(textArea).width($('#content').parent().width()-40);
+// console.log($('#content').parent().width());
+
 //When the user releases the mouse,
 //highlight the selected text
 textArea.addEventListener("mouseup", handleHighlight);
@@ -85,20 +89,34 @@ function renderTextareaHighlights(){
 
   //Return to the right scroll position
   textArea.scrollTop = scrollPosition;
-}
+};
 
 
 //change the document's label context
-$('input[type=radio]').change(function() {
-  currentLabel = this.value;
+$('.label').on('click', function(e) {
+  console.log(e.currentTarget.getAttribute('value'));
+  currentLabel = event.currentTarget.getAttribute('value');
+  $('.label').removeClass('label-selected');
+  $(e.currentTarget).addClass('label-selected');
 });
 
 //change document's highlighter color context
-$('.highlight_color').click(function() {
-    if (currentHighlighterColor) {
-        $("#" + currentHighlighterColor).css('border-width', "thin");
-    }
-    currentHighlighterColor = this.id;
-    $(this).css('border-width', "medium");
-    renderTextareaHighlights();
+$('.highlight-color').on('click', function(e) {
+  console.log(e.currentTarget.id);
+  currentHighlighterColor = e.currentTarget.id;
+  $('.highlight-color').removeClass('color-selected');
+  $(e.currentTarget).addClass('label-selected');
+  renderTextareaHighlights();
 });
+
+function makeHeight() {
+  $('textarea').each(function() {
+      $(this).height($(this).prop('scrollHeight'));
+  });
+};
+
+$(window).on('resize', function() {
+  makeHeight();
+});
+
+makeHeight();
