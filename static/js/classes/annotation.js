@@ -1,14 +1,12 @@
 //jshint esversion:6
 
 class Annotation {
-
-  constructor(range, content, highlighter_color, label){
+  constructor(range, content, label) {
     this.range = {
       startPosition: range.startPosition,
-      endPosition : range.endPosition
+      endPosition: range.endPosition
     };
     this.content = content;
-    this.highlighter_color = highlighter_color;
     this.label = label;
   }
 }
