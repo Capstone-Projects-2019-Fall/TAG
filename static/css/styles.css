@@ -23,11 +23,6 @@ body {
   border-width: 3px;
 }
 
-.color-selected {
-  border-color: black;
-  border-width: 3px;
-}
-
 .annotation {
   color: black;
   text-decoration: none;

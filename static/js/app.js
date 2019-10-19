@@ -5,10 +5,10 @@ var testContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
 
 var textArea = document.querySelector('#doc_view');
 var currentDocument = new Doc("test", testContent);
-var currentHighlighterColor = $('.color-selected')[0].id;
+var currentHighlighterColor;
 // //future implementation
 var openDocuments = [];
-var currentLabel = $('.label-selected')[0].getAttribute('value');
+var currentLabel;
 
 //download highlights
 $('button').click(function (e) {
