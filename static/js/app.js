@@ -5,14 +5,20 @@ var testContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
 
 var textArea = document.querySelector('#doc_view');
 var currentDocument = new Doc("test", testContent);
-var currentHighlighterColor;
-// //future implementation
+
+//default assign first label
+var firstLabel = $('.label')[0];                                      //testing purposes remove when done
+var currentLabel = firstLabel.getAttribute('value');                  //remove assignment when done
+$(firstLabel).attr('id', 'label-selected');                           //remove when done
+delete firstLabel;                                                    //remove when done
+
+//future implementation
 var openDocuments = [];
-var currentLabel;
+openDocuments.push(currentDocument);
 
 //download highlights
-$('button').click(function (e) {
-  if (e.target.id === 'export') {
+$('button').click(function () {
+  if (this.id === 'export') {
     if (openDocuments.length === 0) {
       alert("Error: No data to download!");
       return;
@@ -21,7 +27,35 @@ $('button').click(function (e) {
     console.log(JSON.stringify(openDocuments));
   }
 });
-console.log(currentLabel);
+console.log(currentLabel);                                            //remove when done
+
+//testing purposes //remove when implementing dynamic adding 
+{
+  $('head').append(
+    $('<style/>', {
+      id: 'lorem-style',
+      html: '.hwt-content .label_lorem {background-color: rgb(255, 0, 0);}'
+    })
+  );
+  $('head').append(
+    $('<style/>', {
+      id: 'dolor-style',
+      html: '.hwt-content .label_dolor {background-color: rgb(255, 255, 0);}'
+    })
+  );
+  $('head').append(
+    $('<style/>', {
+      id: 'rem-style',
+      html: '.hwt-content .label_rem {background-color: rgb(255, 192, 203);}'
+    })
+  );
+  $('head').append(
+    $('<style/>', {
+      id: 'sit-style',
+      html: '.hwt-content .label_sit {background-color: rgb(173, 255, 47);}'
+    })
+  );
+}
 
 $(textArea).val(currentDocument.text);
 
@@ -29,96 +63,103 @@ $(textArea).val(currentDocument.text);
 textArea.addEventListener("mouseup", handleHighlight);
 
 function handleHighlight() {
-    if (currentLabel == null || currentHighlighterColor == null) {
-        alert("Error: Please select a label and highlighter color first");
-        return;
-    }
-    let scrollPosition = textArea.scrollTop;
-    let range = getRangeOfSelectedText();
+  if (currentLabel == null) {
+    alert("Error: Please select a label and highlighter color first");
+    return;
+  }
+  let scrollPosition = textArea.scrollTop;
+  let range = getRangeOfSelectedText();
 
-    if (selectedInputRangeIsValid(range)) {
-        //build the annotation
-        let content = extractSelectedContent(range);
-        let notation = new Annotation(
-            range,
-            content,
-            currentHighlighterColor,
-            currentLabel
-        );
+  if (selectedInputRangeIsValid(range)) {
+    //build the annotation
+    let content = extractSelectedContent(range);
+    let notation = new Annotation(
+      range,
+      content,
+      currentLabel
+    );
 
-        //then add this annotation to the current document
-        currentDocument.annotations.push(notation);
+    //then add this annotation to the current document
+    currentDocument.annotations.push(notation);
 
-        renderTextareaHighlights();
-        textArea.scrollTop = scrollPosition;
-    }
+    renderTextareaHighlights();
+    textArea.scrollTop = scrollPosition;
+  }
 }
 
 //returns the starting and ending position of the currently selected text
 getRangeOfSelectedText = function () {
-    let start = textArea.selectionStart;
-    let end = textArea.selectionEnd;
-    return {
-        "startPosition": start,
-        "endPosition": end
-    }
+  let start = textArea.selectionStart;
+  let end = textArea.selectionEnd;
+  return {
+    "startPosition": start,
+    "endPosition": end
+  }
 };
 
-function selectedInputRangeIsValid(range){
-  console.log(range.startPosition, range.endPosition);
-    return range.startPosition !== range.endPosition;
+function selectedInputRangeIsValid(range) {
+  console.log(range.startPosition, range.endPosition);              //remove when done
+  return range.startPosition !== range.endPosition;
 }
 
-function extractSelectedContent(range){
-    return textArea.value.substring(range.startPosition, range.endPosition);
+function extractSelectedContent(range) {
+  return textArea.value.substring(range.startPosition, range.endPosition);
 }
 
 //Actually draws the highlights on the textarea.
 renderTextareaHighlights = function () {
-    //array to hold everything that needs to be highlighted in doc
-    let highlights = [];
+  //array to hold everything that needs to be highlighted in doc
+  let highlights = [];
 
-    //loop through the stored annotations and append to the array as a dictionary
-    currentDocument.annotations.forEach(function(annotation) {
-        let single_highlight = {};
+  //loop through the stored annotations and append to the array as a dictionary
+  currentDocument.annotations.forEach(function (annotation) {
+    let single_highlight = {};
 
-        single_highlight.highlight = [annotation.range.startPosition, annotation.range.endPosition];
-        single_highlight.className = annotation.highlighter_color;
+    single_highlight.highlight = [annotation.range.startPosition, annotation.range.endPosition];
+    single_highlight.className = "label_" + annotation.label;
 
-        highlights.push(single_highlight);
-    });
+    highlights.push(single_highlight);
+  });
 
-    //then highlight based on that array
-    $('textarea').highlightWithinTextarea({
-        highlight: highlights
-    });
+  //then highlight based on that array
+  $('textarea').highlightWithinTextarea({
+    highlight: highlights
+  });
 };
 
 //change the document's label context
-$('.label').on('click', function (e) {
-  console.log(e.currentTarget.getAttribute('value'));
-  currentLabel = event.currentTarget.getAttribute('value');
-  $('.label').removeClass('label-selected');
-  $(e.currentTarget).addClass('label-selected');
+$('.label').on('click', function () {
+  console.log(this.getAttribute('value'));                        //remove when done
+  console.log($(this).css('background-color'));                   //remove when done
+
+  currentLabel = this.getAttribute('value');
+  $('.label').attr('id', '');
+  $(this).attr('id', 'label-selected');
 });
 
-//change document's highlighter color context
-$('.highlight-color').on('click', function (e) {
-  console.log(e.currentTarget.id);
-  currentHighlighterColor = e.currentTarget.id;
-  $('.highlight-color').removeClass('color-selected');
-  $(e.currentTarget).addClass('label-selected');
-  renderTextareaHighlights();
+//invoke colorpicker on icon click
+$('.colorChange').on('click', function () {
+  console.log("click") //remove when done
+  $(this).parent().children('input').click();
 });
 
+//change label color on 
+$('.colorChangePicker').on('change', function () {
+  console.log(this.value);                                        //remove when done
+  console.log($(this).parent()[0].getAttribute('value'));         //remove when done
+  $(this).parent().css('background-color', this.value);
+  $('#' + $(this).parent()[0].getAttribute('value') + '-style').html('.hwt-content .label_' + $(this).parent()[0].getAttribute('value') + ' {background-color: ' + this.value + ';}');
+});
+
+//expand to show entire length of document
 function makeHeight() {
   $('textarea').each(function () {
     $(this).height($(this).prop('scrollHeight'));
   });
 };
 
+//update height on window resize //does not shriink
 $(window).on('resize', function () {
   makeHeight();
 });
-
 makeHeight();
