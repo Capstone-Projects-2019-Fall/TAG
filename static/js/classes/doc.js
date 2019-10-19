@@ -7,7 +7,7 @@ class Doc {
     this.annotations = [];
   }
 
-   getAnnotationRanges(){
-    return this.annotations.map(function(annotation){return annotation.getRangeAsArray();});
+  getAnnotationRanges() {
+    return this.annotations.map(function (annotation) { return annotation.getRangeAsArray(); });
   }
 }
