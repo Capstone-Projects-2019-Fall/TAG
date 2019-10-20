@@ -1,3 +1,10 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+}
+
 body {
   overflow-x: hidden;
   padding-top: 56px;
@@ -39,8 +46,17 @@ body {
   text-decoration: none;
 }
 
+#doc-view {
+  margin: 0;
+  padding: 0;
+  resize: none; 
+  width: 100%; 
+  border:none; 
+  background-color: transparent;
+}
+
 .sticky {
   position: -webkit-sticky; /* Safari */
   position: sticky;
-  top: 64;
+  top: 64px;
 }
