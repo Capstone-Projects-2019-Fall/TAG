@@ -67,7 +67,6 @@ function handleHighlight() {
     alert("Error: Please select a label and highlighter color first");
     return;
   }
-  let scrollPosition = textArea.scrollTop;
   let range = getRangeOfSelectedText();
 
   if (selectedInputRangeIsValid(range)) {
@@ -83,7 +82,6 @@ function handleHighlight() {
     currentDocument.annotations.push(notation);
 
     renderTextareaHighlights();
-    textArea.scrollTop = scrollPosition;
   }
 }
 
