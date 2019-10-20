@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>TAG Annotator</title>
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script
+
+  src="http://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+  <link href="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.css" %}" rel="stylesheet">
+  <script src="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.js" %}"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="left_panel">
+
+          <h1 id="labels">Labels</h1>
+            <div class="labels">
+                <input type="radio" name="category" value="lorem"> lorem<br>
+                <input type="radio" name="category" value="ipsum"> ipsum<br>
+                <input type="radio" name="category" value="dolor"> dolor<br>
+                <input type="radio" name="category" value="sit"> sit<br>
+            </div>
+
+          <h1 id="labels">Highlighter</h1>
+            <div class="highlighter">
+                <p>Please select a color</p>
+                <div class=highlight_color style="background-color: red" id="red"><p></p></div>
+                <div class=highlight_color style="background-color: orange" id="orange"><p></p></div>
+                <div class=highlight_color style="background-color: yellow" id="yellow"><p></p></div>
+                <div class=highlight_color style="background-color: green" id="green"><p></div>
+                <div class=highlight_color style="background-color: blue" id="blue"><p></p>
+                </div>
+            </div>
+
+        </div>
+        <div class="middle_panel">
+          <textarea id="doc_view" readonly="true" rows="100" cols="60"></textarea>
+          <br/>
+          <button id='export'>Download</button>
+        </div>
+      </div>
+    </div>
+  </body>
+<script src="{% static "js/classes/annotation.js" %}"></script>
+<script src="{% static "js/classes/doc.js" %}"></script>
+<script src="{% static "js/app.js" %}"></script>
+
+</html>

@@ -1,6 +1,31 @@
-.hwt-content {
-  width : 720px;
-  height: 480px;
+body {
+  padding-top: 56px;
+  background: #141516;
+}
+
+.container {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1200px;
+}
+
+.highlight-color {
+  height: 30px;
+}
+
+.label:hover{
+  color: blue;
+  cursor: pointer;
+}
+
+.label-selected {
+  border-color: black;
+  border-width: 3px;
+}
+
+.annotation {
+  color: black;
+  text-decoration: none;
 }
 
 .hwt-content .red {
@@ -20,26 +45,4 @@
 
 .hwt-content .orange {
     background-color: orange;
-}
-
-.left_panel {
-    margin-right: 50px;
-}
-
-.labels {
-    margin-bottom: 50px;
-}
-
-.left_panel h1 {
-    text-align: center;
-}
-
-.left_panel div {
-    border-style: solid;
-    border-color: black;
-    border-width: thin;
-}
-
-.highlighter {
-    text-align: center;
 }

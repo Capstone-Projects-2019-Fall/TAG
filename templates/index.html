@@ -1,55 +1,189 @@
-<!DOCTYPE html>
+<html lang="en">
 {% load staticfiles %}
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>TAG Annotator</title>
-    <link rel="stylesheet" href="{% static "css/styles.css" %}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script
 
-  src="http://code.jquery.com/jquery-3.4.1.js"
-  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-  crossorigin="anonymous"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-  <link href="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.css" %}" rel="stylesheet">
-  <script src="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.js" %}"></script>
-  </head>
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="left_panel">
+  <title>TAG Annotator</title>
 
-          <h1 id="labels">Labels</h1>
-            <div class="labels">
-                <input type="radio" name="category" value="lorem"> lorem<br>
-                <input type="radio" name="category" value="ipsum"> ipsum<br>
-                <input type="radio" name="category" value="dolor"> dolor<br>
-                <input type="radio" name="category" value="sit"> sit<br>
-            </div>
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-          <h1 id="labels">Highlighter</h1>
-            <div class="highlighter">
-                <p>Please select a color</p>
-                <div class=highlight_color style="background-color: red" id="red"><p></p></div>
-                <div class=highlight_color style="background-color: orange" id="orange"><p></p></div>
-                <div class=highlight_color style="background-color: yellow" id="yellow"><p></p></div>
-                <div class=highlight_color style="background-color: green" id="green"><p></div>
-                <div class=highlight_color style="background-color: blue" id="blue"><p></p>
-                </div>
-            </div>
+  <!-- Custom styles for this template -->
+  <link href="{% static "css/styles.css" %}" rel="stylesheet">
+  <link href="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.css" %}"
+    rel="stylesheet">
 
-        </div>
-        <div class="middle_panel">
-          <textarea id="doc_view" readonly="true"></textarea>
-          <br/>
-          <button id='export'>Download</button>
-        </div>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">TAG</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
       </div>
     </div>
-  </body>
-<script src="{% static "js/classes/annotation.js" %}"></script>
-<script src="{% static "js/classes/doc.js" %}"></script>
-<script src="{% static "js/app.js" %}"></script>
+  </nav>
+
+  <!-- Page Content -->
+  <!-- Labels -->
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-2">
+        <div class="my-2 row bg-light rounded-lg">
+          <div class="col-lg-12 mt-2 mb-3">
+            <h2 class="my-2">Labels</h2>
+
+            <div id="labels" class="list-group">
+              <div class="list-group-item py-2 px-3 label" value="lorem"
+                style="background-color: lightcoral;">Label 1</div>
+              <div class="list-group-item py-2 px-3 label" value="dolor"
+                style="background-color: yellow;">Label 2</div>
+              <div class="list-group-item py-2 px-3 label" value="rem"
+                style="background-color: pink;">Label 3</div>
+              <div class="list-group-item py-2 px-3 label" value="sit"
+                style="background-color: greenyellow;">Label 4</div>
+            </div>
+          </div>
+        </div>
+        <div class="my-3 row">
+          <div class="col-lg-3"></div>
+          <button id="export" type="button" class="btn btn-primary col-lg-6">Export</button>
+          <div class="col-lg-3"></div>
+        </div>
+        <div class="my-2 row bg-light rounded-lg">
+          <div class="col-lg-12 mt-2 mb-3">
+            <h2 class="my-2">Colors</h2>
+            <p>Please select a color</p>
+            <div class="highlight-color color-selected" style="background-color: red" id="red">
+              <p></p>
+            </div>
+            <div class="highlight-color" style="background-color: orange" id="orange">
+            </div>
+            <div class="highlight-color" style="background-color: yellow" id="yellow">
+            </div>
+            <div class="highlight-color" style="background-color: green" id="green">
+            </div>
+            <div class="highlight-color" style="background-color: blue" id="blue">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.col-lg-2 -->
+
+      <!-- Center Highlight Area -->
+      <div class="col-lg-7">
+        <div class="container row border rounded-lg my-2 bg-light">
+          <div id="content" class="my-4 mx-3" style="width: 100%;">
+            <textarea id="doc_view" readonly="true" style="resize: none; width: 100%; border:none;"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- /.col-lg-8 -->
+
+      <!-- Annotations -->
+      <div class="col-lg-3">
+        <div class="my-2 row bg-light rounded-lg">
+          <div class="col-lg-12 mt-2 mb-3 mx-2">
+            <h2 class="my-2 ">Annotations</h2>
+            <hr>
+            </hr>
+            <div class="list-group">
+              <h4>Label 1</h4>
+              <div class="ml-3">
+                <a href="" class="annotation">word 1</a><br>
+                <a href="" class="annotation">word 2</a><br>
+              </div>
+            </div>
+            <hr>
+            </hr>
+            <div class="list-group">
+              <h4>Label 2</h4>
+              <div class="ml-3">
+                <a href="" class="annotation">word 1</a><br>
+                <a href="" class="annotation">word 2</a><br>
+                <a href="" class="annotation">word 3</a><br>
+              </div>
+            </div>
+            <hr>
+            </hr>
+            <div class="list-group">
+              <h4>Label 3</h4>
+              <div class="ml-3">
+                <a href="" class="annotation">word 1</a><br>
+              </div>
+            </div>
+            <hr>
+            </hr>
+            <div class="list-group">
+              <h4>Label 4</h4>
+              <div class="ml-3">
+                <a href="" class="annotation">word 1</a><br>
+                <a href="" class="annotation">word 2</a><br>
+                <a href="" class="annotation">word 3</a><br>
+                <a href="" class="annotation">word 4</a><br>
+                <a href="" class="annotation">word 5</a><br>
+              </div>
+            </div>
+            <hr>
+            </hr>
+          </div>
+        </div>
+      </div>
+      <!-- /.col-lg-2 -->
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-2 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; TAG (Temple University) 2019</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="http://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.js" %}"></script>
+  <script src="{% static "js/classes/annotation.js" %}"></script>
+  <script src="{% static "js/classes/doc.js" %}"></script>
+  <script src="{% static "js/app.js" %}"></script>
+</body>
 
 </html>
