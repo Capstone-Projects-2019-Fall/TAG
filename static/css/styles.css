@@ -1,4 +1,12 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+}
+
 body {
+  overflow-x: hidden;
   padding-top: 56px;
   background: #141516;
 }
@@ -13,14 +21,24 @@ body {
   height: 30px;
 }
 
-.label:hover{
-  color: blue;
-  cursor: pointer;
+.label div {
+  color: white;
+  mix-blend-mode: difference;
 }
 
-.label-selected {
+.label:hover{
+  cursor: pointer;
   border-color: black;
   border-width: 3px;
+}
+
+#label-selected {
+  border-color: black;
+  border-width: 3px;
+}
+
+.add-btn:hover {
+  cursor: pointer;
 }
 
 .annotation {
@@ -28,21 +46,17 @@ body {
   text-decoration: none;
 }
 
-.hwt-content .red {
-  background-color: red;
+#doc-view {
+  margin: 0;
+  padding: 0;
+  resize: none; 
+  width: 100%; 
+  border:none; 
+  background-color: transparent;
 }
 
-.hwt-content .blue {
-	background-color: skyblue;
-}
-
-.hwt-content .yellow {
-	background-color: yellow;
-}
-.hwt-content .green {
-  background-color: limegreen;
-}
-
-.hwt-content .orange {
-    background-color: orange;
+.sticky {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 64px;
 }
