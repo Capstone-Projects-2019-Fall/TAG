@@ -5,16 +5,39 @@ body, html {
   min-height: 100%;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
 body {
   overflow-x: hidden;
   padding-top: 56px;
   background: #141516;
 }
 
-.container {
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 1200px;
+h2 {
+  word-wrap: break-word;
+}
+
+#content-body {
+  margin: auto;
+  max-width: 1400px;
 }
 
 .highlight-color {
@@ -30,6 +53,12 @@ body {
   cursor: pointer;
   border-color: black;
   border-width: 3px;
+}
+
+.label-name {
+  width: 70%;
+  float: left;
+  word-wrap: break-word;
 }
 
 #label-selected {
@@ -55,8 +84,32 @@ body {
   background-color: transparent;
 }
 
+#label-list {
+  max-height: 26vh;
+}
+
+#doc-list {
+  max-height: 26vh;
+}
+
+#export-container {
+  height: 5vh;
+}
+
+#annota-list {
+  max-height: 75vh;
+}
+
 .sticky {
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 64px;
+}
+
+.hide-scroll {
+  overflow-y: hidden;
+}
+
+.hide-scroll:hover {
+  overflow-y: auto;
 }

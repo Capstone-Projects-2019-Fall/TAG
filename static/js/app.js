@@ -47,6 +47,10 @@ $('button').click(function () {
     $('<style/>', {
       id: 'sit-style',
       html: '.hwt-content .label_sit {background-color: rgb(173, 255, 47);}'
+    }),
+    $('<style/>', {
+      id: 'say-style',
+      html: '.hwt-content .label_say {background-color: cyan;}'
     })
   );
 }
