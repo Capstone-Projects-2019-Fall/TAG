@@ -62,7 +62,7 @@ textArea.html(currentDocument.text);
 //
 // });
 
-
+/*Check if alt key is down, if so remove highlight, else highlight*/
 textArea.mouseup(function(event){
     if (event.altKey){
       handleRemoveHighlight();
@@ -71,9 +71,23 @@ textArea.mouseup(function(event){
     }
 });
 
+
 function handleRemoveHighlight(){
-  console.log("Remove annotation");
+  //get the cursor position
+  let position = getRangeOfSelectedText().startPosition;
+  //get annotations at that position
+  let annotationsContainingCursor = currentDocument.getAnnotationsContainingCharacter(position);
+//for each annotation at that position, remove it.
+console.log(currentDocument.annotations);
+  annotationsContainingCursor.forEach( function(annotation){
+    currentDocument.removeAnnotation(annotation);
+  });
+  console.log(currentDocument.annotations);
+//now redraw the highlights
+  renderTextareaHighlights();
 }
+
+
 //-------------------------------------------------------------------------
 //rewrite this section
 function handleHighlight() {
