@@ -83,12 +83,10 @@ function handleHighlight() {
     return;
   }
   let range = getRangeOfSelectedText();
-
   if (selectedInputRangeIsValid(range)) {
     //build the annotation
     let content = extractSelectedContent(range);
     let annotation = new Annotation(range, content, currentLabel);
-    // console.log(annotation);
     //then add this annotation to the current document
     currentDocument.annotations.push(annotation);
 
@@ -97,14 +95,14 @@ function handleHighlight() {
 }
 
 //returns the starting and ending position of the currently selected text
-getRangeOfSelectedText = function () {
+function getRangeOfSelectedText() {
   let start = textArea[0].selectionStart;
   let end = textArea[0].selectionEnd;
   return {
     'startPosition': start,
     'endPosition': end
-  }
-};
+  };
+}
 
 function selectedInputRangeIsValid(range) {
   console.log('startPos: ' + range.startPosition + '\nendPos: ' + range.endPosition + '\n'
@@ -121,7 +119,7 @@ function extractSelectedContent(range) {
 
 
 //Actually draws the highlights on the textarea.
-renderTextareaHighlights = function () {
+function renderTextareaHighlights(){
   //array to hold everything that needs to be highlighted in doc
   let highlights = [];
 
@@ -139,7 +137,7 @@ renderTextareaHighlights = function () {
   $('textarea').highlightWithinTextarea({
     highlight: highlights
   });
-};
+}
 
 //change the document's label context
 $('.label').on('click', function () {
