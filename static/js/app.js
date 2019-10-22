@@ -54,14 +54,6 @@ $('button').click(function () {
 textArea.html(currentDocument.text);
 
 
-// textArea.contextmenu(function () {console.log("RightClicked"); return false;});
-//on mouse release, highlight selected text
-// textArea.mouseup(handleHighlight);
-// textArea.contextmenu(function(event){
-//   console.log("In menu: " + event.which);
-//
-// });
-
 /*Check if alt key is down, if so remove highlight, else highlight*/
 textArea.mouseup(function(event){
     if (event.altKey){
@@ -76,13 +68,8 @@ function handleRemoveHighlight(){
   //get the cursor position
   let position = getRangeOfSelectedText().startPosition;
   //get annotations at that position
-  let annotationsContainingCursor = currentDocument.getAnnotationsContainingCharacter(position);
-//for each annotation at that position, remove it.
-console.log(currentDocument.annotations);
-  annotationsContainingCursor.forEach( function(annotation){
-    currentDocument.removeAnnotation(annotation);
-  });
-  console.log(currentDocument.annotations);
+  let annotationToRemove = currentDocument.getMostRecentAnnotationContainingCharacter(position);
+  currentDocument.removeAnnotation(annotationToRemove);
 //now redraw the highlights
   renderTextareaHighlights();
 }
@@ -100,14 +87,10 @@ function handleHighlight() {
   if (selectedInputRangeIsValid(range)) {
     //build the annotation
     let content = extractSelectedContent(range);
-    let notation = new Annotation(
-      range,
-      content,
-      currentLabel
-    );
-
+    let annotation = new Annotation(range, content, currentLabel);
+    // console.log(annotation);
     //then add this annotation to the current document
-    currentDocument.annotations.push(notation);
+    currentDocument.annotations.push(annotation);
 
     renderTextareaHighlights();
   }

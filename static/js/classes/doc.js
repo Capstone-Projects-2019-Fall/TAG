@@ -17,6 +17,19 @@ class Doc {
     });
   }
 
+
+  getMostRecentAnnotationContainingCharacter(position){
+    let annotations = this.getAnnotationsContainingCharacter(position);
+    var mostRecent = annotations[0];
+    annotations.forEach(function(annotation){
+      if (annotation.id > mostRecent.id){
+        mostRecent = annotation;
+      }
+    });
+    return mostRecent;
+  }
+
+
   removeAnnotation(annotationToRemove){
     this.annotations = this.annotations.filter(function (annotation) {
       return annotation != annotationToRemove;
