@@ -6,28 +6,23 @@ var testContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
 var textArea = $('#doc-view');
 var currentDocument = new Doc('test', testContent);
 
+var labels = [
+  'lorem',
+  'dolor',
+  'rem',
+  'sit',
+  'say',
+  'help',
+  'need_break'
+];
 //default assign first label
-var firstLabel = $('.label')[0];                                      //testing purposes remove when done
-var currentLabel = firstLabel.getAttribute('value');                  //remove assignment when done
-$(firstLabel).attr('id', 'label-selected');                           //remove when done
-delete firstLabel;                                                    //remove when done
+var currentLabel = labels[0];                                     //remove assignment when done
+$("[value=" + currentLabel + "]").attr('id', 'label-selected');   //remove assignment when done
 console.log('Label Selected: ' + currentLabel);
 
 //future implementation
 var openDocuments = [];
 openDocuments.push(currentDocument);
-
-//download highlights
-$('button').click(function () {
-  if (this.id === 'export') {
-    if (openDocuments.length === 0) {
-      alert('Error: No data to download!');
-      return;
-    }
-
-    console.log(JSON.stringify(openDocuments));
-  }
-});
 
 //testing purposes //remove when implementing dynamic adding 
 {
@@ -51,28 +46,55 @@ $('button').click(function () {
     $('<style/>', {
       id: 'say-style',
       html: '.hwt-content .label_say {background-color: cyan;}'
+    }),
+    $('<style/>', {
+      id: 'help-style',
+      html: '.hwt-content .label_help {background-color: purple;}'
+    }),
+    $('<style/>', {
+      id: 'need_break-style',
+      html: '.hwt-content .label_need_break {background-color: hotpink;}'
     })
   );
 }
 
 textArea.html(currentDocument.text);
+//calling this twice fixes an issue with document not being tall enough sometimes //dunno why
+textArea.height(textArea.prop('scrollHeight'));
+textArea.height(textArea.prop('scrollHeight'));
 
+//download highlights
+$('button').click(function () {
+  if (this.id === 'export') {
+    if (openDocuments.length === 0) {
+      alert('Error: No data to download!');
+      return;
+    }
+    console.log(JSON.stringify(openDocuments));
+  }
+});
+
+//events //
 //on mouse release, highlight selected text
-textArea.mouseup(handleHighlight);
-
-
-//-------------------------------------------------------------------------
-//rewrite this section
-function handleHighlight() {
+textArea.on('mouseup', function () {
   if (currentLabel == null) {
     alert('Error: Please select a label and highlighter color first');
     return;
   }
-  let range = getRangeOfSelectedText();
 
-  if (selectedInputRangeIsValid(range)) {
+  //starting and ending position of selected text
+  let range = {
+    'startPosition': textArea[0].selectionStart,
+    'endPosition': textArea[0].selectionEnd
+  };
+  console.log('startPos: ' + range.startPosition + '\nendPos: ' + range.endPosition + '\n'
+    + ((range.startPosition < range.endPosition) ? 'Valid range' : 'Invalid range'));
+
+  //valid range //build annotation
+  if (range.startPosition < range.endPosition) {
     //build the annotation
-    let content = extractSelectedContent(range);
+    let content = window.getSelection().toString();
+    console.log('textSelected: \n' + window.getSelection().toString());
     let notation = new Annotation(
       range,
       content,
@@ -81,47 +103,21 @@ function handleHighlight() {
 
     //then add this annotation to the current document
     currentDocument.annotations.push(notation);
-
     renderTextareaHighlights();
+
   }
-}
-
-//returns the starting and ending position of the currently selected text
-getRangeOfSelectedText = function () {
-  let start = textArea[0].selectionStart;
-  let end = textArea[0].selectionEnd;
-  return {
-    'startPosition': start,
-    'endPosition': end
-  }
-};
-
-function selectedInputRangeIsValid(range) {
-  console.log('startPos: ' + range.startPosition + '\nendPos: ' + range.endPosition + '\n' 
-    + ((range.startPosition < range.endPosition) ? 'Valid range' : 'Invalid range'));
-  return (range.startPosition < range.endPosition);
-}
-
-function extractSelectedContent(range) {
-  console.log('textSelected: \n' + window.getSelection().toString());
-  return window.getSelection().toString();
-}
-//end of rewrite
-//------------------------------------------------------------------------
-
+});
 
 //Actually draws the highlights on the textarea.
 renderTextareaHighlights = function () {
-  //array to hold everything that needs to be highlighted in doc
   let highlights = [];
 
   //loop through the stored annotations and append to the array as a dictionary
   currentDocument.annotations.forEach(function (annotation) {
-    let single_highlight = {};
-
-    single_highlight.highlight = [annotation.range.startPosition, annotation.range.endPosition];
-    single_highlight.className = 'label_' + annotation.label;
-
+    let single_highlight = {
+      highlight: [annotation.range.startPosition, annotation.range.endPosition],
+      className: 'label_' + annotation.label
+    };
     highlights.push(single_highlight);
   });
 
@@ -137,8 +133,66 @@ $('.label').on('click', function () {
 
   //change label selection
   currentLabel = this.getAttribute('value');
-  $('.label').attr('id', '');
-  $(this).attr('id', 'label-selected');
+  $('.label').attr('id', '');                   //remove label-selected from all
+  $(this).attr('id', 'label-selected');         //add label-selected to clicked
+});
+
+//user wants to edit label name //double clicked label
+$('.label-name').on('dblclick', function () {
+  this.contentEditable = true;                  //enable editing
+  $(this).focus().select();                     //open text box
+});
+
+//user stopped editing label name
+$('.label-name').on('blur', function () {
+  //disable editing
+  this.contentEditable = false;
+  //fix whitespace and create new label name with no spaces (class names can't have spaces)
+  $(this).text($(this).text().trim());
+  let newLabel = $(this).text().replace(/ /g,"_");                                      
+  console.log(newLabel);
+  //check if the name is the same as previous
+  if (labels.indexOf(newLabel) == labels.indexOf($(this).parent().attr('value'))) {
+    console.log('same name as before');
+    return
+  }
+  //check for valid label name
+  //has only whitespace or name matches other labels
+  if ((labels.indexOf(newLabel) >= 0) || newLabel === '') {
+    let num = 1;
+    //find a new name for it
+    while (true) {
+      if (!(labels.indexOf("Label_" + num) >= 0)) {
+        break;
+      } else {
+        num += 1;
+      }
+    }
+    newLabel = "Label_" + num;
+    $(this).text("Label " + num);
+    console.log('Invalid label name \nChanging name to ' + newLabel);
+  } 
+  //delete old name and add new label name
+  labels.splice(labels.indexOf($(this).parent().attr('value')), 1, newLabel);   
+
+  //update label and highlight colors
+  $(this).parent().attr('value', newLabel);
+  $('#' + currentLabel + '-style').remove();
+  $('head').append(
+    $('<style/>', {
+    id: newLabel + '-style',
+    html: '.hwt-content .label_' + newLabel + ' {background-color:' + $(this).parent().css('background-color') + ';}'
+  }));
+
+  //update annotations
+  currentDocument.annotations.forEach(function (annotation) {
+    if (annotation.label === currentLabel) {
+      annotation.label = newLabel;
+    }
+  });
+
+  currentLabel = newLabel;
+  renderTextareaHighlights();
 });
 
 //invoke colorpicker on icon click
@@ -157,11 +211,8 @@ $('.colorChangePicker').on('change', function () {
 
 //update height on window resize and keep scroll position
 $(window).on('resize', function () {
-  var scrollPercent = $(window).scrollTop() / $(document).height();
+  let scrollPercent = $(window).scrollTop() / $(document).height();
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight'));
   $(window).scrollTop(scrollPercent * $(document).height());
 });
-//calling this twice fixes an issue with document not being tall enough sometimes //dunno why
-textArea.height(textArea.prop('scrollHeight'));
-textArea.height(textArea.prop('scrollHeight'));

@@ -45,8 +45,7 @@ h2 {
 }
 
 .label div {
-  color: white;
-  mix-blend-mode: difference;
+  color: black;
 }
 
 .label:hover{
