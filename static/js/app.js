@@ -29,7 +29,7 @@ $('button').click(function () {
   }
 });
 
-//testing purposes //remove when implementing dynamic adding 
+//testing purposes //remove when implementing dynamic adding
 {
   $('head').append(
     $('<style/>', {
@@ -53,10 +53,27 @@ $('button').click(function () {
 
 textArea.html(currentDocument.text);
 
+
+// textArea.contextmenu(function () {console.log("RightClicked"); return false;});
 //on mouse release, highlight selected text
-textArea.mouseup(handleHighlight);
+// textArea.mouseup(handleHighlight);
+// textArea.contextmenu(function(event){
+//   console.log("In menu: " + event.which);
+//
+// });
 
 
+textArea.mouseup(function(event){
+    if (event.altKey){
+      handleRemoveHighlight();
+    } else{
+      handleHighlight();
+    }
+});
+
+function handleRemoveHighlight(){
+  console.log("Remove annotation");
+}
 //-------------------------------------------------------------------------
 //rewrite this section
 function handleHighlight() {
@@ -93,7 +110,7 @@ getRangeOfSelectedText = function () {
 };
 
 function selectedInputRangeIsValid(range) {
-  console.log('startPos: ' + range.startPosition + '\nendPos: ' + range.endPosition + '\n' 
+  console.log('startPos: ' + range.startPosition + '\nendPos: ' + range.endPosition + '\n'
     + ((range.startPosition < range.endPosition) ? 'Valid range' : 'Invalid range'));
   return (range.startPosition < range.endPosition);
 }
