@@ -8,7 +8,6 @@ class Annotation {
     };
     this.content = content;
     this.label = label;
-    this.id = Annotation.idFactory++;
 
   }
 
@@ -16,7 +15,3 @@ class Annotation {
     return position >= this.range.startPosition && position <= this.range.endPosition;
   }
 }
-
-//STATIC var, used to assign each annotation an id.  Incremented in constructor
-//The larger that id of an annotation, the more recently it was created.
-Annotation.idFactory = 0;

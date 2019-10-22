@@ -20,13 +20,7 @@ class Doc {
 
   getMostRecentAnnotationContainingCharacter(position){
     let annotations = this.getAnnotationsContainingCharacter(position);
-    var mostRecent = annotations[0];
-    annotations.forEach(function(annotation){
-      if (annotation.id > mostRecent.id){
-        mostRecent = annotation;
-      }
-    });
-    return mostRecent;
+    return annotations.pop();
   }
 
 
