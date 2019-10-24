@@ -65,6 +65,7 @@ function handleHighlight() {
     return;
   }
   let range = getRangeOfSelectedText();
+  
 
   if (selectedInputRangeIsValid(range)) {
     //build the annotation
@@ -77,6 +78,8 @@ function handleHighlight() {
 
     //then add this annotation to the current document
     currentDocument.annotations.push(notation);
+
+    getMostRecent(content);
 
     renderTextareaHighlights();
   }
@@ -102,6 +105,11 @@ function extractSelectedContent(range) {
   console.log('textSelected: \n' + window.getSelection().toString());
   return window.getSelection().toString();
 }
+
+function getMostRecent(content){
+  document.getElementsByTagName("p")[0].innerHTML = content;
+}
+
 //end of rewrite
 //------------------------------------------------------------------------
 
@@ -125,6 +133,7 @@ renderTextareaHighlights = function () {
   $('textarea').highlightWithinTextarea({
     highlight: highlights
   });
+  
 };
 
 //change the document's label context
