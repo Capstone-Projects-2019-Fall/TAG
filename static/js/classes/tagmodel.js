@@ -26,18 +26,21 @@ class TagModel{
     this.currentDoc = this.openDocs.find(doc => doc.title == name);
   }
 
-  addAnnotation(annotation){
+  addAnnotation(range, currentLabel){
     //validate annotation first, throw error if dumbo
-    if (this.validateAnnotationRange(annotation)){
-      this.currentDoc.annotations.push(annotation);
-    }else{
-      console.log("Range not Valid!");
+    if (this.validateAnnotationRange(range)){
+      let content = this.extractAnnotationContent(range);
+      let annotationToAdd = new Annotation(range, content, currentLabel);
+      this.currentDoc.annotations.push(annotationToAdd);
     }
   }
 
-  validateAnnotationRange(annotation){
-    return annotation.range.startPosition < annotation.range.endPosition;
+  validateAnnotationRange(range){
+    return range.startPosition < range.endPosition;
+  }
 
+  extractAnnotationContent(range){
+    return this.currentDoc.text.substring(range.startPosition, range.endPosition);
   }
 
   removeAnnotation(position){

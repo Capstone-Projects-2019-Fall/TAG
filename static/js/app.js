@@ -76,16 +76,16 @@ function handleRemoveHighlight(){
 
 //-------------------------------------------------------------------------
 //rewrite this section
+
 function handleHighlight() {
+  //**//
   if (currentLabel == null) {
     alert('Error: Please select a label and highlighter color first');
     return;
   }
+
   let range = getRangeOfSelectedText();
-  let content = extractSelectedContent(range);
-  let annotation = new Annotation(range, content, currentLabel);
-  tagModel.addAnnotation(annotation);
-  console.log(tagModel);
+  tagModel.addAnnotation(range, currentLabel);
   renderTextareaHighlights();
 }
 
@@ -99,16 +99,6 @@ function getRangeOfSelectedText() {
   };
 }
 
-function selectedInputRangeIsValid(range) {
-  console.log('startPos: ' + range.startPosition + '\nendPos: ' + range.endPosition + '\n'
-    + ((range.startPosition < range.endPosition) ? 'Valid range' : 'Invalid range'));
-  return (range.startPosition < range.endPosition);
-}
-
-function extractSelectedContent(range) {
-  console.log('textSelected: \n' + window.getSelection().toString());
-  return window.getSelection().toString();
-}
 //end of rewrite
 //------------------------------------------------------------------------
 
