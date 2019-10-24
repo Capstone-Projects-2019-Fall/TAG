@@ -14,7 +14,8 @@ tagModel.setCurrentDoc("test");
 
 //default assign first label
 var firstLabel = $('.label')[0];                                      //testing purposes remove when done
-var currentLabel = firstLabel.getAttribute('value');                  //remove assignment when done
+var currentLabel = firstLabel.getAttribute('value');
+console.log(currentLabel);              //remove assignment when done
 $(firstLabel).attr('id', 'label-selected');
                      //remove when done
 // delete firstLabel;                                                    //remove when done
@@ -27,8 +28,6 @@ $('button').click(function () {
       return;
     }
     console.log(tagModel.exportAsString());
-
-    // console.log(JSON.stringify(openDocuments));
   }
 });
 
@@ -83,16 +82,11 @@ function handleHighlight() {
     return;
   }
   let range = getRangeOfSelectedText();
-  if (selectedInputRangeIsValid(range)) {
-    //build the annotation
-    let content = extractSelectedContent(range);
-    let annotation = new Annotation(range, content, currentLabel);
-    tagModel.addAnnotation(annotation);
-    console.log(tagModel);
-
-    renderTextareaHighlights();
-
-  }
+  let content = extractSelectedContent(range);
+  let annotation = new Annotation(range, content, currentLabel);
+  tagModel.addAnnotation(annotation);
+  console.log(tagModel);
+  renderTextareaHighlights();
 }
 
 //returns the starting and ending position of the currently selected text

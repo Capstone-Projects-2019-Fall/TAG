@@ -27,7 +27,17 @@ class TagModel{
   }
 
   addAnnotation(annotation){
-    this.currentDoc.annotations.push(annotation);
+    //validate annotation first, throw error if dumbo
+    if (this.validateAnnotationRange(annotation)){
+      this.currentDoc.annotations.push(annotation);
+    }else{
+      console.log("Range not Valid!");
+    }
+  }
+
+  validateAnnotationRange(annotation){
+    return annotation.range.startPosition < annotation.range.endPosition;
+
   }
 
   removeAnnotation(position){
