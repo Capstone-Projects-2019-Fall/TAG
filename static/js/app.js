@@ -65,7 +65,7 @@ function handleHighlight() {
     return;
   }
   let range = getRangeOfSelectedText();
-  
+
 
   if (selectedInputRangeIsValid(range)) {
     //build the annotation
@@ -79,7 +79,8 @@ function handleHighlight() {
     //then add this annotation to the current document
     currentDocument.annotations.push(notation);
 
-    getMostRecent(content);
+    //update most recent highlight
+    $('#recent').text(content.trunc(50, true));
 
     renderTextareaHighlights();
   }
@@ -96,7 +97,7 @@ getRangeOfSelectedText = function () {
 };
 
 function selectedInputRangeIsValid(range) {
-  console.log('startPos: ' + range.startPosition + '\nendPos: ' + range.endPosition + '\n' 
+  console.log('startPos: ' + range.startPosition + '\nendPos: ' + range.endPosition + '\n'
     + ((range.startPosition < range.endPosition) ? 'Valid range' : 'Invalid range'));
   return (range.startPosition < range.endPosition);
 }
@@ -104,10 +105,6 @@ function selectedInputRangeIsValid(range) {
 function extractSelectedContent(range) {
   console.log('textSelected: \n' + window.getSelection().toString());
   return window.getSelection().toString();
-}
-
-function getMostRecent(content){
-  document.getElementsByTagName("p")[0].innerHTML = content;
 }
 
 //end of rewrite
@@ -133,7 +130,7 @@ renderTextareaHighlights = function () {
   $('textarea').highlightWithinTextarea({
     highlight: highlights
   });
-  
+
 };
 
 //change the document's label context
@@ -170,3 +167,9 @@ $(window).on('resize', function () {
 //calling this twice fixes an issue with document not being tall enough sometimes //dunno why
 textArea.height(textArea.prop('scrollHeight'));
 textArea.height(textArea.prop('scrollHeight'));
+
+String.prototype.trunc = function (n, truncAfterWord) {
+  if (this.length <= n) { return this; }
+  var subString = this.substr(0, n - 1);
+  return (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
+};
