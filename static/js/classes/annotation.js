@@ -8,7 +8,6 @@ class Annotation {
     };
     this.content = content;
     this.label = label;
-
   }
 
   containsCharacterAt(position){
