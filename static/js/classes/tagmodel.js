@@ -23,11 +23,9 @@ class TagModel {
 
   addAnnotation(range, currentLabel) {
     //validate annotation first, throw error if dumbo
-    if (range.startPosition < range.endPosition) {
-      let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
-      let annotationToAdd = new Annotation(range, content, currentLabel);
-      this.currentDoc.annotations.push(annotationToAdd);
-    }
+    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
+    let annotationToAdd = new Annotation(range, content, currentLabel);
+    this.currentDoc.annotations.push(annotationToAdd);
   }
 
   removeAnnotation(position) {
@@ -38,29 +36,6 @@ class TagModel {
   addCategory(name, color) {
     let newCategory = new Category(name, color);
     this.categories.push(newCategory);
-
-    // add highlight rule to page
-    $('head').append(
-      $('<style/>', {
-        id: name + '-style',
-        html: '.hwt-content .label_' + name + ' {background-color: ' + color + ';}'
-      })
-    );
-
-    // add label to page
-    $('#label-list').append(
-      $('<div/>', {
-        class: 'list-group-item py-2 px-3 label',
-        value: name,
-        style: "background-color: " + color,
-        html: '<div class="label-name">' + name + '</div><img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange" style="float: right;"><input class="colorChangePicker" type="color" style="height:0; width:0; visibility: hidden;">'
-      }));
-
-    // first color => make current category the color
-    if (this.categories.length == 1) {
-      this.currentCategory = name;
-      $('.label[value=' + name + ']').attr('id', 'label-selected');
-    }
   }
 
   checkCategory(name) {
@@ -73,16 +48,6 @@ class TagModel {
   }
 
   renameCategory(newName) {
-    var catColor;
-    // update name in categories list
-    for (let category of this.categories) {
-      if (category.name === this.currentCategory) {
-        category.name = newName;
-        catColor = category.color;
-        break;
-      }
-    }
-
     // update category name of each annotation
     this.currentDoc.annotations.forEach(function (annotation) {
       if (annotation.label === tagModel.currentCategory) {
@@ -90,38 +55,22 @@ class TagModel {
       }
     });
 
-    // update styling for category
-    $('#' + tagModel.currentCategory + '-style').remove();
-    $('head').append(
-      $('<style/>', {
-        id: newName + '-style',
-        html: '.hwt-content .label_' + newName + ' {background-color:' + catColor + ';}'
-      })
-    );
-
-    // update category name in list
-    $('.label[value=' + this.currentCategory + ']').attr('value', newName);
+    // update name in categories list
+    this.categories.find(category => category.name == this.currentCategory).name = newName;
     this.currentCategory = newName;
   }
 
   removeCategory() {
-    // TODO
+    this.categories.splice(this.checkCategory)
   }
 
   changeColor(color) {
     // update color in category list
-    for (let category of this.categories) {
-      if (category.name === this.currentCategory) {
-        category.color = color;
-        break;
-      }
-    }
+    this.categories.find(category => category.name == this.currentCategory).color = color;
+  }
 
-    //update colors on page
-    $('.label[value=' + this.currentCategory + ']').css('background-color', color);
-    $('#' + this.currentCategory + '-style').html(
-      '.hwt-content .label_' + tagModel.currentCategory + ' {background-color: ' + color + ';}'
-    );
+  getColor() {
+    return this.categories.find(category => category.name == this.currentCategory).color;
   }
 
   exportAsString() {

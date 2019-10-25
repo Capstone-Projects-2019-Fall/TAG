@@ -53,7 +53,12 @@ textArea.on('mouseup', function () {
       'startPosition': textArea[0].selectionStart,
       'endPosition': textArea[0].selectionEnd
     };
-    tagModel.addAnnotation(range, tagModel.currentCategory);
+    if (range.startPosition < range.endPosition) {
+      tagModel.addAnnotation(range, tagModel.currentCategory);
+    } else {
+      console.log("Error: invalid range: " + range.startPosition + "-" + range.endPosition);
+      return;
+    }
   }
   renderTextareaHighlights();
 });
@@ -101,23 +106,35 @@ $('.label-name').on('blur', function () {
 
   //fix whitespace and create new label name with no spaces (class names can't have spaces)
   $(this).text($(this).text().trim());
-  let newLabel = $(this).text().replace(/ /g, "_");
-  console.log("Attempting to change label name from " + tagModel.currentCategory + " to " + newLabel);
+  let newName = $(this).text().replace(/ /g, "_");
+  console.log("Attempting to change label name from " + tagModel.currentCategory + " to " + newName);
 
   //check if the name is the same as previous
-  if (newLabel === tagModel.currentCategory) {
+  if (newName === tagModel.currentCategory) {
     console.log('Aborting: Category is the same name as before');
-    return -1;
+    return;
   }
 
   //check for valid label name
-  if ((tagModel.checkCatergory(newLabel) >= 0) || newLabel === '') {
-    console.log('Aborting: Invalid label name: "' + newLabel + '"');
+  if ((tagModel.checkCategory(newName) >= 0) || newName === '') {
+    console.log('Aborting: Invalid label name: "' + newName + '"');
     $(this).text(tagModel.currentCategory);
     return;
   }
-  
-  tagModel.renameCategory(newLabel)
+
+  // update styling for category
+  $('#' + tagModel.currentCategory + '-style').remove();
+  $('head').append(
+    $('<style/>', {
+      id: newName + '-style',
+      html: '.hwt-content .label_' + newName + ' {background-color:' + tagModel.getColor(newName) + ';}'
+    })
+  );
+
+  // update category name in list
+  $('.label[value=' + tagModel.currentCategory + ']').attr('value', newName);
+
+  tagModel.renameCategory(newName)
   renderTextareaHighlights();
 });
 
@@ -131,6 +148,11 @@ $('.colorChange').on('click', function () {
 $('.colorChangePicker').on('change', function () {
   console.log('colorPicked: ' + this.value);
 
+  //update colors on page
+  $('.label[value=' + tagModel.currentCategory + ']').css('background-color', this.value);
+  $('#' + tagModel.currentCategory + '-style').html(
+    '.hwt-content .label_' + tagModel.currentCategory + ' {background-color: ' + this.value + ';}'
+  );
   tagModel.changeColor(this.value);
 });
 
@@ -149,11 +171,34 @@ function addLabel(name, color = null) {
   if (tagModel.checkCategory(name) === -1) {
     if (color === null) {
       randomColor = "#000000".replace(/0/g, function () {
-        return (~~(Math.random()*16)).toString(16);
+        return (~~(Math.random() * 16)).toString(16);
       });
       color = randomColor;
     }
     tagModel.addCategory(name, color);
+
+    // add highlight rule to page
+    $('head').append(
+      $('<style/>', {
+        id: name + '-style',
+        html: '.hwt-content .label_' + name + ' {background-color: ' + color + ';}'
+      })
+    );
+
+    // add label to page
+    $('#label-list').append(
+      $('<div/>', {
+        class: 'list-group-item py-2 px-3 label',
+        value: name,
+        style: "background-color: " + color,
+        html: '<div class="label-name">' + name + '</div><img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange" style="float: right;"><input class="colorChangePicker" type="color" style="height:0; width:0; visibility: hidden;">'
+      }));
+
+    // first color => make current category the color
+    if (tagModel.categories.length == 1) {
+      tagModel.currentCategory = name;
+      $('.label[value=' + name + ']').attr('id', 'label-selected');
+    }
   } else {
     console.log('Failed to add label "' + name + '": label already exists!');
   }
