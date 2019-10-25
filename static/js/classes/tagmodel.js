@@ -8,13 +8,9 @@ class TagModel {
     this.categories = [];
   }
 
-
-  hasNoDocuments() {
-    return this.openDocs.length == 0;
-  }
-
   addDoc(doc) {
     this.openDocs.push(doc);
+    return this.openDocs.length;
   }
 
   setCurrentDoc(name) {
