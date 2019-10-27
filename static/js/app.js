@@ -8,7 +8,7 @@ var testContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
 var textArea = $('#doc-view');
 var tagModel = new TagModel();
 
-//testing purposes //remove when implementing dynamic adding 
+//testing purposes //remove when implementing dynamic adding
 addDoc(makeFakeDoc());
 addLabel(makeRandName());
 //--//
@@ -16,12 +16,21 @@ addLabel(makeRandName());
 // --------------events-------------- //
 
 //download highlights
-$('#export').click(function () {
+$('#download').click(function () {
   if (tagModel.openDocs.length === 0) {
     alert('Error: No data to download!');
     return;
   }
-  console.log(tagModel.exportAsString());
+
+
+console.log("download clicked");
+var blob = new Blob([tagModel.exportAsString()], {type: 'application/JSON'});
+var url = window.URL.createObjectURL(blob);
+console.log("Generated object URL: " + url);
+document.getElementById('download_link').href = url;
+document.getElementById('download_link').click();
+window.URL.revokeObjectURL(url);
+console.log("Revoked URL");
 });
 
 //on mouse release, highlight selected text // or if alt is pressed, delete
@@ -108,7 +117,7 @@ $('#label-list').on('blur', '.label-name', function () {
   // update category name in list
   $('.label[value=' + tagModel.currentCategory + ']').attr('value', newName);
 
-  tagModel.renameCategory(newName)
+  tagModel.renameCategory(newName);
   renderTextareaHighlights();
 });
 
@@ -171,7 +180,7 @@ function addDoc(doc) {
       value: doc.title,
       html: doc.title
     }));
-};
+}
 
 //Actually draws the highlights on the textarea.
 function renderTextareaHighlights() {
@@ -191,7 +200,7 @@ function renderTextareaHighlights() {
   $('textarea').highlightWithinTextarea({
     highlight: highlights
   });
-};
+}
 
 //add new label
 function addLabel(name, color = null) {
@@ -227,13 +236,13 @@ function addLabel(name, color = null) {
   } else {
     console.log('Failed to add label "' + name + '": label already exists!');
   }
-};
+}
 
 //update height on window resize and keep scroll position
 function resize() {
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
-};
+}
 
 // make fake document  // delete when done
 function makeFakeDoc() {
@@ -242,12 +251,12 @@ function makeFakeDoc() {
   let endPosition = randomIntFromInterval(startPosition, testContent.length);
   var newDocument = new Doc(randName, testContent.substring(startPosition, endPosition));
 
-  function randomIntFromInterval(min, max) { // min and max included 
+  function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  return newDocument
-};
+  return newDocument;
+}
 
 // make fake name // delete when done
 function makeRandName() {
