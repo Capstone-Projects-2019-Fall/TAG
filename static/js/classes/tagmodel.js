@@ -2,12 +2,14 @@
 
 class TagModel {
   constructor() {
-    this.currentDoc = {};
+    this.currentDoc = null;
     this.openDocs = [];
     this.currentCategory = null;
     this.categories = [];
     this.deleteList = [];
   }
+
+  // ----- documents ----- //
 
   addDoc(doc) {
     this.openDocs.push(doc);
@@ -17,6 +19,8 @@ class TagModel {
   setCurrentDoc(name) {
     this.currentDoc = this.openDocs.find(doc => doc.title == name);
   }
+
+  // ----- annotations ----- //
 
   addAnnotation(range, currentLabel) {
     //validate annotation first, throw error if dumbo
@@ -42,6 +46,8 @@ class TagModel {
     this.currentDoc.removeAnnotation(annotation);
     this.clearDeleteList();
   }
+
+  // ----- Categories ----- //
 
   addCategory(name, color) {
     let newCategory = new Category(name, color);
@@ -74,14 +80,18 @@ class TagModel {
     this.categories.splice(this.checkCategory)
   }
 
+  // ----- color ----- //
+
   changeColor(color) {
     // update color in category list
     this.categories.find(category => category.name == this.currentCategory).color = color;
   }
 
-  getColor() {
-    return this.categories.find(category => category.name == this.currentCategory).color;
+  getColor(labelname) {
+    return this.categories.find(category => category.name === labelname).color;
   }
+
+  // ----- export ----- //
 
   exportAsString() {
     return JSON.stringify(this.openDocs);

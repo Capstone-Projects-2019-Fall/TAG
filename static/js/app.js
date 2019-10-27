@@ -32,22 +32,44 @@ $('#export').click(function () {
 });
 
 // on mouse release, highlight selected text
-textArea.on('mouseup', function () {
-  if (tagModel.currentCategory === null) {
-    alert('Error: Please select a label and highlighter color first');
-    return;
+textArea.on('mouseup', function (e) {
+  if (e.which === 1) {
+    if (tagModel.currentCategory === null) {
+      alert('Error: Please create a label!');
+      return;
+    }
+    if (tagModel.currentDoc === null) {
+      alert('Error: Please add a document!');
+      return;
+    }
+    let range = {
+      'startPosition': textArea[0].selectionStart,
+      'endPosition': textArea[0].selectionEnd
+    };
+    if (range.startPosition < range.endPosition) {
+      tagModel.addAnnotation(range, tagModel.currentCategory);
+    } else {
+      console.log("Error: invalid range: " + range.startPosition + "-" + range.endPosition);
+      return;
+    }
+    renderTextareaHighlights();
   }
-  let range = {
-    'startPosition': textArea[0].selectionStart,
-    'endPosition': textArea[0].selectionEnd
-  };
-  if (range.startPosition < range.endPosition) {
-    tagModel.addAnnotation(range, tagModel.currentCategory);
-  } else {
-    console.log("Error: invalid range: " + range.startPosition + "-" + range.endPosition);
-    return;
+  // on right click, show annotations at position to delete
+  else if (e.which === 3) {
+    let position = textArea[0].selectionStart;
+    let annotations = tagModel.getAnnotationsAtPos(position);
+    if (annotations.length > 0) {
+      $('#delete-menu').append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
+      for (let i = 0; i < annotations.length; i++) {
+        $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(annotations[i].label) + ';"><b>' + annotations[i].label.trunc(10) + ': </b>' + annotations[i].content.trunc(20) + '</li>');
+      }
+      $('#delete-menu').show(100).
+        css({
+          top: e.pageY + 'px',
+          left: e.pageX + 'px'
+        });
+    }
   }
-  renderTextareaHighlights();
 });
 
 // clicked the menu
@@ -61,33 +83,17 @@ $(document).on("mousedown", function (e) {
   };
 });
 
-// on right click, show annotations at position to delete
-$(textArea).on('contextmenu', function () {
-  let position = textArea[0].selectionStart;
-  let annotations = tagModel.getAnnotationsAtPos(position);
-  if (annotations.length > 0) {
-    for (let i = 0; i < annotations.length; i++) {
-      $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '">' + annotations[i].label.trunc(10) + ': ' + annotations[i].content.trunc(20) + '</li>');
-    }
-    $('#delete-menu').show(100).
-      css({
-        top: event.pageY + 'px',
-        left: event.pageX + 'px'
-      });
-  }
-});
-
+// on annotation delete menu click, delete selected annotation
 $("#delete-menu").on('click', '.delete-anno', function () {
-  if ($(this).attr("value").substring(7, 12) === 'anno_') {
-    let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
-    tagModel.removeAnnotation(tagModel.getDeleteItem(deleteIndex));
-    console.log('Annotation Deleted');
-    renderTextareaHighlights();
-  }
+  let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
+  tagModel.removeAnnotation(tagModel.getDeleteItem(deleteIndex));
+  console.log('Annotation Deleted');
+  renderTextareaHighlights();
   // Hide it AFTER the action was triggered
   $("#delete-menu").hide(100);
 });
 
+// create new label
 $('#add-label').on('click', function () {
   // todo add name checking // no spaces
   // todo change to real add function
@@ -96,14 +102,31 @@ $('#add-label').on('click', function () {
   addLabel(newLabel);
 });
 
-//change the document's label context
-$('#label-list').on('click', '.label', function () {
+//change the label selected
+$('#label-list').on('mouseup', '.label', function (e) {
   console.log('labelSelected: ' + this.getAttribute('value') + '\ncolor: ' + $(this).css('background-color'));
 
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
-  $('.label').attr('id', '');                   //remove label-selected from all
+  $('#label-selected').attr('id', '');                   //remove label-selected from all
   $(this).attr('id', 'label-selected');         //add label-selected to clicked
+
+  if (e.which === 3) {
+    $('#delete-menu').append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
+    $('#delete-menu').show(100).
+      css({
+        top: e.pageY + 'px',
+        left: e.pageX + 'px'
+      });
+  }
+});
+
+$("#delete-menu").on('click', '.delete-doc', function () {
+  //tagModel.removeDoc();
+  console.log('Label Deleted');
+  renderTextareaHighlights();
+  // Hide it AFTER the action was triggered
+  $("#delete-menu").hide(100);
 });
 
 //double clicked label //edit label name
@@ -145,7 +168,7 @@ $('#label-list').on('blur', '.label-name', function () {
   );
 
   // update category name in list
-  $('.label[value=' + tagModel.currentCategory + ']').attr('value', newName);
+  $('#label-selected').attr('value', newName);
 
   tagModel.renameCategory(newName)
   renderTextareaHighlights();
@@ -154,19 +177,20 @@ $('#label-list').on('blur', '.label-name', function () {
 //invoke colorpicker on icon click
 $('#label-list').on('click', '.colorChange', function () {
   console.log('dropperClicked!');
-  $(this).parent().children('input').click();   //invoke color picker
+  $('.colorChangePicker').click();   //invoke color picker
 });
 
 //change label color
-$('#label-list').on('change', '.colorChangePicker', function () {
+$('.colorChangePicker').on('change', function () {
   console.log('colorPicked: ' + this.value);
 
   //update colors on page
-  $('.label[value=' + tagModel.currentCategory + ']').css('background-color', this.value);
+  $('#label-selected').css('background-color', this.value);
   $('#' + tagModel.currentCategory + '-style').html(
     '.hwt-content .label_' + tagModel.currentCategory + ' {background-color: ' + this.value + ';}'
   );
   tagModel.changeColor(this.value);
+  this.value = "black";
 });
 
 // add document button
@@ -178,14 +202,25 @@ $('#add-document').on('click', function () {
   addDoc(newDoc);
 });
 
-// change document render
-$('#doc-list').on('click', '.doc-name', function () {
+// change document
+$('#doc-list').on('mouseup', '.doc-name', function (e) {
   console.log("doc-name-click: " + this.getAttribute('value'));
   tagModel.setCurrentDoc(this.getAttribute('value'));
+  $('#doc-selected').attr('id', '');
+  $(this).attr('id', 'doc-selected');
   textArea.html(tagModel.currentDoc.text);
   renderTextareaHighlights();
   resize();
   $(window).scrollTop(0);
+
+  if (e.which === 3) {
+    $('#delete-menu').append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
+    $('#delete-menu').show(100).
+      css({
+        top: e.pageY + 'px',
+        left: e.pageX + 'px'
+      });
+  }
 });
 
 // update size when window is resized
@@ -195,21 +230,23 @@ $(window).on('resize', function () {
   $(window).scrollTop(scrollPercent * $(document).height());
 });
 
-// ---------------functions---------------- //
+// ----- functions ----- //
 
 //add new document
 function addDoc(doc) {
-  if (tagModel.addDoc(doc) === 1) {
-    tagModel.setCurrentDoc(doc.title);
-    textArea.html(tagModel.currentDoc.text);
-    resize();
-  }
+  tagModel.addDoc(doc)
+  tagModel.setCurrentDoc(doc.title);
+  textArea.html(tagModel.currentDoc.text);
+  resize();
+  $('#doc-selected').attr('id', '');
   $('#doc-list').append(
     $('<h6/>', {
+      id: 'doc-selected',
       class: 'doc-name',
       value: doc.title,
       html: doc.title
     }));
+  $('#doc-list').scrollTop($('#doc-list').prop('scrollHeight'));
 };
 
 //Actually draws the highlights on the textarea.
@@ -249,20 +286,23 @@ function addLabel(name, color = null) {
       })
     );
 
-    // add label to page
+    // select new category
+    tagModel.currentCategory = name;
+    $('#label-selected').attr('id', '');
+
+    // add category to page
     $('#label-list').append(
       $('<div/>', {
         class: 'list-group-item py-2 px-3 label',
+        id: 'label-selected',
         value: name,
         style: "background-color: " + color,
-        html: '<div class="label-name">' + name + '</div><img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange" style="float: right;"><input class="colorChangePicker" type="color" style="height:0; width:0; visibility: hidden;">'
+        html: '<div  class="label-name">' + name + '</div>' +
+          '<img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange">'
       }));
 
-    // first color => make current category the color
-    if (tagModel.categories.length == 1) {
-      tagModel.currentCategory = name;
-      $('.label[value=' + name + ']').attr('id', 'label-selected');
-    }
+    // go to new label's postion
+    $('#label-list').scrollTop($('#label-list').prop('scrollHeight'));
   } else {
     console.log('Failed to add label "' + name + '": label already exists!');
   }
@@ -273,6 +313,8 @@ function resize() {
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
 };
+
+// show delete menu
 
 // make fake document  // delete when done
 function makeFakeDoc() {
@@ -304,28 +346,3 @@ String.prototype.trunc = function (n, truncAfterWord = false) {
   var subString = this.substr(0, n - 1);
   return (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
 };
-
-jQuery.fn.extend({
-  slideRightShow: function() {
-    return this.each(function() {
-        $(this).show('slide', {direction: 'right'}, 1000);
-    });
-  },
-  slideLeftHide: function() {
-    return this.each(function() {
-      $(this).hide('slide', {direction: 'left'}, 1000);
-    });
-  },
-  slideRightHide: function() {
-    return this.each(function() {
-      $(this).hide('slide', {direction: 'right'}, 1000);
-    });
-  },
-  slideLeftShow: function() {
-    return this.each(function() {
-      $(this).show('slide', {direction: 'left'}, 1000);
-    });
-  }
-});
-
-// function
