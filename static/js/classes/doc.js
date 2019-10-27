@@ -8,18 +8,11 @@ class Doc {
   }
 
 
-  getAnnotationsContainingCharacter(position){
+  getAnnotationsAtPos(position){
     return this.annotations.filter(function (annotation) {
       return annotation.containsCharacterAt(position);
     });
   }
-
-
-  getMostRecentAnnotationContainingCharacter(position){
-    let annotations = this.getAnnotationsContainingCharacter(position);
-    return annotations.pop();
-  }
-
 
   removeAnnotation(annotationToRemove){
     this.annotations = this.annotations.filter(function (annotation) {

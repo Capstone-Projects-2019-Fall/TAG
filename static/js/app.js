@@ -11,11 +11,18 @@ var tagModel = new TagModel();
 //testing purposes //remove when implementing dynamic adding 
 addDoc(makeFakeDoc());
 addLabel(makeRandName());
+
+var list = ['one', 'two', 'black', 'blue'];
 //--//
 
 // --------------events-------------- //
 
-//download highlights
+// prevent right clicking
+$(document).on('contextmenu', function () {
+  event.preventDefault();
+});
+
+// download highlights
 $('#export').click(function () {
   if (tagModel.openDocs.length === 0) {
     alert('Error: No data to download!');
@@ -24,29 +31,61 @@ $('#export').click(function () {
   console.log(tagModel.exportAsString());
 });
 
-//on mouse release, highlight selected text // or if alt is pressed, delete
+// on mouse release, highlight selected text
 textArea.on('mouseup', function () {
-  //alt key pressed
-  if (event.altKey) {
-    let position = textArea[0].selectionStart;
-    tagModel.removeAnnotation(position);
+  if (tagModel.currentCategory === null) {
+    alert('Error: Please select a label and highlighter color first');
+    return;
+  }
+  let range = {
+    'startPosition': textArea[0].selectionStart,
+    'endPosition': textArea[0].selectionEnd
+  };
+  if (range.startPosition < range.endPosition) {
+    tagModel.addAnnotation(range, tagModel.currentCategory);
   } else {
-    if (tagModel.currentCategory === null) {
-      alert('Error: Please select a label and highlighter color first');
-      return;
-    }
-    let range = {
-      'startPosition': textArea[0].selectionStart,
-      'endPosition': textArea[0].selectionEnd
-    };
-    if (range.startPosition < range.endPosition) {
-      tagModel.addAnnotation(range, tagModel.currentCategory);
-    } else {
-      console.log("Error: invalid range: " + range.startPosition + "-" + range.endPosition);
-      return;
-    }
+    console.log("Error: invalid range: " + range.startPosition + "-" + range.endPosition);
+    return;
   }
   renderTextareaHighlights();
+});
+
+// clicked the menu
+$(document).on("mousedown", function (e) {
+  // If the clicked element is not the menu
+  if ($(e.target).parents("#delete-menu").length === 0) {
+    // Hide it
+    tagModel.clearDeleteList();
+    $("#delete-menu").hide(100);
+    $("#delete-menu").text('')
+  };
+});
+
+// on right click, show annotations at position to delete
+$(textArea).on('contextmenu', function () {
+  let position = textArea[0].selectionStart;
+  let annotations = tagModel.getAnnotationsAtPos(position);
+  if (annotations.length > 0) {
+    for (let i = 0; i < annotations.length; i++) {
+      $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '">' + annotations[i].label.trunc(10) + ': ' + annotations[i].content.trunc(20) + '</li>');
+    }
+    $('#delete-menu').show(100).
+      css({
+        top: event.pageY + 'px',
+        left: event.pageX + 'px'
+      });
+  }
+});
+
+$("#delete-menu").on('click', '.delete-anno', function () {
+  if ($(this).attr("value").substring(7, 12) === 'anno_') {
+    let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
+    tagModel.removeAnnotation(tagModel.getDeleteItem(deleteIndex));
+    console.log('Annotation Deleted');
+    renderTextareaHighlights();
+  }
+  // Hide it AFTER the action was triggered
+  $("#delete-menu").hide(100);
 });
 
 $('#add-label').on('click', function () {
@@ -259,3 +298,34 @@ function makeRandColor() {
     return (~~(Math.random() * 10) + 6).toString(16);
   });
 }
+
+String.prototype.trunc = function (n, truncAfterWord = false) {
+  if (this.length <= n) { return this; }
+  var subString = this.substr(0, n - 1);
+  return (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
+};
+
+jQuery.fn.extend({
+  slideRightShow: function() {
+    return this.each(function() {
+        $(this).show('slide', {direction: 'right'}, 1000);
+    });
+  },
+  slideLeftHide: function() {
+    return this.each(function() {
+      $(this).hide('slide', {direction: 'left'}, 1000);
+    });
+  },
+  slideRightHide: function() {
+    return this.each(function() {
+      $(this).hide('slide', {direction: 'right'}, 1000);
+    });
+  },
+  slideLeftShow: function() {
+    return this.each(function() {
+      $(this).show('slide', {direction: 'left'}, 1000);
+    });
+  }
+});
+
+// function

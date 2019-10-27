@@ -6,6 +6,7 @@ class TagModel {
     this.openDocs = [];
     this.currentCategory = null;
     this.categories = [];
+    this.deleteList = [];
   }
 
   addDoc(doc) {
@@ -24,9 +25,22 @@ class TagModel {
     this.currentDoc.annotations.push(annotationToAdd);
   }
 
-  removeAnnotation(position) {
-    let annotationToRemove = this.currentDoc.getMostRecentAnnotationContainingCharacter(position);
-    this.currentDoc.removeAnnotation(annotationToRemove);
+  getAnnotationsAtPos(position) {
+    this.deleteList = this.currentDoc.getAnnotationsAtPos(position);
+    return this.deleteList;
+  }
+
+  getDeleteItem(index) {
+    return this.deleteList[index];
+  }
+
+  clearDeleteList() {
+    this.deleteList = [];
+  }
+
+  removeAnnotation(annotation) {
+    this.currentDoc.removeAnnotation(annotation);
+    this.clearDeleteList();
   }
 
   addCategory(name, color) {
