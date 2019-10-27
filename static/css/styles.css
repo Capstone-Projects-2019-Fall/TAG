@@ -60,3 +60,7 @@ body {
   position: sticky;
   top: 64px;
 }
+
+ul {
+  list-style-type: none;
+}

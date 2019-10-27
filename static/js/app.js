@@ -82,6 +82,8 @@ function handleHighlight() {
     //update most recent highlight
     $('#recent').text(content.trunc(50, true));
 
+    addToList(content);
+
     renderTextareaHighlights();
   }
 }
@@ -105,6 +107,19 @@ function selectedInputRangeIsValid(range) {
 function extractSelectedContent(range) {
   console.log('textSelected: \n' + window.getSelection().toString());
   return window.getSelection().toString();
+}
+
+addToList = function(content){
+  labelName = $('#label-selected').attr('value');
+  let listName = document.getElementById(labelName);
+  if(listName.id === labelName){
+    var node = document.createElement('LI');
+    var textNode = document.createTextNode(content);
+    node.appendChild(textNode);
+    listName.appendChild(node);
+    console.log('Success!\nAdded ' + content + ' to ' + labelName + ' annotation list.');
+  }
+    
 }
 
 //end of rewrite
