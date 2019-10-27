@@ -9,4 +9,8 @@ class Annotation {
     this.content = content;
     this.label = label;
   }
+
+  containsCharacterAt(position){
+    return position >= this.range.startPosition && position <= this.range.endPosition;
+  }
 }

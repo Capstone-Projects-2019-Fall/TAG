@@ -3,6 +3,23 @@ body, html {
   padding: 0;
   height: 100%;
   min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 
 body {
@@ -11,10 +28,13 @@ body {
   background: #141516;
 }
 
-.container {
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 1200px;
+h2 {
+  word-wrap: break-word;
+}
+
+#content-body {
+  margin: auto;
+  max-width: 1400px;
 }
 
 .highlight-color {
@@ -22,14 +42,19 @@ body {
 }
 
 .label div {
-  color: white;
-  mix-blend-mode: difference;
+  color: black;
 }
 
 .label:hover{
   cursor: pointer;
   border-color: black;
   border-width: 3px;
+}
+
+.label-name {
+  width: 70%;
+  float: left;
+  word-wrap: break-word;
 }
 
 #label-selected {
@@ -55,8 +80,36 @@ body {
   background-color: transparent;
 }
 
+#label-list {
+  max-height: 26vh;
+}
+
+#doc-list {
+  max-height: 26vh;
+}
+
+.doc-name:hover {
+  cursor: pointer;
+}
+
+#export-container {
+  height: 5vh;
+}
+
+#annota-list {
+  max-height: 75vh;
+}
+
 .sticky {
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 64px;
+}
+
+.hide-scroll {
+  overflow-y: hidden;
+}
+
+.hide-scroll:hover {
+  overflow-y: auto;
 }

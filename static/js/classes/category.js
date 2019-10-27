@@ -1,9 +1,9 @@
 //jshint esversion:6
 
-class Label {
+class Category {
     constructor(name, color) {
       this.name = name;
-      this.name = color;
+      this.color = color;
     }
 }
   
