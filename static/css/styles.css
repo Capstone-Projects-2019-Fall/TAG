@@ -29,15 +29,13 @@ h2 {
   max-height: 26vh;
 }
 
-.label:hover{
-  cursor: pointer;
-  border: 3px solid black;
+.label-name {
+  word-wrap: break-word;
 }
 
-.label-name {
-  width: 70%;
-  float: left;
-  word-wrap: break-word;
+.label-name:hover{
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 #label-selected {
@@ -46,6 +44,7 @@ h2 {
 
 .colorChange {
   float: right;
+  margin-left: 5px;
 }
 
 .colorChangePicker {

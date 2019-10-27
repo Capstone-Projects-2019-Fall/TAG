@@ -74,6 +74,7 @@ class TagModel {
     // update name in categories list
     this.categories.find(category => category.name == this.currentCategory).name = newName;
     this.currentCategory = newName;
+    console.log(this.currentCategory);
   }
 
   removeCategory() {

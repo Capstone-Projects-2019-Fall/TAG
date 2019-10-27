@@ -108,11 +108,11 @@ $('#label-list').on('mouseup', '.label', function (e) {
 
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
-  $('#label-selected').attr('id', '');                   //remove label-selected from all
+  $('.label').attr('id', '');                   //remove label-selected from all
   $(this).attr('id', 'label-selected');         //add label-selected to clicked
 
   if (e.which === 3) {
-    $('#delete-menu').append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
+    $('#delete-menu').append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
     $('#delete-menu').show(100).
       css({
         top: e.pageY + 'px',
@@ -121,7 +121,7 @@ $('#label-list').on('mouseup', '.label', function (e) {
   }
 });
 
-$("#delete-menu").on('click', '.delete-doc', function () {
+$("#delete-menu").on('click', '.delete-label', function () {
   //tagModel.removeDoc();
   console.log('Label Deleted');
   renderTextareaHighlights();
@@ -142,7 +142,7 @@ $('#label-list').on('blur', '.label-name', function () {
 
   //fix whitespace and create new label name with no spaces (class names can't have spaces)
   $(this).text($(this).text().trim());
-  let newName = $(this).text().replace(/ /g, "_");
+  let newName = $(this).text().replace(/\s/g, "_").replace(/[\W]/g, '');
   console.log("Attempting to change label name from " + tagModel.currentCategory + " to " + newName);
 
   //check if the name is the same as previous
@@ -163,7 +163,7 @@ $('#label-list').on('blur', '.label-name', function () {
   $('head').append(
     $('<style/>', {
       id: newName + '-style',
-      html: '.hwt-content .label_' + newName + ' {background-color:' + tagModel.getColor(newName) + ';}'
+      html: '.hwt-content .label_' + newName + ' {background-color:' + tagModel.getColor(tagModel.currentCategory) + ';}'
     })
   );
 
@@ -221,6 +221,14 @@ $('#doc-list').on('mouseup', '.doc-name', function (e) {
         left: e.pageX + 'px'
       });
   }
+});
+
+$("#delete-menu").on('click', '.delete-doc', function () {
+  //tagModel.removeDoc();
+  console.log('Document Deleted');
+  renderTextareaHighlights();
+  // Hide it AFTER the action was triggered
+  $("#delete-menu").hide(100);
 });
 
 // update size when window is resized
@@ -297,8 +305,7 @@ function addLabel(name, color = null) {
         id: 'label-selected',
         value: name,
         style: "background-color: " + color,
-        html: '<div  class="label-name">' + name + '</div>' +
-          '<img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange">'
+        html: '<img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange"><div  class="label-name">' + name + '</div>'
       }));
 
     // go to new label's postion
@@ -313,8 +320,6 @@ function resize() {
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
 };
-
-// show delete menu
 
 // make fake document  // delete when done
 function makeFakeDoc() {
