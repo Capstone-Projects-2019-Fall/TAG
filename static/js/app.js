@@ -8,13 +8,6 @@ var testContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
 var textArea = $('#doc-view');
 var tagModel = new TagModel();
 
-//testing purposes //remove when implementing dynamic adding 
-addDoc(makeFakeDoc());
-addLabel(makeRandName());
-
-var list = ['one', 'two', 'black', 'blue'];
-//--//
-
 // --------------events-------------- //
 
 // prevent right clicking
@@ -122,8 +115,13 @@ $('#label-list').on('mouseup', '.label', function (e) {
 });
 
 $("#delete-menu").on('click', '.delete-label', function () {
-  //tagModel.removeDoc();
-  console.log('Label Deleted');
+  tagModel.deleteCategory();
+  console.log('Category Deleted');
+  resize();
+  $('#label-selected').remove();
+  if (tagModel.currentDoc != null) {
+    $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
+  }
   renderTextareaHighlights();
   // Hide it AFTER the action was triggered
   $("#delete-menu").hide(100);
@@ -224,8 +222,18 @@ $('#doc-list').on('mouseup', '.doc-name', function (e) {
 });
 
 $("#delete-menu").on('click', '.delete-doc', function () {
-  //tagModel.removeDoc();
+  tagModel.deleteDoc();
   console.log('Document Deleted');
+  if (tagModel.currentDoc != null) {
+    textArea.html(tagModel.currentDoc.text);
+  } else {
+    textArea.html('');
+  }
+  resize();
+  $('#doc-selected').remove();
+  if (tagModel.currentDoc != null) {
+    $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
+  }
   renderTextareaHighlights();
   // Hide it AFTER the action was triggered
   $("#delete-menu").hide(100);
@@ -254,6 +262,7 @@ function addDoc(doc) {
       value: doc.title,
       html: doc.title
     }));
+  renderTextareaHighlights()
   $('#doc-list').scrollTop($('#doc-list').prop('scrollHeight'));
 };
 
@@ -263,13 +272,15 @@ function renderTextareaHighlights() {
   let highlights = [];
 
   //loop through the stored annotations and append to the array as a dictionary
-  tagModel.currentDoc.annotations.forEach(function (annotation) {
-    let single_highlight = {
-      highlight: [annotation.range.startPosition, annotation.range.endPosition],
-      className: 'label_' + annotation.label
-    };
-    highlights.push(single_highlight);
-  });
+  if (tagModel.currentDoc != null) {
+    tagModel.currentDoc.annotations.forEach(function (annotation) {
+      let single_highlight = {
+        highlight: [annotation.range.startPosition, annotation.range.endPosition],
+        className: 'label_' + annotation.label
+      };
+      highlights.push(single_highlight);
+    });
+  }
 
   //then highlight based on that array
   $('textarea').highlightWithinTextarea({

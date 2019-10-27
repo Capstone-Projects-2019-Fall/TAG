@@ -17,7 +17,15 @@ class TagModel {
   }
 
   setCurrentDoc(name) {
-    this.currentDoc = this.openDocs.find(doc => doc.title == name);
+    this.currentDoc = this.openDocs.find(doc => doc.title === name);
+  }
+
+  deleteDoc() {
+    let docToDelete = this.currentDoc;
+    this.openDocs = this.openDocs.filter(function (doc) {
+      return doc != docToDelete;
+    });
+    this.currentDoc = this.openDocs[0];
   }
 
   // ----- annotations ----- //
@@ -65,20 +73,32 @@ class TagModel {
 
   renameCategory(newName) {
     // update category name of each annotation
-    this.currentDoc.annotations.forEach(function (annotation) {
-      if (annotation.label === tagModel.currentCategory) {
-        annotation.label = newName;
-      }
+    this.openDocs.forEach(function (doc) {
+      doc.annotations.forEach(function (annotation) {
+        if (annotation.label === tagModel.currentCategory) {
+          annotation.label = newName;
+        }
+      })
     });
 
     // update name in categories list
     this.categories.find(category => category.name == this.currentCategory).name = newName;
     this.currentCategory = newName;
-    console.log(this.currentCategory);
   }
 
-  removeCategory() {
-    this.categories.splice(this.checkCategory)
+  deleteCategory() {
+    let categoryToDelete = this.currentCategory;
+    this.openDocs.forEach(function (doc) {
+      doc.annotations = doc.annotations.filter(function (annotation) {
+        return annotation.label != categoryToDelete;
+      });
+    });
+    this.categories.splice(this.categories.indexOf(this.categories.find(category => category.name === this.currentCategory)), 1);
+    if (this.categories.length > 0) {
+      this.currentCategory = this.categories[0].name;
+    } else {
+      this.currentCategory = null;
+    }
   }
 
   // ----- color ----- //
