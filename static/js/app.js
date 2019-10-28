@@ -36,17 +36,19 @@ textArea.on('mouseup', function () {
     tagModel.removeAnnotation(position);
   }
 
-  let range = {
-    'startPosition': textArea[0].selectionStart,
-    'endPosition': textArea[0].selectionEnd
-  };
-  if(range.startPosition !== range.endPosition) {
-    console.log("Selected: " + range.startPosition + "-" + range.endPosition);
-  }
-  if (range.startPosition < range.endPosition) {
-    tagModel.addAnnotation(range);
-  } else {
-    return;
+  else {
+    let range = {
+      'startPosition': textArea[0].selectionStart,
+      'endPosition': textArea[0].selectionEnd
+    };
+    if (range.startPosition !== range.endPosition) {
+      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
+    }
+    if (range.startPosition < range.endPosition) {
+      tagModel.addAnnotation(range);
+    } else {
+      return;
+    }
   }
   renderTextareaHighlights();
 });
@@ -55,13 +57,13 @@ $('#add-label').on('click', function () {
   // todo add name checking // no spaces
   // todo change to real add function
   var newLabel = makeRandName();
-  console.log("Creating new category: [" + newLabel + "]");
+  console.log("CSS: Creating new category: [" + newLabel + "]");
   addLabel(newLabel);
 });
 
 //change the document's label context
 $('#label-list').on('click', '.label', function () {
-  console.log('labelSelected: ' + this.getAttribute('value') + '\ncolor: ' + $(this).css('background-color'));
+  console.log("Selected label: [" + this.getAttribute('value') + "]");
 
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
@@ -124,12 +126,13 @@ $('#label-list').on('click', '.colorChange', function () {
 
 //change label color
 $('#label-list').on('change', '.colorChangePicker', function () {
+  //TODO: specify original color and label
   console.log('Highlight color changed to: ' + this.value);
 
   //update colors on page
   $('.label[value=' + tagModel.currentCategory + ']').css('background-color', this.value);
   $('#' + tagModel.currentCategory + '-style').html(
-    '.hwt-content .label_' + tagModel.currentCategory + ' {background-color: ' + this.value + ';}'
+  '.hwt-content .label_' + tagModel.currentCategory + ' {background-color: ' + this.value + ';}'
   );
   tagModel.changeColor(this.value);
 });
@@ -163,6 +166,8 @@ $(window).on('resize', function () {
 
 //add new document
 function addDoc(doc) {
+  tagModel.addDoc(doc);
+
   if (tagModel.openDocs.length === 1) {
     tagModel.setCurrentDoc(doc.title);
     textArea.html(tagModel.currentDoc.text);
