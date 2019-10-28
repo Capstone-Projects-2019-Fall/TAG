@@ -22,6 +22,7 @@ class TagModel {
     let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
     let annotationToAdd = new Annotation(range, content, currentLabel);
     this.currentDoc.annotations.push(annotationToAdd);
+    return annotationToAdd;
   }
 
   removeAnnotation(position) {
