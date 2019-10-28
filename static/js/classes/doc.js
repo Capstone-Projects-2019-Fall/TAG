@@ -7,23 +7,22 @@ class Doc {
     this.annotations = [];
   }
 
-
-  getAnnotationsContainingCharacter(position){
-    return this.annotations.filter(function (annotation) {
+  getAnnotation(position){
+    let annotations =  this.annotations.filter(function (annotation) {
       return annotation.containsCharacterAt(position);
     });
+
+    if(annotations.length !== 0) {
+      return annotations.pop();
+    }
+    else {
+      console.log("Invalid highlight removal!")
+    }
   }
 
-
-  getMostRecentAnnotationContainingCharacter(position){
-    let annotations = this.getAnnotationsContainingCharacter(position);
-    return annotations.pop();
-  }
-
-
-  removeAnnotation(annotationToRemove){
+  updateAnnotationList(blacklistAnnotation){
     this.annotations = this.annotations.filter(function (annotation) {
-      return annotation != annotationToRemove;
+      return annotation !== blacklistAnnotation;
     }
   );
   }
