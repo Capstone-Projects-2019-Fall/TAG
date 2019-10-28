@@ -6,7 +6,7 @@ var testContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
 var textArea = $('#doc-view');
 var tagModel = new TagModel();
 
-//testing purposes, remove when implementing dynamic adding
+//testing purposes //remove when implementing dynamic adding
 addDoc(makeFakeDoc());
 addLabel(makeRandName());
 
@@ -37,14 +37,16 @@ textArea.on('mouseup', function () {
   }
 
   else {
+    if (tagModel.currentCategory === null) {
+      alert('Error: Please select a category first');
+      return;
+    }
     let range = {
       'startPosition': textArea[0].selectionStart,
       'endPosition': textArea[0].selectionEnd
     };
-    if (range.startPosition !== range.endPosition) {
-      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
-    }
     if (range.startPosition < range.endPosition) {
+      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
       tagModel.addAnnotation(range);
     } else {
       return;
