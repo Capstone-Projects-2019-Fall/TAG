@@ -19,12 +19,17 @@ $('#download').click(function () {
     alert('Error: No data to download!');
     return;
   }
-  let blob = new Blob([tagModel.exportAsString()], {type: 'application/JSON'});
-  let url = window.URL.createObjectURL(blob);
+
+  console.log("download clicked");
+  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
+  var url = window.URL.createObjectURL(blob);
   console.log("Generated object URL: " + url);
   document.getElementById('download_link').href = url;
   document.getElementById('download_link').click();
   window.URL.revokeObjectURL(url);
+
+  console.log("Revoked URL");
+
 });
 
 //on mouse1 release
@@ -46,11 +51,14 @@ textArea.on('mouseup', function () {
       'endPosition': textArea[0].selectionEnd
     };
     if (range.startPosition < range.endPosition) {
+      let annotationCreated = tagModel.addAnnotation(range, tagModel.currentCategory);
       console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
-      tagModel.addAnnotation(range);
+      $('#recent').text(annotationCreated.content.trunc(50, true));
+      addToList(annotationCreated.content);
     } else {
       return;
     }
+
   }
   renderTextareaHighlights();
 });
@@ -128,7 +136,6 @@ $('#label-list').on('click', '.colorChange', function () {
 
 //change label color
 $('#label-list').on('change', '.colorChangePicker', function () {
-  //TODO: specify original color and label
   console.log('Highlight color changed to: ' + this.value);
 
   //update colors on page
@@ -228,6 +235,18 @@ function addLabel(name, color = null) {
         html: '<div class="label-name">' + name + '</div><img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange" style="float: right;"><input class="colorChangePicker" type="color" style="height:0; width:0; visibility: hidden;">'
       }));
 
+    $('#anno-list').append(
+      $('<h4/>', {
+        class: 'ml-2',
+        html: name
+      })
+    ).append(
+      $('<div/>', {
+        class: 'list-group',
+        value: name
+      })
+    );
+
     // first color => make current category the color
     if (tagModel.categories.length === 1) {
       tagModel.currentCategory = name;
@@ -235,6 +254,15 @@ function addLabel(name, color = null) {
     }
   } else {
     console.log('Failed to add label "' + name + '": label already exists!');
+  }
+}
+
+function addToList(content) {
+  if (tagModel.currentCategory != null) {
+    $('.list-group[value="' + tagModel.currentCategory + '"]').append(
+      $('<ul/>').text(content.trunc(20, true))
+    );
+    console.log('Success!\nAdded ' + content + ' to ' + tagModel.currentCategory + ' annotation list.');
   }
 }
 
@@ -267,4 +295,10 @@ function makeRandColor() {
   return "#000000".replace(/0/g, function () {
     return (~~(Math.random() * 10) + 6).toString(16);
   });
+}
+
+String.prototype.trunc = function (n, truncAfterWord) {
+  if (this.length <= n) { return this; }
+  var subString = this.substr(0, n - 1);
+  return (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
 }

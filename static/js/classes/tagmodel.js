@@ -24,6 +24,7 @@ class TagModel {
     let annotationToAdd = new Annotation(range, content, this.currentCategory);
     console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + this.currentCategory + "]");
     this.currentDoc.annotations.push(annotationToAdd);
+    return annotationToAdd;
   }
 
   removeAnnotation(position) {
