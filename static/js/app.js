@@ -164,9 +164,10 @@ $('#label-list').on('change', '.colorChangePicker', function () {
 $('#add-document').on('click', function () {
   // todo add name checking // no spaces
   // todo change to real add function
-  var newDoc = makeFakeDoc();
+  // var newDoc = makeFakeDoc();
   //
-  addDoc(newDoc);
+  // addDoc(newDoc);
+  $('#fileInputControl').click();
 });
 
 // change document render
