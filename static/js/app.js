@@ -37,14 +37,16 @@ textArea.on('mouseup', function () {
   }
 
   else {
+    if (tagModel.currentCategory === null) {
+      alert('Error: Please select a category first');
+      return;
+    }
     let range = {
       'startPosition': textArea[0].selectionStart,
       'endPosition': textArea[0].selectionEnd
     };
-    if (range.startPosition !== range.endPosition) {
-      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
-    }
     if (range.startPosition < range.endPosition) {
+      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
       tagModel.addAnnotation(range);
     } else {
       return;
