@@ -15,6 +15,27 @@ addLabel(makeRandName());
 
 // --------------events-------------- //
 
+$(document).ready(function() {
+  $("#fileInputControl").on("change", fileInputControlChangeEventHandler);
+});
+
+function fileInputControlChangeEventHandler(event) {
+  let fileInputControl = event.target;
+  let files = fileInputControl.files;
+  let firstFile = files[0];
+  console.log(firstFile);
+  let fileReader = new FileReader();
+  fileReader.onload = function(event){
+    let fileContents = fileReader.result;
+    let newDoc = new Doc(firstFile.name, fileContents);
+    addDoc(newDoc);
+  };
+
+  fileReader.readAsText(firstFile);
+}
+
+
+
 //download highlights
 $('#download').click(function () {
   if (tagModel.openDocs.length === 0) {
