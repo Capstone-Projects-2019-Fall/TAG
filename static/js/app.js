@@ -52,7 +52,7 @@ textArea.on('mouseup', function () {
     };
     if (range.startPosition < range.endPosition) {
       let annotationCreated = tagModel.addAnnotation(range, tagModel.currentCategory);
-
+      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
       $('#recent').text(annotationCreated.content.trunc(50, true));
       addToList(annotationCreated.content);
     } else {
@@ -136,7 +136,7 @@ $('#label-list').on('click', '.colorChange', function () {
 
 //change label color
 $('#label-list').on('change', '.colorChangePicker', function () {
-  console.log('colorPicked: ' + this.value);
+  console.log('Highlight color changed to: ' + this.value);
 
   //update colors on page
   $('.label[value=' + tagModel.currentCategory + ']').css('background-color', this.value);
