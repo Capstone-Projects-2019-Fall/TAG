@@ -6,7 +6,7 @@ var testContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
 var textArea = $('#doc-view');
 var tagModel = new TagModel();
 
-//testing purposes, remove when implementing dynamic adding
+//testing purposes //remove when implementing dynamic adding
 addDoc(makeFakeDoc());
 addLabel(makeRandName());
 
