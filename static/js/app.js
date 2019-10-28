@@ -19,11 +19,14 @@ function fileInputControlChangeEventHandler(event) {
   let fileInputControl = event.target;
   let files = fileInputControl.files;
   let firstFile = files[0];
+  console.log("Found File: ");
   console.log(firstFile);
   let fileReader = new FileReader();
   fileReader.onload = function(event){
     let fileContents = fileReader.result;
     let newDoc = new Doc(firstFile.name, fileContents);
+    console.log("Created Doc: ");
+    console.log(newDoc);
     addDoc(newDoc);
   };
 
@@ -31,7 +34,7 @@ function fileInputControlChangeEventHandler(event) {
 }
 //download highlights
 $('#download').click(function () {
-  console.log("JSON download requested...")
+  console.log("JSON download requested...");
   if (tagModel.openDocs.length === 0) {
     alert('Error: No data to download!');
     return;
@@ -321,4 +324,4 @@ String.prototype.trunc = function (n, truncAfterWord) {
   if (this.length <= n) { return this; }
   var subString = this.substr(0, n - 1);
   return (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
-}
+};
