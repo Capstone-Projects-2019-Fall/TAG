@@ -1,0 +1,119 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+body {
+  overflow-x: hidden;
+  padding-top: 56px;
+  background: #141516;
+}
+
+h2 {
+  word-wrap: break-word;
+}
+
+#content-body {
+  margin: auto;
+  max-width: 1400px;
+}
+
+.highlight-color {
+  height: 30px;
+}
+
+.label div {
+  color: black;
+}
+
+.label:hover{
+  cursor: pointer;
+  border-color: black;
+  border-width: 3px;
+}
+
+.label-name {
+  width: 70%;
+  float: left;
+  word-wrap: break-word;
+}
+
+#label-selected {
+  border-color: black;
+  border-width: 3px;
+}
+
+.add-btn:hover {
+  cursor: pointer;
+}
+
+.annotation {
+  color: black;
+  text-decoration: none;
+}
+
+#doc-view {
+  margin: 0;
+  padding: 0;
+  resize: none; 
+  width: 100%; 
+  border:none; 
+  background-color: transparent;
+}
+
+#label-list {
+  max-height: 26vh;
+}
+
+#doc-list {
+  max-height: 26vh;
+}
+
+.doc-name:hover {
+  cursor: pointer;
+}
+
+#export-container {
+  height: 5vh;
+}
+
+#annota-list {
+  max-height: 75vh;
+}
+
+.sticky {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 64px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.hide-scroll {
+  overflow-y: hidden;
+}
+
+.hide-scroll:hover {
+  overflow-y: auto;
+}
