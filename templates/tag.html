@@ -88,6 +88,15 @@
       <!-- Center Highlight Area -->
       <div class="col-lg-8">
         <div class="container">
+          <!-- Search form -->
+          <div class="border rounded-lg my-3 mx-4 bg-light">
+              <form class="form-inline">
+                  <button id="plain-text" type="button" class="btn btn-mdb-color focus active" data-toggle="button" aria-pressed="true" autocomplete="off">Plain Text</button>
+                  <button id="regex" type="button" class="btn btn-mdb-color" data-toggle="button" aria-pressed="false" autocomplete="off">Regular Expression</button>
+                  <input id="search-bar" class="form-control" type="text" placeholder="Search" aria-label="Search">
+                  <i class="fas fa-search" aria-hidden="true"></i>
+              </form>
+          </div> 
           <div class="border rounded-lg my-2 bg-light">
             <div id="content" class="my-5 mx-4">
               <textarea id="doc-view" readonly="true"></textarea>
@@ -144,6 +153,7 @@
   <script src="{% static "js/classes/doc.js" %}"></script>
   <script src="{% static "js/classes/tagmodel.js" %}"></script>
   <script src="{% static "js/app.js" %}"></script>
+  <script src="{% static "js/search.js" %}"></script>
 </body>
 
 </html>
