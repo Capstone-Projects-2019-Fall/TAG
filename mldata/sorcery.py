@@ -34,7 +34,7 @@ def magic(input):
     data = json.loads(input)
     labels = []
     for document in data:
-        doc = documentClass(document['title'], document['text'].replace('\n', ' '))     # parse text
+        doc = documentClass(document['title'], re.sub(r'\s', ' ', document['text']))     # parse text
         documents.append(doc)
         annotations = document['annotations']                                           # get annotations for document
         for annotation in annotations:
@@ -46,7 +46,7 @@ def magic(input):
             annoWords = annotation['content'].split(' ')                                # split annotation words
             for word in annoWords:                                                      # check each word in annotation words
                 cleanWord = word.strip().strip(string.punctuation)                      # remove whitespace and punctuation
-                if cleanWord == 'the' or cleanWord == 'a' or cleanWord == 'an':         # ignore articles
+                if cleanWord == 'the' or cleanWord == 'a' or cleanWord == 'an' or cleanWord == 'is':    # ignore articles
                     continue
                 elif not cleanWord in labels[index].words:                              # add word if not in labels words list
                     labels[index].words.add(cleanWord)
@@ -84,7 +84,8 @@ def printArr(arr):
     string = '['
     for thing in arr:
         string += str(thing) + ','
-    string = string[:-1]
+    if len(string) != 1:
+        string = string[:-1]
     string += ']'
     return(string)
 

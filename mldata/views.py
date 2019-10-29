@@ -32,5 +32,5 @@ def index(request):
         print("Elapsed Time: " + str(endTime-startTime))
         return HttpResponse(output, content_type='application/json')
 
-def APItest(request):
-    return render(request, 'APItest.html')
+# def APItest(request):
+#     return render(request, 'APItest.html')

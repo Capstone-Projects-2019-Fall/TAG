@@ -12,7 +12,7 @@ $(document).on('contextmenu', function () {
 });
 
 // download highlights
-$('#download').click(function () {
+$('#download').on('click', function () {
   console.log("JSON download requested...");
   // no files found
   if (tagModel.openDocs.length === 0) {
@@ -27,6 +27,34 @@ $('#download').click(function () {
   document.getElementById('download_link').href = url;
   document.getElementById('download_link').click();
   window.URL.revokeObjectURL(url);
+});
+
+// send to mldata
+$('#sendML').on('click', function () {
+  // no files found
+  if (tagModel.openDocs.length === 0) {
+    alert('Error: No data to send!');
+    return;
+  }
+  // prepare data
+  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
+  var formData = new FormData();
+  formData.append("jsonUpload", blob);
+  $.ajax({
+    type: "POST",
+    url: "mldata",
+    contentType: false,
+    processData: false,
+    cache: false,
+    enctype: "multipart/form-data",
+    data: formData,
+    success: function (data) {
+      console.log("Data received from algorithm:\n" + JSON.stringify(data));
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+      console.log("Send failed: \nStatus: " + textStatus + "\nError: " + errorThrown);
+    }
+  });
 });
 
 // on file change, add document
