@@ -7,7 +7,6 @@ class Doc {
     this.annotations = [];
   }
 
-
   getAnnotationsAtPos(position){
     return this.annotations.filter(function (annotation) {
       return annotation.containsCharacterAt(position);

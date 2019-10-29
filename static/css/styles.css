@@ -49,6 +49,8 @@ h2 {
 
 .colorChange:hover {
   cursor: pointer;
+  border-color: black;
+  border-width: 3px;
 }
 
 .colorChangePicker {
@@ -85,6 +87,10 @@ h2 {
 
 #anno-list {
   max-height: 75vh;
+}
+
+.add-btn:hover {
+  cursor: pointer;
 }
 
 .annotation {
