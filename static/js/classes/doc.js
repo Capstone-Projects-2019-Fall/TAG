@@ -8,14 +8,15 @@ class Doc {
   }
 
   getAnnotationsAtPos(position){
-    return this.annotations.filter(function (annotation) {
+    let annotations =  this.annotations.filter(function (annotation) {
       return annotation.containsCharacterAt(position);
     });
+    return annotations
   }
 
-  removeAnnotation(annotationToRemove){
+  updateAnnotationList(blacklistAnnotation){
     this.annotations = this.annotations.filter(function (annotation) {
-      return annotation != annotationToRemove;
+      return annotation !== blacklistAnnotation;
     }
   );
   }

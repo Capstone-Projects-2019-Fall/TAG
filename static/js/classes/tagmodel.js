@@ -12,12 +12,22 @@ class TagModel {
   // ----- documents ----- //
 
   addDoc(doc) {
+    console.log("Adding document: '" + doc.title + "'");
     this.openDocs.push(doc);
-    return this.openDocs.length;
   }
 
   setCurrentDoc(name) {
+    console.log("Set current document to: '" + name + "'");
     this.currentDoc = this.openDocs.find(doc => doc.title === name);
+  }
+
+  docIndex(name) {
+    for (let index = 0; index < this.openDocs.length; index++) {
+      if (this.openDocs[index].title === name) {
+        return index;
+      }
+    }
+    return -1;
   }
 
   deleteDoc() {
@@ -30,11 +40,13 @@ class TagModel {
 
   // ----- annotations ----- //
 
-  addAnnotation(range, currentLabel) {
+  addAnnotation(range) {
     //validate annotation first, throw error if dumbo
-    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
-    let annotationToAdd = new Annotation(range, content, currentLabel);
+    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition).trim();
+    let annotationToAdd = new Annotation(range, content, this.currentCategory);
+    console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + this.currentCategory + "]");
     this.currentDoc.annotations.push(annotationToAdd);
+    return annotationToAdd;
   }
 
   getAnnotationsAtPos(position) {
@@ -51,7 +63,8 @@ class TagModel {
   }
 
   removeAnnotation(annotation) {
-    this.currentDoc.removeAnnotation(annotation);
+    console.log("Removing annotation: '" + annotation.content + "' from [" + this.currentCategory + "]");
+    this.currentDoc.updateAnnotationList(annotation);
     this.clearDeleteList();
   }
 
@@ -59,10 +72,11 @@ class TagModel {
 
   addCategory(name, color) {
     let newCategory = new Category(name, color);
+    console.log("Adding category: [" + newCategory.name + "]");
     this.categories.push(newCategory);
   }
 
-  checkCategory(name) {
+  categoryIndex(name) {
     for (let index = 0; index < this.categories.length; index++) {
       if (this.categories[index].name === name) {
         return index;
@@ -81,9 +95,11 @@ class TagModel {
       })
     });
 
-    // update name in categories list
-    this.categories.find(category => category.name == this.currentCategory).name = newName;
+    //then update the label name in the category list
+    this.categories.find(category => category.name === this.currentCategory).name = newName;
     this.currentCategory = newName;
+
+    console.log("Relabeled " + count + " annotations.");
   }
 
   deleteCategory() {
@@ -105,7 +121,7 @@ class TagModel {
 
   changeColor(color) {
     // update color in category list
-    this.categories.find(category => category.name == this.currentCategory).color = color;
+    this.categories.find(category => category.name === this.currentCategory).color = color;
   }
 
   getColor(labelname) {

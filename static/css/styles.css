@@ -109,6 +109,10 @@ h2 {
   top: 64px;
 }
 
+ul {
+  list-style-type: none;
+}
+
 .hide-scroll {
   overflow-y: hidden;
 }
