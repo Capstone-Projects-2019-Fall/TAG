@@ -15,4 +15,12 @@ $("#regex").on("click", function(){
 $("#search-button").on("click", function(){
     var searching = document.getElementById("search-box").value;
     console.log("Searching for " + searching + " in document");
+
+    var text = document.getElementById("doc-view").value;
+
+    if(searching.length > 0 && text.indexOf(searching) > -1) {
+        console.log("Success! " + searching + " found in current document");
+    } else {
+        console.log("Failure... " + searching + " not found in current document");
+    }
 });
