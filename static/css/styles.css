@@ -118,7 +118,7 @@ ul {
   overflow-y: auto;
 }
 
-#search-bar input[type=text]:focus:not([readonly]){
-  border: 1px solid #007bff;
-  box-shadow: 0 0 0 1px #007bff 
+button[aria-pressed="true"]{
+  background-color: green;
 }
+

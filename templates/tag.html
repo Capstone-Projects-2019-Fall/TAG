@@ -18,6 +18,7 @@
   <link href="{% static "css/styles.css" %}" rel="stylesheet">
   <link href="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.css" %}"
     rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -88,17 +89,22 @@
       <!-- Center Highlight Area -->
       <div class="col-lg-8">
         <div class="container">
-          <!-- Search form -->
-          <div class="border rounded-lg my-3 mx-4 bg-light">
-              <form class="form-inline">
-                  <button id="plain-text" type="button" class="btn btn-mdb-color focus active" data-toggle="button" aria-pressed="true" autocomplete="off">Plain Text</button>
-                  <button id="regex" type="button" class="btn btn-mdb-color" data-toggle="button" aria-pressed="false" autocomplete="off">Regular Expression</button>
-                  <input id="search-bar" class="form-control" type="text" placeholder="Search" aria-label="Search">
-                  <i class="fas fa-search" aria-hidden="true"></i>
-              </form>
-          </div> 
-          <div class="border rounded-lg my-2 bg-light">
-            <div id="content" class="my-5 mx-4">
+          <!-- Search form --> 
+          <div class="border rounded-lg my-2 bg-light">               
+            <div id="content" class="my-5 mx-4">   
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <button type="button" id="search-button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+                <input type="text" id="search-box" class="form-control" placeholder="Search..." aria-label="Search">
+                <div class="input-group-append">
+                  <button type="button" id="plain-text" data-toggle="button" aria-pressed="true">Plain Text</button>
+                </div>
+                <div class="input-group-append">
+                  <button type="button" id="regex" data-toggle="button" aria-pressed="false">Regular Expression</button>
+                </div>
+              </div>
+              <hr>    
               <textarea id="doc-view" readonly="true"></textarea>
             </div>
           </div>
