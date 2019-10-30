@@ -49,7 +49,8 @@ $('#sendML').on('click', function () {
     enctype: "multipart/form-data",
     data: formData,
     success: function (data) {
-      console.log("Data received from algorithm:\n" + JSON.stringify(data));
+      console.log("Data received from algorithm");
+      loadJsonData(data, true);
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
       console.log("Send failed: \nStatus: " + textStatus + "\nError: " + errorThrown);
@@ -325,7 +326,7 @@ function addDoc(doc) {
       value: doc.title,
       html: doc.title
     }));
-  renderTextareaHighlights()
+  renderTextareaHighlights();
   $('#doc-list').scrollTop($('#doc-list').prop('scrollHeight'));
 };
 
@@ -363,6 +364,7 @@ function addLabel(name, color = null) {
     $('head').append(
       $('<style/>', {
         id: name + '-style',
+        class: 'highlight-style',
         html: '.hwt-content .label_' + name + ' {background-color: ' + color + ';}'
       })
     );
@@ -431,6 +433,33 @@ function makeRandColor() {
   return "#000000".replace(/0/g, function () {
     return (~~(Math.random() * 10) + 6).toString(16);
   });
+}
+
+function loadJsonData(data, obliterate = false) {
+  console.log('Displaying new data from mlalgorithm');
+  if (obliterate) {
+    tagModel = new TagModel();
+    $('.label').remove();
+    $('.highlight-style').remove();
+    $('.doc-name').remove();
+  }
+  // add remove annotation from annotation list
+  data.forEach(function (doc) {
+    var newDoc = new Doc(doc.title, doc.text);
+    addDoc(newDoc);
+    tagModel.currentDoc = newDoc;
+    doc.annotations.forEach(function (annotation) {
+      if (tagModel.categoryIndex(annotation.label) === -1) {
+        addLabel(annotation.label);
+      };
+      tagModel.addAnnotation(annotation.range, annotation.label);
+    });
+  });
+
+  textArea.html(tagModel.currentDoc.text);
+  renderTextareaHighlights();
+  resize();
+  $(window).scrollTop(0);
 }
 
 String.prototype.trunc = function (n, truncAfterWord = false) {
