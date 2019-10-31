@@ -30,6 +30,12 @@
         aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="input-group mb-0">
+          <div class="input-group-prepend">
+            <button type="button" id="search-button"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </div>
+          <input type="text" id="search-box" class="form-control" placeholder="Search document..." aria-label="Search">
+        </div>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
@@ -92,18 +98,6 @@
           <!-- Search form --> 
           <div class="border rounded-lg my-2 bg-light">               
             <div id="content" class="my-5 mx-4">   
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <button type="button" id="search-button"><i class="fa fa-search" aria-hidden="true"></i></button>
-                </div>
-                <input type="text" id="search-box" class="form-control" placeholder="Search..." aria-label="Search">
-                <div class="input-group-append">
-                  <button type="button" id="plain-text" data-toggle="button" aria-pressed="true">Plain Text</button>
-                </div>
-                <div class="input-group-append">
-                  <button type="button" id="regex" data-toggle="button" aria-pressed="false">Regular Expression</button>
-                </div>
-              </div>
               <hr>    
               <textarea id="doc-view" readonly="true"></textarea>
             </div>
