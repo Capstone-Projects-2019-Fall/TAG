@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 # replace sorcery with machine learning program (.py)
 from mldata.sorcery import magic
+from mldata.TAG_ner_v1 import main
 from django.shortcuts import render
 import time
 
@@ -30,6 +31,9 @@ def index(request):
         output = magic(jsonData)  # replace with machine learning algorithm
         endTime = time.time()
         print("Elapsed Time: " + str(endTime-startTime))
+        print("Preparing to run main TAG_ner_v1 (spacy stuff)")
+        main()
+        print("main from spacy stuff finished")
         return HttpResponse(output, content_type='application/json')
 
 # def APItest(request):
