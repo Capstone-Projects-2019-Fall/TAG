@@ -42,7 +42,7 @@ class TagModel {
 
   addAnnotation(range, category) {
     //validate annotation first, throw error if dumbo
-    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition).trim();
+    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
     let annotationToAdd = new Annotation(range, content, category);
     console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + category + "]");
     this.currentDoc.annotations.push(annotationToAdd);

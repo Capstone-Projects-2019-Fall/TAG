@@ -6,11 +6,6 @@ var tagModel = new TagModel();
 
 // --------------events-------------- //
 
-// prevent right clicking
-$(document).on('contextmenu', function () {
-  event.preventDefault();
-});
-
 // download highlights
 $('#download').on('click', function () {
   console.log("JSON download requested...");
@@ -65,7 +60,7 @@ $("#fileInputControl").on("change", function () {
   $(document.body).css('cursor', 'wait');
   [].forEach.call(this.files, function (file) {
     // clean up name of string
-    let fileName = file.name.replace(/\s/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
+    let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
     if (tagModel.docIndex(fileName) === -1) {
       // not a text file
       if (fileName.match(/.*\.txt$/g) === null) {
@@ -75,7 +70,7 @@ $("#fileInputControl").on("change", function () {
       // read, create, and add file
       let fileReader = new FileReader(file);
       fileReader.onload = function () {
-        let newDoc = new Doc(fileName, fileReader.result);
+        let newDoc = new Doc(fileName, fileReader.result.replace(/\s+/g, " "));
         console.log("Created Doc: " + fileName);
         addDoc(newDoc);
       };
@@ -113,21 +108,23 @@ textArea.on('mouseup', function (e) {
     }
     renderTextareaHighlights();
   }
-  // on right click, show annotations at position to delete
-  else if (e.which === 3) {
-    let position = textArea[0].selectionStart;
-    let annotations = tagModel.getAnnotationsAtPos(position);
-    if (annotations.length > 0) {
-      $('#delete-menu').append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
-      for (let i = 0; i < annotations.length; i++) {
-        $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(annotations[i].label) + ';"><b>' + annotations[i].label.trunc(10) + ': </b>' + annotations[i].content.trunc(20) + '</li>');
-      }
-      $('#delete-menu').show(100).
-        css({
-          top: e.pageY + 'px',
-          left: e.pageX + 'px'
-        });
+});
+
+// on right click, show annotations at position to delete
+textArea.on('contextmenu', function (e) {
+  event.preventDefault();
+  let position = textArea[0].selectionStart;
+  let annotations = tagModel.getAnnotationsAtPos(position);
+  if (annotations.length > 0) {
+    $('#delete-menu').append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
+    for (let i = 0; i < annotations.length; i++) {
+      $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(annotations[i].label) + ';"><b>' + annotations[i].label.trunc(10) + ': </b>' + annotations[i].content.trunc(20) + '</li>');
     }
+    $('#delete-menu').show(100).
+      css({
+        top: e.pageY + 'px',
+        left: e.pageX + 'px'
+      });
   }
 });
 
@@ -169,17 +166,20 @@ $('#label-list').on('mouseup', '.label', function (e) {
   tagModel.currentCategory = this.getAttribute('value');
   $('.label').attr('id', '');                   //remove label-selected from all
   $(this).attr('id', 'label-selected');         //add label-selected to clicked
-
-  if (e.which === 3) {
-    $('#delete-menu').append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
-    $('#delete-menu').show(100).
-      css({
-        top: e.pageY + 'px',
-        left: e.pageX + 'px'
-      });
-  }
 });
 
+// on label right click
+$('#label-list').on('contextmenu', function (e) {
+  event.preventDefault();
+  $('#delete-menu').append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
+  $('#delete-menu').show(100).
+    css({
+      top: e.pageY + 'px',
+      left: e.pageX + 'px'
+    });
+});
+
+// clicked delete label
 $("#delete-menu").on('click', '.delete-label', function () {
   tagModel.deleteCategory();
   console.log('Category Deleted');
@@ -274,17 +274,20 @@ $('#doc-list').on('mouseup', '.doc-name', function (e) {
   renderTextareaHighlights();
   resize();
   $(window).scrollTop(0);
-
-  if (e.which === 3) {
-    $('#delete-menu').append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
-    $('#delete-menu').show(100).
-      css({
-        top: e.pageY + 'px',
-        left: e.pageX + 'px'
-      });
-  }
 });
 
+// right click document list
+$('#doc-list').on('contextmenu', function (e) {
+  event.preventDefault();
+  $('#delete-menu').append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
+  $('#delete-menu').show(100).
+    css({
+      top: e.pageY + 'px',
+      left: e.pageX + 'px'
+    });
+});
+
+// clicked delete document
 $("#delete-menu").on('click', '.delete-doc', function () {
   tagModel.deleteDoc();
   console.log('Document Deleted');
