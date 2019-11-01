@@ -70,7 +70,7 @@ $("#fileInputControl").on("change", function () {
       // read, create, and add file
       let fileReader = new FileReader(file);
       fileReader.onload = function () {
-        let newDoc = new Doc(fileName, fileReader.result.replace(/\s+/g, " "));
+        let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
         console.log("Created Doc: " + fileName);
         addDoc(newDoc);
       };
