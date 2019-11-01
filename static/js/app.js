@@ -143,7 +143,6 @@ $(document).on("mousedown", function (e) {
 $("#delete-menu").on('click', '.delete-anno', function () {
   let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
   tagModel.removeAnnotation(tagModel.getDeleteItem(deleteIndex));
-  console.log('Annotation Deleted');
   renderTextareaHighlights();
   // Hide it AFTER the action was triggered
   $("#delete-menu").hide(100);

@@ -97,9 +97,8 @@ class TagModel {
 
     //then update the label name in the category list
     this.categories.find(category => category.name === this.currentCategory).name = newName;
+    console.log("Relabeled category: [" + this.currentCategory + "] to [" + newName + "]");
     this.currentCategory = newName;
-
-    console.log("Relabeled annotation to " + newName + ".");
   }
 
   deleteCategory() {
