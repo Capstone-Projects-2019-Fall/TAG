@@ -48,7 +48,7 @@ def magic(input):
                 index = len(labels)-1                                                   # update index number
             annoWords = annotation['content'].split()                                   # split annotation words
             for word in annoWords:                                                      # check each word in annotation words
-                cleanWord = word.strip().strip(string.punctuation)                      # remove whitespace and punctuation
+                cleanWord = word.strip().strip(string.punctuation).lower()              # remove whitespace and punctuation
                 if cleanWord == 'the' or cleanWord == 'a' or cleanWord == 'an' or cleanWord == 'is':    # ignore articles
                     continue
                 elif not cleanWord in labels[index].words:                              # add word if not in labels words list
@@ -59,7 +59,8 @@ def magic(input):
         for label in labels:                                                            # do each label
             coordsList = []
             for word in label.words:                                                    # check for each word
-                for m in re.finditer(word, doc.text):                                   # find start and end position of all instances
+                reWord = r'(?i)\b' + re.escape(word) + r'\b'
+                for m in re.finditer(reWord, doc.text):                                   # find start and end position of all instances
                     coordsList.append((m.start(), m.end()))
             coordsList.sort(key=lambda x: x[0])                                         # sort by start position
             currentCoords = coordsList[0]                                               # starting with first annotation
