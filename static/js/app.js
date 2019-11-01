@@ -3,6 +3,7 @@
 /* ---------- page setup ---------- */
 var textArea = $('#doc-view');
 var tagModel = new TagModel();
+var deleteList = [];
 
 // --------------events-------------- //
 
@@ -114,11 +115,12 @@ textArea.on('mouseup', function (e) {
 textArea.on('contextmenu', function (e) {
   event.preventDefault();
   let position = textArea[0].selectionStart;
-  let annotations = tagModel.getAnnotationsAtPos(position);
-  if (annotations.length > 0) {
+  deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
+  
+  if (deleteList.length > 0) {
     $('#delete-menu').append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
-    for (let i = 0; i < annotations.length; i++) {
-      $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(annotations[i].label) + ';"><b>' + annotations[i].label.trunc(10) + ': </b>' + annotations[i].content.trunc(20) + '</li>');
+    for (let i = 0; i < deleteList.length; i++) {
+      $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(deleteList[i].label) + ';"><b>' + deleteList[i].label.trunc(10) + ': </b>' + deleteList[i].content.trunc(20) + '</li>');
     }
     $('#delete-menu').show(100).
       css({
@@ -133,7 +135,6 @@ $(document).on("mousedown", function (e) {
   // If the clicked element is not the menu
   if ($(e.target).parents("#delete-menu").length === 0) {
     // Hide it
-    tagModel.clearDeleteList();
     $("#delete-menu").hide(100);
     $("#delete-menu").text('')
   };
@@ -142,7 +143,7 @@ $(document).on("mousedown", function (e) {
 // on annotation delete menu click, delete selected annotation
 $("#delete-menu").on('click', '.delete-anno', function () {
   let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
-  tagModel.removeAnnotation(tagModel.getDeleteItem(deleteIndex));
+  tagModel.removeAnnotation(deleteList[deleteIndex]);
   renderTextareaHighlights();
   // Hide it AFTER the action was triggered
   $("#delete-menu").hide(100);
