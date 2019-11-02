@@ -102,8 +102,6 @@ textArea.on('mouseup', function (e) {
     if (range.startPosition < range.endPosition) {
       let annotationCreated = tagModel.addAnnotation(range, tagModel.currentCategory);
       console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
-      $('#recent').text(annotationCreated.content.trunc(50, true));
-      addToList(annotationCreated.content);
     } else {
       return;
     }
@@ -116,7 +114,7 @@ textArea.on('contextmenu', function (e) {
   event.preventDefault();
   let position = textArea[0].selectionStart;
   deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
-  
+
   if (deleteList.length > 0) {
     $('#delete-menu').append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
     for (let i = 0; i < deleteList.length; i++) {
@@ -242,7 +240,7 @@ $('#label-list').on('blur', '.label-name', function () {
 
 //invoke colorpicker on icon click
 $('#label-list').on('click', '.colorChange', function () {
-  console.log('dropperClicked!');
+  console.log('Color picker clicked for: [' + tagModel.currentCategory + ']');
   $('#colorChangePicker').click();   //invoke color picker
 });
 
@@ -257,6 +255,7 @@ $('#colorChangePicker').on('change', function () {
   );
   tagModel.changeColor(this.value);
   this.value = "black";
+  renderTextareaHighlights();
 });
 
 // add document button
@@ -335,8 +334,23 @@ function addDoc(doc) {
 
 //Actually draws the highlights on the textarea.
 function renderTextareaHighlights() {
+  console.log("Rendering");
   //array to hold everything that needs to be highlighted in doc
   let highlights = [];
+
+  $('#anno-list').empty();
+  tagModel.categories.forEach(function (category) {
+    $('#anno-list').append(
+      $('<h6/>', {
+        html: category.name
+      })
+    ).append(
+      $('<ul/>', {
+        class: 'anno-group',
+        value: category.name
+      })
+    );
+  });
 
   //loop through the stored annotations and append to the array as a dictionary
   if (tagModel.currentDoc != null) {
@@ -346,7 +360,23 @@ function renderTextareaHighlights() {
         className: 'label_' + annotation.label
       };
       highlights.push(single_highlight);
+
+      $('.anno-group[value="' + annotation.label + '"]').append(
+        $('<li/>', {
+          class: 'annotation roundCorner',
+          style: 'background-color: ' + tagModel.getColor(annotation.label)
+        }).text(annotation.content.trunc(20, true))
+      );
     });
+
+    if (tagModel.currentDoc.annotations.length > 0) {
+      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length-1]
+      $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
+      $('#recentArea').css('display', 'block');
+    } else {
+      $('#recent').empty();
+      $('#recentArea').css('display', 'none');
+    }
   }
 
   //then highlight based on that array
@@ -389,19 +419,6 @@ function addLabel(name, color = null) {
     // go to new label's postion
     $('#label-list').scrollTop($('#label-list').prop('scrollHeight'));
 
-    // add to annotation list
-    $('#anno-list').append(
-      $('<h4/>', {
-        class: 'ml-2',
-        html: name
-      })
-    ).append(
-      $('<div/>', {
-        class: 'list-group',
-        value: name
-      })
-    );
-
     // first color => make current category the color
     if (tagModel.categories.length === 1) {
       tagModel.currentCategory = name;
@@ -409,15 +426,6 @@ function addLabel(name, color = null) {
     }
   } else {
     console.log('Failed to add label "' + name + '": label already exists!');
-  }
-}
-
-function addToList(content) {
-  if (tagModel.currentCategory != null) {
-    $('.list-group[value="' + tagModel.currentCategory + '"]').append(
-      $('<ul/>').text(content.trunc(20, true))
-    );
-    console.log('Success!\nAdded ' + content + ' to ' + tagModel.currentCategory + ' annotation list.');
   }
 }
 
