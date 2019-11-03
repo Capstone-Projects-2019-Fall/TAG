@@ -157,10 +157,8 @@ $('#add-label').on('click', function () {
   addLabel(newLabel);
 });
 
-//change the label selected
-$('#label-list').on('mouseup', '.label', function (e) {
-  console.log("Selected label: [" + this.getAttribute('value') + "]");
-
+//change the document's label context
+$('#label-list').on('click', '.label', function () {
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
   $('.label').attr('id', '');                   //remove label-selected from all
