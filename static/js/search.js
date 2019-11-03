@@ -5,7 +5,15 @@ $("#search-button").on("click", function(){
         console.log("Searching to highlight");
         // Get the text the user is searching for
         var searching = document.getElementById("search-box").value;
-        var regex = new RegExp(searching, 'g');
+
+        // Get flags selected from dropdown;
+        var flags = [];
+        $.each($("input[name='flag']:checked"), function(){
+            flags.push($(this).val());
+        });
+        console.log("Flags: " + flags.join(''));
+
+        var regex = new RegExp("\\b" + searching + "\\b", flags.join(''));
         console.log("Searching for " + searching + " in document"); 
 
         //Get the contents of the entire document
@@ -34,7 +42,7 @@ $("#search-button").on("click", function(){
     } else if ($("#search-type").children("option:selected").val() === "delete") {
         console.log("Searching to delete.");
         var searching = document.getElementById("search-box").value;
-        var regex = new RegExp(searching, 'g');
+        var regex = new RegExp("\\b" + searching, 'g');
         console.log("Searching for " + searching + " in document"); 
 
         //Get the contents of the entire document
@@ -65,7 +73,15 @@ $("#search-box").on("keypress", function(e){
             console.log("Searching to highlight");
             // Get the text the user is searching for
             var searching = document.getElementById("search-box").value;
-            var regex = new RegExp(searching, 'g');
+
+            // Get flags selected from dropdown;
+            var flags = [];
+            $.each($("input[name='flag']:checked"), function(){
+                flags.push($(this).val());
+            });
+            console.log("Flags: " + flags.join(''));
+
+            var regex = new RegExp("\\b" + searching + "\\b", flags.join(''));
             console.log("Searching for " + searching + " in document"); 
 
             //Get the contents of the entire document
@@ -116,3 +132,5 @@ $("#search-box").on("keypress", function(e){
         }
     } 
 });
+
+

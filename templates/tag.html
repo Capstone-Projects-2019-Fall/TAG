@@ -41,6 +41,21 @@
                 <option value="delete">Search to Delete</option>
               </select>
             </div>
+            <div class="input-group-append">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="regex-flags" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Flags
+                    </button>
+                    <form class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="i"> Case-insensitive (i)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="g"> Global (g)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="m"> Multiline mode (m)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="s"> Dotall Mode (s)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="u"> Unicode Support (u)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="y"> Sticky Mode (y)</label>
+                    </form>
+                  </div>
+            </div>
         </div>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
@@ -160,6 +175,7 @@
   <script src="{% static "js/classes/tagmodel.js" %}"></script>
   <script src="{% static "js/app.js" %}"></script>
   <script src="{% static "js/search.js" %}"></script>
+  <script src="{% static "js/chosen.jquery.min.js" %}"></script>
 </body>
 
 </html>
