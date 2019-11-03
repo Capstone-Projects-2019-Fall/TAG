@@ -93,8 +93,6 @@ $('#add-label').on('click', function () {
 
 //change the document's label context
 $('#label-list').on('click', '.label', function () {
-  console.log("Selected label: [" + this.getAttribute('value') + "]");
-
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
   //remove label-selected from all
