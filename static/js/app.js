@@ -91,8 +91,10 @@ $('#add-label').on('click', function () {
   addLabel(newLabel);
 });
 
+let label_list = $("#label-list");
+
 //change the document's label context
-$('#label-list').on('click', '.label', function () {
+label_list.on('click', '.label', function () {
   console.log("Selected label: [" + this.getAttribute('value') + "]");
 
   //change label selection
@@ -104,15 +106,21 @@ $('#label-list').on('click', '.label', function () {
 });
 
 //edit label name
-$('#label-list').on('dblclick', '.label-name', function () {
+label_list.on('dblclick', '.label-name', function () {
   //enble editing
   this.contentEditable = true;
   //open textbox
   $(this).focus().select();
 });
 
+label_list.on('keypress', '.label-name', function (e) {
+    if(e.which === 13) {
+      $(this).blur();
+    }
+});
+
 //stopped editing label name
-$('#label-list').on('blur', '.label-name', function () {
+label_list.on('blur', '.label-name', function (e) {
   //disable editing
   this.contentEditable = false;
 
@@ -150,12 +158,12 @@ $('#label-list').on('blur', '.label-name', function () {
 });
 
 //invoke colorpicker on icon click
-$('#label-list').on('click', '.colorChange', function () {
+label_list.on('click', '.colorChange', function () {
   $(this).parent().children('input').click();   //invoke color picker
 });
 
 //change label color
-$('#label-list').on('change', '.colorChangePicker', function () {
+label_list.on('change', '.colorChangePicker', function () {
   console.log('Highlight color changed to: ' + this.value);
 
   //update colors on page
