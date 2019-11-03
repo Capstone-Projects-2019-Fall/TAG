@@ -192,8 +192,16 @@ $("#delete-menu").on('click', '.delete-label', function () {
   $("#delete-menu").hide(100);
 });
 
+let label_list = $("#label-list");
+
+label_list.on('keypress', '.label-name', function (e) {
+    if(e.which === 13) {
+      $(this).blur();
+    }
+});
+
 //edit label name
-$('#label-list').on('dblclick', '.label-name', function () {
+label_list.on('dblclick', '.label-name', function () {
   //enble editing
   this.contentEditable = true;
   //open textbox
@@ -201,7 +209,7 @@ $('#label-list').on('dblclick', '.label-name', function () {
 });
 
 //stopped editing label name
-$('#label-list').on('blur', '.label-name', function () {
+label_list.on('blur', '.label-name', function () {
   //disable editing
   this.contentEditable = false;
 
@@ -240,7 +248,7 @@ $('#label-list').on('blur', '.label-name', function () {
 });
 
 //invoke colorpicker on icon click
-$('#label-list').on('click', '.colorChange', function () {
+label_list.on('click', '.colorChange', function () {
   console.log('dropperClicked!');
   $('#colorChangePicker').click();   //invoke color picker
 });
