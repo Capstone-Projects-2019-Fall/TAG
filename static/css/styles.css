@@ -6,30 +6,10 @@ body, html {
   scroll-behavior: smooth;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
- 
-::-webkit-scrollbar-thumb {
-  background: #888; 
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
-}
-
 body {
   overflow-x: hidden;
   padding-top: 56px;
   background: #141516;
-}
-
-h2 {
-  word-wrap: break-word;
 }
 
 #content-body {
@@ -37,38 +17,40 @@ h2 {
   max-width: 1400px;
 }
 
-.highlight-color {
-  height: 30px;
-}
-
-.label div {
-  color: black;
-}
-
-.label:hover{
-  cursor: pointer;
-  border-color: black;
-  border-width: 3px;
-}
-
-.label-name {
-  width: 70%;
-  float: left;
+h2 {
   word-wrap: break-word;
-}
-
-#label-selected {
-  border-color: black;
-  border-width: 3px;
 }
 
 .add-btn:hover {
   cursor: pointer;
 }
 
-.annotation {
-  color: black;
-  text-decoration: none;
+#label-list {
+  max-height: 26vh;
+}
+
+.label-name {
+  word-wrap: break-word;
+}
+
+.label-name:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#label-selected {
+  border: 3px solid black;
+}
+
+.colorChange {
+  float: right;
+  margin-left: 5px;
+}
+
+.colorChange:hover {
+  cursor: pointer;
+  border-color: black;
+  border-width: 3px;
 }
 
 #doc-view {
@@ -80,24 +62,41 @@ h2 {
   background-color: transparent;
 }
 
-#label-list {
-  max-height: 26vh;
-}
-
 #doc-list {
   max-height: 26vh;
+  word-wrap: break-word;
+  overflow: hidden;
 }
 
 .doc-name:hover {
   cursor: pointer;
+  text-decoration: underline;
+}
+
+#doc-selected {
+  text-decoration: underline;
 }
 
 #export-container {
   height: 5vh;
 }
 
-#annota-list {
+#anno-list {
   max-height: 75vh;
+}
+
+.add-btn:hover {
+  cursor: pointer;
+}
+
+.annotation {
+  color: black;
+  text-decoration: none;
+}
+
+.annotation:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .sticky {
@@ -116,4 +115,62 @@ ul {
 
 .hide-scroll:hover {
   overflow-y: auto;
+}
+
+#delete-menu {
+  display: none;
+  z-index: 2;
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid #6b6b6b;
+  background: #FAFAFA;
+  border-radius: 5px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  
+}
+
+#delete-menu h6 {
+  margin: 10px 10px 6px;
+  font-weight: bold;
+}
+
+#delete-menu li {
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+#delete-menu li:hover {
+  text-decoration: underline;
+}
+
+.noDisplay {
+  height:0; 
+  width:0; 
+  visibility: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+@media (max-width: 1090px) {
+  .sticky {
+    position: static;
+    top: auto;
+  }
 }
