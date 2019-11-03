@@ -20,13 +20,13 @@ QUnit.module( "Document", () => {
   docMock.annotations.push(annotation3);
 
   test( "Get Annotation", function(assert) {
-    assert.ok( docMock.getAnnotation(0) === annotation1, "Annotation 1 indexed successfully" );
-    assert.ok( docMock.getAnnotation(100) === annotation2, "Annotation 2 indexed successfully" );
-    assert.ok( docMock.getAnnotation(250) === annotation3, "Annotation 3 indexed successfully" );
+    assert.ok( docMock.getAnnotationsAtPos(0)[0] === annotation1, "Annotation 1 indexed successfully" );
+    assert.ok( docMock.getAnnotationsAtPos(100)[0] === annotation2, "Annotation 2 indexed successfully" );
+    assert.ok( docMock.getAnnotationsAtPos(250)[0] === annotation3, "Annotation 3 indexed successfully" );
 
-    assert.ok( docMock.getAnnotation(250) !== annotation2, "Indexed annotation is not an incorrect annotation" );
-    assert.ok( docMock.getAnnotation(100) !== annotation1, "Indexed annotation is not an incorrect annotation" );
-    assert.ok( docMock.getAnnotation(0) !== annotation3, "Indexed annotation is not an incorrect annotation" );
+    assert.ok( docMock.getAnnotationsAtPos(250) !== annotation2, "Indexed annotation is not an incorrect annotation" );
+    assert.ok( docMock.getAnnotationsAtPos(100) !== annotation1, "Indexed annotation is not an incorrect annotation" );
+    assert.ok( docMock.getAnnotationsAtPos(0) !== annotation3, "Indexed annotation is not an incorrect annotation" );
   });
 
   test( "Update Annotation List", function(assert) {
