@@ -59,11 +59,12 @@ QUnit.module( "TAG Model", () => {
   });
 
   QUnit.module( "Annotations", () => {
-    let docMock = new Doc("titleTest", "lorem ipsum dolor sit amet norum dictum sera");
-    let cat = new Category("testCat", "testColor");
-    let expectedAnno = new Annotation({startPosition: 0, endPosition: 5}, "lorem", cat);
+
 
     test("Add Annotation", function(assert) {
+      let docMock = new Doc("titleTest", "lorem ipsum dolor sit amet norum dictum sera");
+      let cat = new Category("testCat", "testColor");
+      let expectedAnno = new Annotation({startPosition: 0, endPosition: 5}, "lorem", cat);
       let tag = new TagModel();
       tag.currentCategory = cat;
       tag.addDoc(docMock);
@@ -79,6 +80,9 @@ QUnit.module( "TAG Model", () => {
     });
 
     test("Remove Annotation", function(assert) {
+      let docMock = new Doc("titleTest", "lorem ipsum dolor sit amet norum dictum sera");
+      let cat = new Category("testCat", "testColor");
+      let expectedAnno = new Annotation({startPosition: 0, endPosition: 5}, "lorem", cat);
       let tag = new TagModel();
       tag.currentCategory = cat;
       tag.addDoc(docMock);
