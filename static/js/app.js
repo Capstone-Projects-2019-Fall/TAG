@@ -180,7 +180,7 @@ $('#add-label').on('click', function () {
 });
 
 //change the document's label context
-$('#label-list').on('click', '.label', function () {
+$('#label-list').on('mouseup', '.label', function () {
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
   $('.label').attr('id', '');                   //remove label-selected from all
