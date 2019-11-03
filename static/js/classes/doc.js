@@ -7,17 +7,11 @@ class Doc {
     this.annotations = [];
   }
 
-  getAnnotation(position){
+  getAnnotationsAtPos(position){
     let annotations =  this.annotations.filter(function (annotation) {
       return annotation.containsCharacterAt(position);
     });
-
-    if(annotations.length !== 0) {
-      return annotations.pop();
-    }
-    else {
-      console.log("Invalid highlight removal!")
-    }
+    return annotations
   }
 
   updateAnnotationList(blacklistAnnotation){
