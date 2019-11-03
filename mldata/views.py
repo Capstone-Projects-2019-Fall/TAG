@@ -1,39 +1,36 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from mldata.fakeSpacy import MLAlgorithm # replace fakeSpacy with machine learning program (.py)
+# replace sorcery with machine learning program (.py)
+from mldata.sorcery import magic
+from django.shortcuts import render
+import time
 
-@csrf_exempt 
+@csrf_exempt
 def index(request):
     # get request
-    if request.method == 'GET':     # remove GET request before deploying
-        # try and get input from url
-        input = request.GET.get('input', '')
-        # no input
-        # return directions to use WebAPI
-        if input == '':
-            noInputResponse = 'Welcome to the our totally working api! \n'
-            noInputResponse += 'Add "?input=" then some json to the url to use the api! \n'
-            noInputResponse += 'Or send a POST request with the file attached as "file" \n'
-            return HttpResponse(noInputResponse)
-        # did get input
-        # prepare data
-        try:
-            data = json.loads(input)
-        except json.decoder.JSONDecodeError:
-            return HttpResponse('Json formatted incorrectely! Please fix then try again!')
-        jsonData = json.dumps(data)
+    if request.method == 'GET':
+        noInputResponse = 'Welcome to the our totally working api! \n'
+        noInputResponse += 'To use our API, send a POST request with a JSON file attached as "jsonUpload" in form data'
+        return HttpResponse(noInputResponse)
     # post request
     elif request.method == 'POST':
+        startTime = time.time()
         # get file
-        xfile = request.FILES['file']
+        xfile = request.FILES['jsonUpload']
         # did get input
         # prepare data
         try:
             data = json.loads(xfile.read())
+            print(data)
         except json.decoder.JSONDecodeError:
             return HttpResponse('Json formatted incorrectely! Please fix then try again!')
         jsonData = json.dumps(data)
+        # return data from machine learning algorithm
+        output = magic(jsonData)  # replace with machine learning algorithm
+        endTime = time.time()
+        print("Elapsed Time: " + str(endTime-startTime))
+        return HttpResponse(output, content_type='application/json')
 
-    # return data from machine learning algorithm
-    return HttpResponse(MLAlgorithm(jsonData), content_type='application/json')
+# def APItest(request):
+#     return render(request, 'APItest.html')
