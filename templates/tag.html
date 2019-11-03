@@ -19,6 +19,8 @@
   <link href="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.css" %}"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="shortcut icon" href="#" />
+
 </head>
 
 <body>
@@ -97,17 +99,16 @@
             <div id="Documents" class="col-lg-12 mt-2 mb-3">
               <h2 class="mt-3">Documents
                 <div id="add-document" class='add-btn' style="float: right;">+</div>
-                <input type="file" id="fileInputControl" accept="text/plain" style="display: none;">
               </h2>
               <hr>
               <div id="doc-list" class="ml-2 hide-scroll"></div> <!-- Important -->
             </div>
           </div>
-          <div id="export-container" class="my-3 row">
-            <div class="col-lg-3"></div>
-            <button id="download" type="button" class="btn btn-primary col-lg-6">Download</button>
-            <a id="download_link" download="annotations.json" href=”” ></a>
-            <div class="col-lg-3"></div>
+          <div class="my-3 row">
+            <div id="export-container" class="col-lg-12 btn-group">
+                <button id="download" type="button" class="btn btn-primary col-lg-6">Download</button>
+                <button id="sendML" type="button" class="btn btn-success col-lg-6">Annotate</button>
+            </div>
           </div>
         </div>
       </div>
@@ -127,7 +128,6 @@
       </div>
       <!-- /.col-lg-8 -->
 
-      <!-- Annotations -->
       <!-- Annotations -->
       <div class="col-lg-2">
         <div class="sticky">
@@ -153,6 +153,10 @@
     <!-- /.row -->
   </div>
   <!-- /.container -->
+  <ul id="delete-menu"></ul>
+  <input id="colorChangePicker" class="noDisplay" type="color">
+  <input id="fileInputControl" class="noDisplay" type="file" accept="text/plain" multiple>
+  <a id="download_link" class="noDisplay" download="annotations.json" href=””></a>
 
   <!-- Footer -->
   <footer class="py-2 bg-dark">
