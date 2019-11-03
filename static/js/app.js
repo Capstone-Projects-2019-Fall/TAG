@@ -59,26 +59,49 @@ $("#fileInputControl").on("change", function () {
   console.log("Found " + this.files.length + " files");
   // add each file to documents
   $(document.body).css('cursor', 'wait');
+  let invalidFiles = [];
   [].forEach.call(this.files, function (file) {
-    // clean up name of string
+    // clean up name of string and check if belongs
     let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
     if (tagModel.docIndex(fileName) === -1) {
-      // not a text file
-      if (fileName.match(/.*\.txt$/g) === null) {
-        console.log("Not a text file");
-        return
+      // check text file
+      if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
+        // read, create, and add file
+        let fileReader = new FileReader(file);
+        fileReader.onload = function () {
+          let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
+          console.log("Created Doc: " + fileName);
+          addDoc(newDoc);
+        };
+        fileReader.readAsText(file);
       }
-      // read, create, and add file
-      let fileReader = new FileReader(file);
-      fileReader.onload = function () {
-        let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
-        console.log("Created Doc: " + fileName);
-        addDoc(newDoc);
-      };
-      fileReader.readAsText(file);
-    } else {
-      console.log("File already uploaded")
+      // check json file
+      else if (fileName.match(/.*\.json$/g) !== null) {
+        // read, create, and add file
+        let fileReader = new FileReader(file);
+        fileReader.onload = function () {
+          console.log("Adding Json Doc: " + fileName);
+          let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
+          loadJsonData(JSON.parse(newJson));
+        };
+        fileReader.readAsText(file);
+      } 
+      // wasn't one of the file types
+      else {
+        invalidFiles.push("File type not supported for: '" + fileName + "'\n");
+      }
+    } 
+    // name matches one of the files already uploaded
+    else {
+      invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
     }
+  if (invalidFiles.length > 0) {
+    let warning = "";
+    invalidFiles.forEach(function(string) {
+      warning += string;
+    });
+    alert(warning);
+  }
   });
   $(document.body).css('cursor', 'default');
   this.value = "";
@@ -100,7 +123,7 @@ textArea.on('mouseup', function (e) {
       'endPosition': textArea[0].selectionEnd
     };
     if (range.startPosition < range.endPosition) {
-      let annotationCreated = tagModel.addAnnotation(range, tagModel.currentCategory);
+      tagModel.addAnnotation(range, tagModel.currentCategory);
       console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
     } else {
       return;
@@ -435,11 +458,12 @@ function resize() {
   textArea.height(textArea.prop('scrollHeight') + 1);
 }
 
-// make fake name // delete when done
+// generate random name
 function makeRandName() {
   return parseInt(Math.random() * Math.pow(10, 14)).toString(36);
 }
 
+// generate random color
 function makeRandColor() {
   return "#000000".replace(/0/g, function () {
     return (~~(Math.random() * 10) + 6).toString(16);
@@ -454,8 +478,18 @@ function loadJsonData(data, obliterate = false) {
     $('.highlight-style').remove();
     $('.doc-name').remove();
   }
+
+  // for invalid files
+  let invalidFiles = [];
+
   // add remove annotation from annotation list
   data.forEach(function (doc) {
+    // check if file belongs
+    if (tagModel.docIndex(doc.title) > -1) {
+      invalidFiles.push("File already uploaded for: '" + doc.title + "'\n");
+      return;
+    }
+    // create and add doc
     var newDoc = new Doc(doc.title, doc.text);
     addDoc(newDoc);
     tagModel.currentDoc = newDoc;
@@ -467,10 +501,20 @@ function loadJsonData(data, obliterate = false) {
     });
   });
 
+  // update everything
   textArea.html(tagModel.currentDoc.text);
   renderTextareaHighlights();
   resize();
   $(window).scrollTop(0);
+
+  // alert errors
+  if (invalidFiles.length > 0) {
+    let warning = "";
+    invalidFiles.forEach(function(string) {
+      warning += string;
+    });
+    alert(warning);
+  }
 }
 
 String.prototype.trunc = function (n, truncAfterWord = false) {
