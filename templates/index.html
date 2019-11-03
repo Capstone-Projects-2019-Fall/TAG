@@ -1,22 +1,13 @@
 <!DOCTYPE HTML>
-<!--
-	Hyperspace by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 {% load staticfiles %}
+
 <html>
 	<head>
-		<title>TAG Home</title>
+		<title>TAG - Text-Annotated GUI</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static "css/main.css" %}" />
 		<noscript><link rel="stylesheet" href="{% static "css/noscript.css" %}" /></noscript>
-
-          <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
 	</head>
 	<body class="is-preload">
 
@@ -26,9 +17,9 @@
 					<nav>
 						<ul>
 							<li><a href="#intro">Welcome</a></li>
-							<li><a href="#one">Who we are</a></li>
-							<li><a href="#two">What we do</a></li>
-							<li><a href="#three">Get in touch</a></li>
+							<li><a href="#one">About</a></li>
+							<li><a href="#two">Features</a></li>
+							<li><a href="#three">Contact</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -41,7 +32,7 @@
 					<section id="intro" class="wrapper style1 fullscreen fade-up">
 						<div class="inner">
 							<h1>Text-Annotated GUI</h1>
-							<p>Just another application created under the Skynet License.</p>
+							<p>Machine Learning document annotations for the average Joe.</p>
 							<ul class="actions">
 								<li><a href="{% url 'tag' %}" class="button scrolly">Start Annotating</a></li>
 							</ul>
@@ -51,38 +42,43 @@
 				<!-- One -->
 					<section id="one" class="wrapper style2 spotlights">
 						<section>
-							<a href="#" class="image"><img src="{% static "images/pic01.jpg" %}" alt="" data-position="center center" /></a>
+							<a href="#" class="image"><img src="{% static "images/pic01.png" %}" alt="" data-position="center center" /></a>
 							<div class="content">
 								<div class="inner">
-									<h2>Sed ipsum dolor</h2>
-									<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-									<ul class="actions">
-										<li><a href="generic.html" class="button">Learn more</a></li>
-									</ul>
+									<h2>Keywords</h2>
+									<p>
+                                        Searching for specific words or phrases can be a tedious process for large files.
+                                        Ctrl+F is a simple solution for when you know the exact word that you want, but what happens
+                                        when the problem is more complex than that? How can you highlight words that
+                                        belong to an umbrella category? TAG aims to solve this problem.
+                                    </p>
 								</div>
 							</div>
 						</section>
 						<section>
-							<a href="#" class="image"><img src="{% static "images/pic01.jpg" %}" alt="" data-position="top center" /></a>
+							<a href="#" class="image"><img src="{% static "images/pic02.png" %}" alt="" data-position="top center" /></a>
 							<div class="content">
 								<div class="inner">
-									<h2>Feugiat consequat</h2>
-									<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-									<ul class="actions">
-										<li><a href="generic.html" class="button">Learn more</a></li>
-									</ul>
+									<h2>Machine Learning</h2>
+									<p>
+                                        By specifying a category or 'label', a user can expect to have their documents highlighted
+                                        with all words or phrases that match that label.  This is accomplished by sending a
+                                        sample set to a powerful back-end engine that will intelligently parse the document
+                                        for any occurrences of a certain category.
+                                    </p>
 								</div>
 							</div>
 						</section>
 						<section>
-							<a href="#" class="image"><img src="{% static "images/pic01.jpg" %}" alt="" data-position="25% 25%" /></a>
+							<a href="#" class="image"><img src="{% static "images/pic03.png" %}" alt="" data-position="25% 25%" /></a>
 							<div class="content">
 								<div class="inner">
-									<h2>Ultricies aliquam</h2>
-									<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-									<ul class="actions">
-										<li><a href="generic.html" class="button">Learn more</a></li>
-									</ul>
+									<h2>Annotations</h2>
+									<p>
+                                        Once the machine has completed its computations, it will return a list of its
+                                        predictions from the documents.  These results are then displayed graphically on
+                                        the web interface as annotated highlights for the user to digest.
+                                    </p>
 								</div>
 							</div>
 						</section>
@@ -92,43 +88,40 @@
 				<!-- Two -->
 					<section id="two" class="wrapper style3 fade-up">
 						<div class="inner">
-							<h2>What we do</h2>
-							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+							<h2>Features</h2>
+							<p></p>
 							<div class="features">
 								<section>
 									<span class="icon solid major fa-code"></span>
-									<h3>Lorem ipsum amet</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>Intelligent Highlights</h3>
+									<p>Annotate a document by defining a label and submitting it to the back-end machine for highlights!</p>
 								</section>
 								<section>
 									<span class="icon solid major fa-lock"></span>
-									<h3>Aliquam sed nullam</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>Data Retention</h3>
+									<p>Retain the state of your highlights by creating an account - you can reload your progress next time you login.</p>
 								</section>
 								<section>
 									<span class="icon solid major fa-cog"></span>
-									<h3>Sed erat ullam corper</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>Configuration</h3>
+									<p>We offer the ability to truly customize the application to your needs. You can upload multiple files, select your highlight colors, define your labels, and more!</p>
 								</section>
 								<section>
 									<span class="icon solid major fa-desktop"></span>
-									<h3>Veroeros quis lorem</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>Platforms</h3>
+									<p>In addition to our web page, we also offer this project as a standalone application for iOS on the App Store.</p>
 								</section>
-								<section>
+                                <section>
 									<span class="icon solid major fa-link"></span>
-									<h3>Urna quis bibendum</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>Zip Files</h3>
+									<p>Have a bulk amount of files to annotate? We support .zip!</p>
 								</section>
 								<section>
 									<span class="icon major fa-gem"></span>
-									<h3>Aliquam urna dapibus</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>Grade A Performance</h3>
+									<p>This application works like none other.  The best on the market, some say. And it's free!</p>
 								</section>
 							</div>
-							<ul class="actions">
-								<li><a href="generic.html" class="button">Learn more</a></li>
-							</ul>
 						</div>
 					</section>
 
@@ -136,11 +129,11 @@
 				<!-- Three -->
 					<section id="three" class="wrapper style1 fade-up">
 						<div class="inner">
-							<h2>Get in touch</h2>
-							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+							<h2>Contact</h2>
+							<p>This project was developed by a small team of 6 undergraduates at Temple University managed by Keith Hudock and under the direction of professors Charles Wang and Slobodan Vucetic.</p>
 							<div class="split style1">
 								<section>
-									<form method="post" action="#">
+									<form method="post" action="#">{% csrf_token %}
 										<div class="fields">
 											<div class="field half">
 												<label for="name">Name</label>
@@ -156,34 +149,27 @@
 											</div>
 										</div>
 										<ul class="actions">
-											<li><a href="" class="button submit">Send Message</a></li>
+											<li><a href="#" class="button submit">Send Message</a></li>
 										</ul>
 									</form>
 								</section>
 								<section>
 									<ul class="contact">
 										<li>
-											<h3>Address</h3>
-											<span>12345 Somewhere Road #654<br />
-											Nashville, TN 00000-0000<br />
-											USA</span>
-										</li>
-										<li>
 											<h3>Email</h3>
-											<a href="#">user@untitled.tld</a>
-										</li>
-										<li>
-											<h3>Phone</h3>
-											<span>(000) 000-0000</span>
+                                            <p><a href="mailto:Vucetic@temple.edu" style="color:#fcba03">Slobodan Vucetic</a></p>
+                                            <p><a href="mailto:Charles.Wang@temple.edu" style="color:#fcba03">Charles Wang</a></p>
+                                            <p><a href="mailto:keith.hudock@temple.edu" style="color:#fcba03">Keith Hudock</a></p>
+                                            <p><a href="mailto:nicholas.gonzalez@temple.edu" style="color:#fcba03">Nico Gonzalez</a></p>
+                                            <p><a href="mailto:tony.mark@temple.edu" style="color:#fcba03">Tony Mark</a></p>
+                                            <p><a href="mailto:QunchaoZhou@temple.edu" style="color:#fcba03">Qunchao Zhou</a></p>
+                                            <p><a href="mailto:tuj52136@temple.edu" style="color:#fcba03">Leo Vergnetti</a></p>
+                                            <p><a href="mailto:matt.anthony@temple.edu" style="color:#fcba03">Matt Anthony</a></p>
 										</li>
 										<li>
 											<h3>Social</h3>
 											<ul class="icons">
-												<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-												<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-												<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-												<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-												<li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+												<li><a href="https://github.com/cis-cs-capstone-course/TAG" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
 											</ul>
 										</li>
 									</ul>
@@ -198,7 +184,7 @@
 			<footer id="footer" class="wrapper style1-alt">
 				<div class="inner">
 					<ul class="menu">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						<li>&copy; Temple University. All rights reserved.</li>
 					</ul>
 				</div>
 			</footer>
