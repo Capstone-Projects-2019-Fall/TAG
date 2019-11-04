@@ -38,6 +38,12 @@
           </div>
           <input type="text" id="search-box" class="form-control" placeholder="Search document..." aria-label="Search">
           <div class="input-group-append">
+            <select id="text-type">
+              <option id="plain-text" value="plain-text">Plain Text</option>
+              <option id="regex" value="regex">Regex</option>
+            </select>
+          </div>
+          <div class="input-group-append">
               <select id="search-type">
                 <option value="add">Search to Highlight</option>
                 <option value="delete">Search to Delete</option>
@@ -45,7 +51,7 @@
             </div>
             <div class="input-group-append">
                 <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="regex-flags" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="regex-flags" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: none;">
                       Flags
                     </button>
                     <form class="dropdown-menu" aria-labelledby="dropdownMenuButton">
