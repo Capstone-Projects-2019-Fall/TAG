@@ -60,19 +60,12 @@ $("#search-button").on("click", function(){
             console.log("Searching for " + searching + " in document"); 
 
             //Get the contents of the entire document
-            var text = document.getElementById("doc-view").value;
-            // Split text into tokens
-            var token = text.split(/\s/);
-
-            //Current position in the document
-            var position = 0;
-  
-            token.forEach( function(word){
-                if(word.match(regex)){
-                    console.log("Found " + word + "\nStart postion: " + position + "\nEnd Position: " + (position + word.length));
-                    tagModel.removeAnnotation(position)
+            tagModel.currentDoc.annotations.forEach( function(annotation){
+                if(annotation.content.match(regex)){
+                    console.log("Found " + annotation.content + "\nStart postion: " + position + "\nEnd Position: " + (position + annotation.content.length));
+                    tagModel.removeAnnotation(annotation);
                 }
-                position += word.length+1; // the plus 1 accounts for the space at the end
+                position += annotation.content.length+1; // the plus 1 accounts for the space at the end
             })
             renderTextareaHighlights();
         }
@@ -142,20 +135,14 @@ $("#search-box").on("keypress", function(e){
                 var regex = new RegExp("\\b" + searching, 'g');
                 console.log("Searching for " + searching + " in document"); 
     
-                //Get the contents of the entire document
-                var text = document.getElementById("doc-view").value;
-                // Split text into tokens
-                var token = text.split(/\s/);
-    
-                //Current position in the document
-                var position = 0;
-      
-                token.forEach( function(word){
-                    if(word.match(regex)){
-                        console.log("Found " + word + "\nStart postion: " + position + "\nEnd Position: " + (position + word.length));
-                        tagModel.removeAnnotation(position)
+                //Get the annotations of the current document
+                
+                tagModel.currentDoc.annotations.forEach( function(annotation){
+                    if(annotation.content.match(regex)){
+                        console.log("Found " + annotation.content + "\nStart postion: " + position + "\nEnd Position: " + (position + annotation.content.length));
+                        tagModel.removeAnnotation(annotation);
                     }
-                    position += word.length+1; // the plus 1 accounts for the space at the end
+                    position += annotation.content.length+1; // the plus 1 accounts for the space at the end
                 })
                 renderTextareaHighlights();
             }
