@@ -43,9 +43,9 @@ function searchForText(){
             console.log("Flags: " + flags.join(''));
             let regex = null;
             if($("#text-type").children("option:selected").val() === "plain-text"){
-                regex = new RegExp("\\b" + searching + "\\b");
+                regex = new RegExp("\\b" + RegExp.escape(searching) + "\\b");
             } else {
-                regex = new RegExp("\\b" + RegExp.escape(searching) + "\\b", flags.join(''));
+                regex = new RegExp("\\b" + searching + "\\b", flags.join(''));
             }
             console.log("Searching for " + searching + " in document"); 
 
@@ -83,11 +83,18 @@ function searchForText(){
             alert("Please enter the text you want to highlight");
             return;
         } else {
+            //Current position in the document
+            var position = 0;
+            
+            var flags = [];
+            $.each($("input[name='flag']:checked"), function(){
+                flags.push($(this).val());
+            });
             let regex = null;
             if($("#text-type").children("option:selected").val() === "plain-text"){
-                regex = new RegExp("\\b" + searching + "\\b");
+                regex = new RegExp("\\b" + RegExp.escape(searching) + "\\b");
             } else {
-                regex = new RegExp("\\b" + RegExp.escape(searching) + "\\b", flags.join(''));
+                regex = new RegExp("\\b" + searching + "\\b", flags.join(''));
             }
             console.log("Searching for " + searching + " in document"); 
 
