@@ -1,11 +1,23 @@
 //jshint esversion:6
 
 /* ---------- page setup ---------- */
-var textArea = $('#doc-view');
 var tagModel = new TagModel();
+var textArea = $('#doc-view');
+var label_list = $("#label-list");
+var delete_menu = $('#delete-menu');
 var deleteList = [];
 
 // --------------events-------------- //
+
+// clicked anywhere
+$(document).on("mousedown", function (e) {
+  // If the clicked element is not the menu
+  if ($(e.target).parents("#delete-menu").length === 0) {
+    // Hide it
+    delete_menu.hide(100);
+    delete_menu.text('')
+  };
+});
 
 // download highlights
 $('#download').on('click', function () {
@@ -85,23 +97,23 @@ $("#fileInputControl").on("change", function () {
           loadJsonData(JSON.parse(newJson));
         };
         fileReader.readAsText(file);
-      } 
+      }
       // wasn't one of the file types
       else {
         invalidFiles.push("File type not supported for: '" + fileName + "'\n");
       }
-    } 
+    }
     // name matches one of the files already uploaded
     else {
       invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
     }
-  if (invalidFiles.length > 0) {
-    let warning = "";
-    invalidFiles.forEach(function(string) {
-      warning += string;
-    });
-    alert(warning);
-  }
+    if (invalidFiles.length > 0) {
+      let warning = "";
+      invalidFiles.forEach(function (string) {
+        warning += string;
+      });
+      alert(warning);
+    }
   });
   $(document.body).css('cursor', 'default');
   this.value = "";
@@ -139,11 +151,11 @@ textArea.on('contextmenu', function (e) {
   deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
 
   if (deleteList.length > 0) {
-    $('#delete-menu').append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
+    delete_menu.append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
     for (let i = 0; i < deleteList.length; i++) {
-      $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(deleteList[i].label) + ';"><b>' + deleteList[i].label.trunc(10) + ': </b>' + deleteList[i].content.trunc(20) + '</li>');
+      delete_menu.append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(deleteList[i].label) + ';"><b>' + deleteList[i].label.trunc(10) + ': </b>' + deleteList[i].content.trunc(20) + '</li>');
     }
-    $('#delete-menu').show(100).
+    delete_menu.show(100).
       css({
         top: e.pageY + 'px',
         left: e.pageX + 'px'
@@ -151,36 +163,15 @@ textArea.on('contextmenu', function (e) {
   }
 });
 
-// clicked the menu
-$(document).on("mousedown", function (e) {
-  // If the clicked element is not the menu
-  if ($(e.target).parents("#delete-menu").length === 0) {
-    // Hide it
-    $("#delete-menu").hide(100);
-    $("#delete-menu").text('')
-  };
-});
-
-// on annotation delete menu click, delete selected annotation
-$("#delete-menu").on('click', '.delete-anno', function () {
-  let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
-  tagModel.removeAnnotation(deleteList[deleteIndex]);
-  renderTextareaHighlights();
-  // Hide it AFTER the action was triggered
-  $("#delete-menu").hide(100);
-});
-
 // create new label
 $('#add-label').on('click', function () {
-  // todo add name checking // no spaces
-  // todo change to real add function
   var newLabel = makeRandName();
   console.log("CSS: Creating new category: [" + newLabel + "]");
   addLabel(newLabel);
 });
 
 //change the document's label context
-$('#label-list').on('mouseup', '.label', function () {
+label_list.on('mouseup', '.label', function () {
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
   $('.label').attr('id', '');                   //remove label-selected from all
@@ -188,36 +179,20 @@ $('#label-list').on('mouseup', '.label', function () {
 });
 
 // on label right click
-$('#label-list').on('contextmenu', function (e) {
+label_list.on('contextmenu', function (e) {
   event.preventDefault();
-  $('#delete-menu').append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
-  $('#delete-menu').show(100).
+  delete_menu.append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
+  delete_menu.show(100).
     css({
       top: e.pageY + 'px',
       left: e.pageX + 'px'
     });
 });
 
-// clicked delete label
-$("#delete-menu").on('click', '.delete-label', function () {
-  tagModel.deleteCategory();
-  console.log('Category Deleted');
-  resize();
-  $('#label-selected').remove();
-  if (tagModel.currentDoc != null) {
-    $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
-  }
-  renderTextareaHighlights();
-  // Hide it AFTER the action was triggered
-  $("#delete-menu").hide(100);
-});
-
-let label_list = $("#label-list");
-
 label_list.on('keypress', '.label-name', function (e) {
-    if(e.which === 13) {
-      $(this).blur();
-    }
+  if (e.which === 13) {
+    $(this).blur();
+  }
 });
 
 //edit label name
@@ -307,31 +282,48 @@ $('#doc-list').on('mouseup', '.doc-name', function (e) {
 // right click document list
 $('#doc-list').on('contextmenu', function (e) {
   event.preventDefault();
-  $('#delete-menu').append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
-  $('#delete-menu').show(100).
+  delete_menu.append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
+  delete_menu.show(100).
     css({
       top: e.pageY + 'px',
       left: e.pageX + 'px'
     });
 });
 
-// clicked delete document
-$("#delete-menu").on('click', '.delete-doc', function () {
-  tagModel.deleteDoc();
-  console.log('Document Deleted');
-  if (tagModel.currentDoc != null) {
-    textArea.html(tagModel.currentDoc.text);
-  } else {
-    textArea.html('');
+// clicked delete
+delete_menu.on('click', 'li', function () {
+  // delete annotation
+  if ($(this).hasClass('delete-anno')) {
+    let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
+    tagModel.removeAnnotation(deleteList[deleteIndex]);
+  } 
+  // delete label
+  else if ($(this).hasClass('delete-label')) {
+    tagModel.deleteCategory();
+    console.log('Category Deleted');
+    resize();
+    $('#label-selected').remove();
+    if (tagModel.currentDoc != null) {
+      $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
+    }
   }
-  resize();
-  $('#doc-selected').remove();
-  if (tagModel.currentDoc != null) {
-    $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
+  // delete document
+  else if ($(this).hasClass('delete-doc')) {
+    tagModel.deleteDoc();
+    console.log('Document Deleted');
+    if (tagModel.currentDoc != null) {
+      textArea.html(tagModel.currentDoc.text);
+    } else {
+      textArea.html('');
+    }
+    resize();
+    $('#doc-selected').remove();
+    if (tagModel.currentDoc != null) {
+      $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
+    }
   }
   renderTextareaHighlights();
-  // Hide it AFTER the action was triggered
-  $("#delete-menu").hide(100);
+  delete_menu.hide(100);
 });
 
 // update size when window is resized
@@ -399,7 +391,7 @@ function renderTextareaHighlights() {
     });
 
     if (tagModel.currentDoc.annotations.length > 0) {
-      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length-1]
+      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1]
       $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
       $('#recentArea').css('display', 'block');
     } else {
@@ -516,7 +508,7 @@ function loadJsonData(data, obliterate = false) {
   // alert errors
   if (invalidFiles.length > 0) {
     let warning = "";
-    invalidFiles.forEach(function(string) {
+    invalidFiles.forEach(function (string) {
       warning += string;
     });
     alert(warning);
