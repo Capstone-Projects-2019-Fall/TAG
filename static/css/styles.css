@@ -12,10 +12,10 @@ body {
   background: #141516;
 }
 
-#content-body {
+/* #content-body {
   margin: auto;
   max-width: 1400px;
-}
+} */
 
 h2 {
   word-wrap: break-word;
