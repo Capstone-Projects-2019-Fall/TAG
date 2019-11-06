@@ -5,6 +5,7 @@ var tagModel = new TagModel();
 var textArea = $('#doc-view');
 var label_list = $("#label-list");
 var delete_menu = $('#delete-menu');
+var doc_list = $('#doc-list');
 var deleteList = [];
 
 // --------------events-------------- //
@@ -107,14 +108,14 @@ $("#fileInputControl").on("change", function () {
     else {
       invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
     }
-    if (invalidFiles.length > 0) {
-      let warning = "";
-      invalidFiles.forEach(function (string) {
-        warning += string;
-      });
-      alert(warning);
-    }
   });
+  if (invalidFiles.length > 0) {
+    let warning = "";
+    invalidFiles.forEach(function (string) {
+      warning += string;
+    });
+    alert(warning);
+  }
   $(document.body).css('cursor', 'default');
   this.value = "";
 });
@@ -181,15 +182,31 @@ textArea.on('contextmenu', function (e) {
   deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
 
   if (deleteList.length > 0) {
-    delete_menu.append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
+    delete_menu.append(
+      $('<h6/>', {
+        html: 'Delete Annotation:'
+      })
+    ).append(
+      $('<hr/>', {
+        style: 'margin: 0;'
+      })
+    );
     for (let i = 0; i < deleteList.length; i++) {
-      delete_menu.append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(deleteList[i].label) + ';"><b>' + deleteList[i].label.trunc(10) + ': </b>' + deleteList[i].content.trunc(20) + '</li>');
+      delete_menu.append(
+        $('<li/>', {
+          class: 'delete-anno',
+          value: 'delete_anno_' + i,
+          style: 'background-color:' + tagModel.getColor(deleteList[i].label),
+          html: '<b>' + deleteList[i].label.trunc(10) + ': </b>'
+        }).append(
+          deleteList[i].content.trunc(20)
+        )
+      ).show(100).
+        css({
+          top: e.pageY + 'px',
+          left: e.pageX + 'px'
+        });
     }
-    delete_menu.show(100).
-      css({
-        top: e.pageY + 'px',
-        left: e.pageX + 'px'
-      });
   }
 });
 
@@ -211,18 +228,16 @@ label_list.on('mouseup', '.label', function () {
 // on label right click
 label_list.on('contextmenu', function (e) {
   event.preventDefault();
-  delete_menu.append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
-  delete_menu.show(100).
+  delete_menu.append(
+    $('<li/>', {
+      class: 'delete-label',
+      html: '<b>delete</b>'
+    })
+  ).show(100).
     css({
       top: e.pageY + 'px',
       left: e.pageX + 'px'
     });
-});
-
-label_list.on('keypress', '.label-name', function (e) {
-  if (e.which === 13) {
-    $(this).blur();
-  }
 });
 
 //edit label name
@@ -231,6 +246,13 @@ label_list.on('dblclick', '.label-name', function () {
   this.contentEditable = true;
   //open textbox
   $(this).focus().select();
+});
+
+// user pressed enter on label name change
+label_list.on('keypress', '.label-name', function (e) {
+  if (e.which === 13) {
+    $(this).blur();
+  }
 });
 
 //stopped editing label name
@@ -299,7 +321,7 @@ $('#add-document').on('click', function () {
 });
 
 // change document
-$('#doc-list').on('mouseup', '.doc-name', function (e) {
+doc_list.on('mouseup', '.doc-name', function (e) {
   tagModel.setCurrentDoc(this.getAttribute('value'));
   $('#doc-selected').attr('id', '');
   $(this).attr('id', 'doc-selected');
@@ -310,10 +332,14 @@ $('#doc-list').on('mouseup', '.doc-name', function (e) {
 });
 
 // right click document list
-$('#doc-list').on('contextmenu', function (e) {
+doc_list.on('contextmenu', function (e) {
   event.preventDefault();
-  delete_menu.append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
-  delete_menu.show(100).
+  delete_menu.append(
+    $('<li/>', {
+      class: 'delete-doc',
+      html: '<b>delete</b>'
+    })
+  ).show(100).
     css({
       top: e.pageY + 'px',
       left: e.pageX + 'px'
@@ -391,15 +417,16 @@ function addDoc(doc) {
   textArea.html(tagModel.currentDoc.text);
   resize();
   $('#doc-selected').attr('id', '');
-  $('#doc-list').append(
+  doc_list.append(
     $('<h6/>', {
       id: 'doc-selected',
       class: 'doc-name',
       value: doc.title,
       html: doc.title
-    }));
+    })
+  );
   renderTextareaHighlights();
-  $('#doc-list').scrollTop($('#doc-list').prop('scrollHeight'));
+  doc_list.scrollTop(doc_list.prop('scrollHeight'));
 };
 
 //Actually draws the highlights on the textarea.
@@ -482,9 +509,18 @@ function addLabel(name, color = null) {
         class: 'list-group-item py-2 px-3 label',
         id: 'label-selected',
         value: name,
-        style: "background-color: " + color,
-        html: '<img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange"><div  class="label-name">' + name + '</div>'
-      }));
+        style: "background-color: " + color
+      }).append(
+        $('<img/>', {
+          class: 'colorChange',
+          src: 'https://img.icons8.com/metro/24/000000/color-dropper.png',
+        })
+      ).append(
+        $('<div/>', {
+          class: 'label-name'
+        }).text(name)
+      )
+    );
 
     // go to new label's postion
     $('#label-list').scrollTop($('#label-list').prop('scrollHeight'));
@@ -566,6 +602,7 @@ function loadJsonData(data, obliterate = false) {
 
 String.prototype.trunc = function (n, truncAfterWord = false) {
   if (this.length <= n) { return this; }
-  var subString = this.substr(0, n - 1);
-  return (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
+  let subString = this.substr(0, n - 1);
+  let truncString = (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
+  return (truncString.length === 1 ? truncString : subString);
 };
