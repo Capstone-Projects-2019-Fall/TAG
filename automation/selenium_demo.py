@@ -2,13 +2,15 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
+from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 
 def change_label(label_name, index):
     driver.execute_script("$('#label-selected').attr('value','" + label_name + "');")
     time.sleep(1)
     driver.execute_script("tagModel.renameCategory('" + label_name + "');")
     time.sleep(1)
-    driver.execute_script("document.getElementsByClassName('label-name')["+ index + "].innerHTML = '" + label_name + "';")
+    driver.execute_script("document.getElementsByClassName('label-name')[" + index + "].innerHTML = '" + label_name + "';")
     time.sleep(1)
     driver.execute_script("renderTextareaHighlights();")
 
@@ -42,4 +44,16 @@ time.sleep(2)
 add_doc = driver.find_element_by_id("fileInputControl")
 add_doc.send_keys("/home/tug3260/Documents/Lorem_Ipsum.txt")
 time.sleep(2)
+
+# Wait until highlight is created manually
+try:
+    element = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CLASS_NAME, "label_test1")))
+finally:
+    driver.execute_script("renderTextareaHighlights();")
+    time.sleep(2)
+
+# Download resulting JSON file
+download_json = driver.find_element_by_id("download")
+download_json.click()
+
 
