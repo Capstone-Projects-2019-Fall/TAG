@@ -28,14 +28,29 @@ $('#download').on('click', function () {
     return;
   }
 
+  downloadAsJson();
+
   // file download
+  // var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
+  // var url = window.URL.createObjectURL(blob);
+  // console.log("Generated object URL: " + url);
+  // document.getElementById('download_link').href = url;
+  // document.getElementById('download_link').click();
+  // window.URL.revokeObjectURL(url);
+});
+
+function downloadAsJson(){
   var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
   var url = window.URL.createObjectURL(blob);
   console.log("Generated object URL: " + url);
   document.getElementById('download_link').href = url;
   document.getElementById('download_link').click();
   window.URL.revokeObjectURL(url);
-});
+}
+
+function downloadAsZip(){
+
+}
 
 // send to mldata
 $('#sendML').on('click', function () {
@@ -296,7 +311,7 @@ delete_menu.on('click', 'li', function () {
   if ($(this).hasClass('delete-anno')) {
     let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
     tagModel.removeAnnotation(deleteList[deleteIndex]);
-  } 
+  }
   // delete label
   else if ($(this).hasClass('delete-label')) {
     tagModel.deleteCategory();

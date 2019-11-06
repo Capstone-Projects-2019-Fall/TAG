@@ -116,4 +116,5 @@ class TagModel {
   exportAsString() {
     return JSON.stringify(this.openDocs);
   }
+
 }
