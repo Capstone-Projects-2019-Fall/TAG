@@ -37,6 +37,7 @@ def main(output_dir, data_path, n_iter, model=None):
     # """Set up the pipeline and entity recognizer, and train the new entity."""
     random.seed(0)
     train_data, labelset = data_converting(data_path)
+    print("Training with: ", train_data)
     if model is not None:
         nlp = spacy.load(model)  # load existing spaCy model
         print("Loaded model '%s'" % model)
@@ -88,8 +89,11 @@ def main(output_dir, data_path, n_iter, model=None):
         doc = nlp(d['text'])
         returnData = []
         for ent in doc.ents:
-            returnData.append(annotationClass(ent.label_, ent.start_char, ent.end_char, ent.text).__dict__)
+            annotation = annotationClass(ent.label_, ent.start_char, ent.end_char, ent.text)
+            print("Found entity: %d in %s", annotation.__dict__, d['title'])
+            returnData.append(annotation.__dict__)
         docs.append(documentClass(d['title'], d['text'], returnData).__dict__)
+
     return docs
 
 
