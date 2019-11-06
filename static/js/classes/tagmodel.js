@@ -44,12 +44,17 @@ class TagModel {
     let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
     let annotationToAdd = new Annotation(range, content, category);
     console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + category + "]");
-    this.currentDoc.annotations.push(annotationToAdd);
+    return this.currentDoc.sortedPush(annotationToAdd);
   }
 
   removeAnnotation(annotation) {
     console.log("Removing annotation: '" + annotation.content + "' from [" + this.currentCategory + "]");
     this.currentDoc.updateAnnotationList(annotation);
+  }
+
+  removeAnnotationByRange(range) {
+    console.log("Removing part of annotation: " + this.currentDoc.text.substring(range.startPosition, range.endPosition));
+    this.currentDoc.deleteByRange(range, this.currentCategory);
   }
 
   // ----- Categories ----- //

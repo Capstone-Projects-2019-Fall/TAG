@@ -66,7 +66,7 @@ $('#sendML').on('click', function () {
   });
 });
 
-// on file change, add document
+// add document
 $("#fileInputControl").on("change", function () {
   console.log("Found " + this.files.length + " files");
   // add each file to documents
@@ -130,17 +130,31 @@ textArea.on('mouseup', function (e) {
       alert('Error: Please add a document!');
       return;
     }
-    let range = {
-      'startPosition': textArea[0].selectionStart,
-      'endPosition': textArea[0].selectionEnd
-    };
-    if (range.startPosition < range.endPosition) {
-      tagModel.addAnnotation(range, tagModel.currentCategory);
-      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
-    } else {
-      return;
+
+    let range = {};
+    if (textArea[0].selectionStart < textArea[0].selectionEnd) {
+      range = {
+        startPosition: textArea[0].selectionStart,
+        endPosition: textArea[0].selectionEnd
+      };
+
+      if (e.altKey) {
+        tagModel.addAnnotation(range, tagModel.currentCategory);
+        renderTextareaHighlights();
+      } else if (e.ctrlKey) {
+        tagModel.removeAnnotationByRange(range);
+        renderTextareaHighlights();
+      } else {
+        delete_menu.css({
+          top: e.pageY + 'px',
+          left: e.pageX + 'px'
+        });
+        delete_menu.append('<h6>Which?</h6><hr style="margin: 0;">');
+        delete_menu.append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: green;">Add</li>');
+        delete_menu.append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: red;">Delete</li>');
+        delete_menu.show(100);
+      }
     }
-    renderTextareaHighlights();
   }
 });
 
@@ -293,10 +307,29 @@ $('#doc-list').on('contextmenu', function (e) {
 // clicked delete
 delete_menu.on('click', 'li', function () {
   // delete annotation
-  if ($(this).hasClass('delete-anno')) {
-    let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
+  if ($(this).hasClass('add-anno')) {
+    let value = $(this).attr('value').split(' ');
+    var range = {
+      startPosition: parseInt(value[0]),
+      endPosition: parseInt(value[1])
+    };
+    tagModel.addAnnotation(range, tagModel.currentCategory);
+    console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
+  }
+  // 
+  else if ($(this).hasClass('delete-anno-part')) {
+    let value = $(this).attr('value').split(' ');
+    var range = {
+      startPosition: parseInt(value[0]),
+      endPosition: parseInt(value[1])
+    };
+    tagModel.removeAnnotationByRange(range);
+  }
+  // 
+  else if ($(this).hasClass('delete-anno')) {
+    let deleteIndex = parseInt($(this).attr('value').replace('delete_anno_', ''));
     tagModel.removeAnnotation(deleteList[deleteIndex]);
-  } 
+  }
   // delete label
   else if ($(this).hasClass('delete-label')) {
     tagModel.deleteCategory();
