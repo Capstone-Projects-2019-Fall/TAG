@@ -3,9 +3,10 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 # replace sorcery with machine learning program (.py)
 from mldata.sorcery import magic
-from mldata.TAG_ner_v1 import main
+from mldata.Capstone_backend import main, data_converting
 from django.shortcuts import render
 import time
+
 
 @csrf_exempt
 def index(request):
@@ -23,17 +24,15 @@ def index(request):
         # prepare data
         try:
             data = json.loads(xfile.read())
-            print(data)
         except json.decoder.JSONDecodeError:
-            return HttpResponse('Json formatted incorrectely! Please fix then try again!')
-        jsonData = json.dumps(data)
+            return HttpResponse('Json formatted incorrectly! Please fix then try again!')
+        # jsonData = json.dumps(data)
         # return data from machine learning algorithm
-        output = magic(jsonData)  # replace with machine learning algorithm
+        print("Preparing to run main Capstone_backend (spacy stuff)")
+        outputFromML = main(None, data, 30)
+        output = json.dumps(outputFromML)
         endTime = time.time()
         print("Elapsed Time: " + str(endTime-startTime))
-        print("Preparing to run main TAG_ner_v1 (spacy stuff)")
-        main()
-        print("main from spacy stuff finished")
         return HttpResponse(output, content_type='application/json')
 
 # def APItest(request):
