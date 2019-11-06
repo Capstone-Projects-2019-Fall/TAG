@@ -119,6 +119,22 @@ $("#fileInputControl").on("change", function () {
   this.value = "";
 });
 
+var aKeyPressed = false;
+var dKeyPressed = false;
+$(window).keydown(function(e) {
+  if (e.which === 65) {
+    aKeyPressed = true;
+  } else if (e.which === 68) {
+    dKeyPressed = true;
+  }
+}).keyup(function(e) {
+  if (e.which === 65) {
+    aKeyPressed = false;
+  } else if (e.which === 68) {
+    dKeyPressed = false;
+  }
+});
+
 // on mouse release, highlight selected text
 textArea.on('mouseup', function (e) {
   if (e.which === 1) {
@@ -138,10 +154,10 @@ textArea.on('mouseup', function (e) {
         endPosition: textArea[0].selectionEnd
       };
 
-      if (e.altKey) {
+      if (aKeyPressed) {
         tagModel.addAnnotation(range, tagModel.currentCategory);
         renderTextareaHighlights();
-      } else if (e.ctrlKey) {
+      } else if (dKeyPressed) {
         tagModel.removeAnnotationByRange(range);
         renderTextareaHighlights();
       } else {
