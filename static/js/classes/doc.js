@@ -7,6 +7,7 @@ class Doc {
     this.annotations = [];
   }
 
+  // get all annotations at this position
   getAnnotationsAtPos(position) {
     let annotations = this.annotations.filter(function (annotation) {
       return annotation.containsCharacterAt(position);
@@ -14,83 +15,108 @@ class Doc {
     return annotations;
   }
 
-  getIndexesByRange(range, label = null) {
+  // get all indices contained within the range // if label specified, only include those with that label
+  getIndicesByRange(range, label = null) {
     var indexArr = [];
+    // check all indices
     for (let i = 0; i < this.annotations.length; i++) {
+      let current = this.annotations[i];
+      // label specifier
       if (label) {
-        if (label !== this.annotations[i].label) {
+        // exclude those that don't belong to label
+        if (label !== current.label) {
           continue;
         }
       }
-      if (range.startPosition - 2 <= this.annotations[i].range.endPosition && range.endPosition >= this.annotations[i].range.endPosition) {
+      // current's end position within
+      if (range.startPosition <= current.range.endPosition && range.endPosition >= current.range.endPosition) {
         indexArr.push(i);
-      } else if (range.endPosition + 2 >= this.annotations[i].range.startPosition && range.endPosition <= this.annotations[i].range.endPosition) {
+      } 
+      // current's start position within
+      else if (range.endPosition >= current.range.startPosition && range.endPosition <= current.range.endPosition) {
         indexArr.push(i);
-      } else if (range.startPosition >= this.annotations[i].range.startPosition && range.endPosition <= this.annotations[i].range.endPosition) {
+      } 
+      // current encompasses range
+      else if (range.startPosition >= current.range.startPosition && range.endPosition <= current.range.endPosition) {
         indexArr.push(i);
       }
     }
     return indexArr;
   }
 
+  // get the index of the annotation
   getAnnotationIndex(annotation) {
+    // check all indices
     for (let i = 0; i < this.annotations.length; i++) {
+      // found // return index
       if (annotation === this.annotations[i]) {
         return i;
       }
     }
+    // didn't find // return out of bound index
     return -1;
   }
 
+  // remove range from annotations (only for the specified label) // splits if necessary
   deleteByRange(range, label) {
-    let indexes = this.getIndexesByRange(range, label);
-    console.log(indexes);
+    // get all indices that range belongs in
+    let indices = this.getIndicesByRange(range, label);
+    // array of new annotations to add
     let push = [];
-    for (let i = indexes.length - 1; i >= 0; i--) {
-      // if (range.startPosition >= this.annotations[indexes[i]].range.startPosition && range.endPosition <= this.annotations[indexes[i]].range.endPosition) {
-        if (range.startPosition > this.annotations[indexes[i]].range.startPosition) {
-          var range1 = {
-            startPosition: this.annotations[indexes[i]].range.startPosition,
-            endPosition: range.startPosition
-          };
-          var content1 = this.annotations[indexes[i]].content.substring(0, range.startPosition - this.annotations[indexes[i]].range.startPosition);
-          push.push(new Annotation(range1, content1, label));
-        }
-        if (range.endPosition < this.annotations[indexes[i]].range.endPosition) {
-          var range2 = {
-            startPosition: range.endPosition,
-            endPosition: this.annotations[indexes[i]].range.endPosition
-          };
-          var content2 = this.annotations[indexes[i]].content.substring(range.endPosition - this.annotations[indexes[i]].range.startPosition, this.annotations[indexes[i]].content.length);
-          push.push(new Annotation(range2, content2, label));
-        }
-      // }
-      this.annotations.splice(indexes[i], 1);
+    // check all marked indices (back to front to prevent mispositioning when deleting)
+    for (let i = indices.length - 1; i >= 0; i--) {
+      let current = this.annotations[indices[i]];
+      // deleting range leaves a head
+      if (range.startPosition > current.range.startPosition) {
+        // new range to add
+        var range1 = {
+          startPosition: current.range.startPosition,
+          endPosition: range.startPosition
+        };
+        // new content
+        var content1 = current.content.substring(0, range.startPosition - current.range.startPosition);
+        push.push(new Annotation(range1, content1, label));
+      }
+      // range range leaves a tail
+      if (range.endPosition < current.range.endPosition) {
+        // new range to add
+        var range2 = {
+          startPosition: range.endPosition,
+          endPosition: current.range.endPosition
+        };
+        // new content
+        var content2 = current.content.substring(range.endPosition - current.range.startPosition);
+        push.push(new Annotation(range2, content2, label));
+      }
+      // remove current annotation
+      this.annotations.splice(indices[i], 1);
     }
+    // add remaining annotations
     for (let annotation of push) {
       this.annotations.push(annotation);
     };
     return;
   }
 
+  // remove specfic annotation
   updateAnnotationList(blacklistAnnotation) {
     this.annotations = this.annotations.filter(function (annotation) {
       return annotation !== blacklistAnnotation;
     });
   }
 
-  // push element into sorted position // merge if we can // returns -1 if pushed // returns index if already belongs
+  // push element into sorted position // merge if can // returns index
   sortedPush(annotation) {
-    // get overlapping
-    let indexes = this.getIndexesByRange(annotation.range, annotation.label);
+    // get overlapping indices
+    let indices = this.getIndicesByRange(annotation.range, annotation.label);
     var newAnno = annotation;
-    // merge overlapping
-    for (let i = 0; i < indexes.length; i++) {
-      newAnno = this.compareAnnotations(newAnno, this.annotations[indexes[i]]);
+    // merge overlapping or adjacent
+    for (let i = 0; i < indices.length; i++) {
+      newAnno = this.compareAnnotations(newAnno, this.annotations[indices[i]]);
     }
-    // remove old highlights
-    for (let i = indexes.length - 1; i >= 0; i--) {
-      this.annotations.splice(indexes[i], 1);
+    // remove old highlights (starts from back to prevent mispositioning)
+    for (let i = indices.length - 1; i >= 0; i--) {
+      this.annotations.splice(indices[i], 1);
     }
     // push new highlight to correct index
     for (let i = 0; i < this.annotations.length; i++) {
@@ -104,10 +130,11 @@ class Doc {
     return this.annotations.length - 1;
   }
 
+  // compare annotations and specify how to merge
   compareAnnotations(a, b) {
     // smaller start position
     if (a.range.startPosition < b.range.startPosition) {
-      // smaller end position // replace
+      // greater end position // encapsulated
       if (a.range.endPosition >= b.range.endPosition) {
         return a;
       }
@@ -115,7 +142,7 @@ class Doc {
       return this.mergeAnnotations(a, b);
     }
 
-    // greater or equal start position
+    // greater start position
     // smaller end position // encapsulated
     if (a.range.endPosition <= b.range.endPosition) {
       return b;
@@ -126,22 +153,18 @@ class Doc {
     }
   }
 
+  // do merging (assumes a starts before b starts and ends before b ends)
   mergeAnnotations(a, b) {
+    // get a's start and b's end
     var range = {
       startPosition: a.range.startPosition,
       endPosition: b.range.endPosition
     };
-    let difference = a.range.endPosition - a.range.startPosition;
-    var content = a.content;
-    if (difference < 0) {
-      content = a.content;
-      for (let i = difference; i < 0; i++) {
-        content += " ";
-      }
-      content += b.content;
-    } else {
-      content += b.content.substring(difference);
-    }
+    // get the difference between a's end and b's start 
+    let difference = b.range.startPosition - a.range.endPosition;
+    console.log(difference);
+    // create content with spaces
+    var content = a.content + b.content.substring(difference);
 
     return new Annotation(range, content, a.label);
   }
