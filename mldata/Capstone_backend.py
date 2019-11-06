@@ -82,10 +82,13 @@ def main(output_dir, data_path, n_iter, model=None):
         nlp.to_disk(output_dir)
         print("Saved model to", output_dir)
 
-    #TESTING immediately ( NO SAVE)
+    return nlp
 
+def test(nlp, data):
+    # nlp = spacy.load(model)  # load existing spaCy model
+    # print("Loaded model '%s'" % model)
     docs = []
-    for d in data_path:
+    for d in data:
         doc = nlp(d['text'])
         returnData = []
         for ent in doc.ents:
@@ -93,9 +96,7 @@ def main(output_dir, data_path, n_iter, model=None):
             print("Found entity: %d in %s", annotation.__dict__, d['title'])
             returnData.append(annotation.__dict__)
         docs.append(documentClass(d['title'], d['text'], returnData).__dict__)
-
-    return docs
-
+    return json.dumps(docs)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
