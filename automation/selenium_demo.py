@@ -5,6 +5,16 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 
+def navigate_homepage():
+    driver.find_element_by_xpath('//a[@href="#one"]').click()
+    time.sleep(2)
+    driver.find_element_by_xpath('//a[@href="#two"]').click()
+    time.sleep(2)
+    driver.find_element_by_xpath('//a[@href="#three"]').click()
+    time.sleep(2)
+    driver.find_element_by_xpath('//a[@href="#intro"]').click()
+    time.sleep(2)
+
 def change_label(label_name, index):
     driver.execute_script("$('#label-selected').attr('value','" + label_name + "');")
     time.sleep(1)
@@ -24,7 +34,8 @@ driver = webdriver.Chrome("/home/tug3260/TAG/automation/chromedriver", chrome_op
 driver.get("http://127.0.0.1:8000/")
 time.sleep(2)
 
-# Click button to open up TAG Annotator
+# Navigate homepage, Click button to open up TAG Annotator
+navigate_homepage()
 get_started = driver.find_element_by_class_name("button")
 get_started.click()
 time.sleep(2)
