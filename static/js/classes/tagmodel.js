@@ -42,7 +42,7 @@ class TagModel {
 
   addAnnotation(range, category) {
     //validate annotation first, throw error if dumbo
-    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition).trim();
+    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
     let annotationToAdd = new Annotation(range, content, category);
     console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + category + "]");
     this.currentDoc.annotations.push(annotationToAdd);
@@ -97,9 +97,8 @@ class TagModel {
 
     //then update the label name in the category list
     this.categories.find(category => category.name === this.currentCategory).name = newName;
+    console.log("Relabeled category: [" + this.currentCategory + "] to [" + newName + "]");
     this.currentCategory = newName;
-
-    console.log("Relabeled annotation to " + newName + ".");
   }
 
   deleteCategory() {

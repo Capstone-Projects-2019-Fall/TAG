@@ -20,9 +20,9 @@ class annotationClass:
 
 
 class documentClass:
-    def __init__(self, title, text):
+    def __init__(self, title):
         self.title = title
-        self.text = text
+        self.text = None
         self.annotations = []
 
     def __repr__(self):
@@ -34,7 +34,10 @@ def magic(input):
     data = json.loads(input)
     labels = []
     for document in data:
-        doc = documentClass(document['title'], re.sub(r'\s', ' ', document['text']))     # parse text
+        newstring = re.sub(r'[\r\t\f\v\ ]+', ' ', document['text'])
+        print(newstring)
+        doc = documentClass(document['title'])                                          # parse text
+        doc.text = newstring
         documents.append(doc)
         annotations = document['annotations']                                           # get annotations for document
         for annotation in annotations:
@@ -43,22 +46,23 @@ def magic(input):
             if index < 0:                                                               # not in list
                 labels.append(labelSet(annoLabel))                                      # add it
                 index = len(labels)-1                                                   # update index number
-            annoWords = annotation['content'].split(' ')                                # split annotation words
+            annoWords = annotation['content'].split()                                   # split annotation words
             for word in annoWords:                                                      # check each word in annotation words
-                cleanWord = word.strip().strip(string.punctuation)                      # remove whitespace and punctuation
+                cleanWord = word.strip().strip(string.punctuation).lower()              # remove whitespace and punctuation
                 if cleanWord == 'the' or cleanWord == 'a' or cleanWord == 'an' or cleanWord == 'is':    # ignore articles
                     continue
                 elif not cleanWord in labels[index].words:                              # add word if not in labels words list
                     labels[index].words.add(cleanWord)
 
     for doc in documents:                                                               # annotate for all documents
+        print('fuck')
         for label in labels:                                                            # do each label
             coordsList = []
             for word in label.words:                                                    # check for each word
-                for m in re.finditer(word, doc.text):                                   # find start and end position of all instances
+                reWord = r'(?i)\b' + re.escape(word) + r'\b'
+                for m in re.finditer(reWord, doc.text):                                   # find start and end position of all instances
                     coordsList.append((m.start(), m.end()))
             coordsList.sort(key=lambda x: x[0])                                         # sort by start position
-
             currentCoords = coordsList[0]                                               # starting with first annotation
             if currentCoords != None:                                                   # check to make sure there is an annotation
                 for i in range(1, len(coordsList)):                                     # iterate through each annotation
@@ -77,7 +81,7 @@ def magic(input):
                 newAnnotation.range['endPosition'] = currentCoords[1]
                 newAnnotation.content = doc.text[newAnnotation.range['startPosition']:newAnnotation.range['endPosition']]
                 doc.annotations.append(newAnnotation)
-    return printArr(documents)                                                          # returned stringified json
+    return re.sub('\\n', '\\\\n', printArr(documents))                                     # returned stringified json
 
 # split array with comments and surround with brackets
 def printArr(arr):
