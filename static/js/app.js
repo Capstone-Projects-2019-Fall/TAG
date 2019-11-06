@@ -32,8 +32,11 @@ $('#sendML').on('click', function () {
     return;
   }
   // prepare data
+
   var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
   var formData = new FormData();
+  console.log("Sending data to ML");
+
   formData.append("jsonUpload", blob);
   $.ajax({
     type: "POST",
