@@ -608,6 +608,11 @@ function makeHighlights() {
     return;
   }
   let labelSortedAnnos = tagModel.currentDoc.getAnnotationsByLabel();
+  let offset =0
+  if (labelSortedAnnos.length > 1) {
+    offset = 4.6 / (labelSortedAnnos.length - 1);
+  }
+  let padding = 0;
   let text = tagModel.currentDoc.text;
   for (let anno of labelSortedAnnos) {
     console.log(anno);
@@ -617,10 +622,11 @@ function makeHighlights() {
     let lastIndex = 0;
     for (let a of anno) {
       let string = highlights.html() + text.substring(lastIndex, a.range.startPosition);
-      string += '<mark class="label_' + a.label + '">' + text.substring(a.range.startPosition, a.range.endPosition) + '</mark>';
+      string += '<mark class="label_' + a.label + '" style="padding: ' + padding + 'px 0;">' + text.substring(a.range.startPosition, a.range.endPosition) + '</mark>';
       lastIndex = a.range.endPosition;
       highlights.html(string);
     }
+    padding += offset;
     if (lastIndex !== text.length) {
       highlights.html(highlights.html() + text.substring(lastIndex, text.length));
     }
