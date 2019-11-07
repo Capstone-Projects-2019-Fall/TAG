@@ -31,11 +31,11 @@ class Doc {
       // current's end position within
       if (range.startPosition <= current.range.endPosition && range.endPosition >= current.range.endPosition) {
         indexArr.push(i);
-      } 
+      }
       // current's start position within
       else if (range.endPosition >= current.range.startPosition && range.endPosition <= current.range.endPosition) {
         indexArr.push(i);
-      } 
+      }
       // current encompasses range
       else if (range.startPosition >= current.range.startPosition && range.endPosition <= current.range.endPosition) {
         indexArr.push(i);
@@ -55,6 +55,28 @@ class Doc {
     }
     // didn't find // return out of bound index
     return -1;
+  }
+
+  getAnnotationsByLabel(label = '') {
+    var annotations = [];
+    // do each category
+    for (let category of tagModel.categories) {
+      // specfic label
+      if (label !== '') {
+        if (category !== tagModel.categories[label]) {
+          continue;
+        }
+      }
+      // try each annotation
+      var catAnno = [];
+      for (let anno of this.annotations) {
+        if (anno.label === category.name) {
+          catAnno.push(anno);
+        }
+      }
+      annotations.push(catAnno);
+    }
+    return annotations;
   }
 
   // remove range from annotations (only for the specified label) // splits if necessary
@@ -93,7 +115,7 @@ class Doc {
     }
     // add remaining annotations
     for (let annotation of push) {
-      this.annotations.push(annotation);
+      this.sortedPush(annotation);
     };
     return;
   }
@@ -111,8 +133,8 @@ class Doc {
     let indices = this.getIndicesByRange(annotation.range, annotation.label);
     var newAnno = annotation;
     // merge overlapping or adjacent
-    for (let i = 0; i < indices.length; i++) {
-      newAnno = this.compareAnnotations(newAnno, this.annotations[indices[i]]);
+    for (let i of indices) {
+      newAnno = this.compareAnnotations(newAnno, this.annotations[i]);
     }
     // remove old highlights (starts from back to prevent mispositioning)
     for (let i = indices.length - 1; i >= 0; i--) {
@@ -120,9 +142,24 @@ class Doc {
     }
     // push new highlight to correct index
     for (let i = 0; i < this.annotations.length; i++) {
+      // less than // push
       if (newAnno.range.startPosition < this.annotations[i].range.startPosition) {
         this.annotations.splice(i, 0, newAnno);
         return i;
+      }
+      // equal // compare ends
+      else if (newAnno.range.startPosition === this.annotations[i].range.startPosition) {
+        if (newAnno.range.endPosition < this.annotations[i].range.endPosition) {
+          this.annotations.splice(i, 0, newAnno);
+          return i;
+        }
+        // equal // compare labels
+        else if (newAnno.range.endPosition === this.annotations[i].range.endPosition) {
+          if (tagModel.categoryIndex(newAnno.label) < tagModel.categoryIndex(this.annotations[i].label)) {
+            this.annotations.splice(i, 0, newAnno);
+            return i;
+          }
+        }
       }
     }
     // got to the end // just push

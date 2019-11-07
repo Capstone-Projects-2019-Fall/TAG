@@ -3,6 +3,7 @@
 /* ---------- page setup ---------- */
 var tagModel = new TagModel();
 var textArea = $('#doc-view');
+var highlightArea = $('#highlightArea');
 var label_list = $("#label-list");
 var delete_menu = $('#delete-menu');
 var doc_list = $('#doc-list');
@@ -95,7 +96,10 @@ $("#fileInputControl").on("change", function () {
         fileReader.onload = function () {
           console.log("Adding Json Doc: " + fileName);
           let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
-          loadJsonData(JSON.parse(newJson));
+          let errors = loadJsonData(JSON.parse(newJson));
+          if (errors.length > 0) {
+            invalidFiles.push(errors);
+          }
         };
         fileReader.readAsText(file);
       }
@@ -122,13 +126,13 @@ $("#fileInputControl").on("change", function () {
 
 var aKeyPressed = false;
 var dKeyPressed = false;
-$(window).keydown(function(e) {
+$(window).keydown(function (e) {
   if (e.which === 65) {
     aKeyPressed = true;
   } else if (e.which === 68) {
     dKeyPressed = true;
   }
-}).keyup(function(e) {
+}).keyup(function (e) {
   if (e.which === 65) {
     aKeyPressed = false;
   } else if (e.which === 68) {
@@ -433,7 +437,6 @@ function addDoc(doc) {
 function renderTextareaHighlights() {
   console.log("Rendering");
   //array to hold everything that needs to be highlighted in doc
-  let highlights = [];
 
   $('#anno-list').empty();
   tagModel.categories.forEach(function (category) {
@@ -452,11 +455,6 @@ function renderTextareaHighlights() {
   //loop through the stored annotations and append to the array as a dictionary
   if (tagModel.currentDoc != null) {
     tagModel.currentDoc.annotations.forEach(function (annotation) {
-      let single_highlight = {
-        highlight: [annotation.range.startPosition, annotation.range.endPosition],
-        className: 'label_' + annotation.label
-      };
-      highlights.push(single_highlight);
 
       $('.anno-group[value="' + annotation.label + '"]').append(
         $('<li/>', {
@@ -476,10 +474,12 @@ function renderTextareaHighlights() {
     }
   }
 
+  makeHighlights();
+
   //then highlight based on that array
-  $('textarea').highlightWithinTextarea({
-    highlight: highlights
-  });
+  // $('textarea').highlightWithinTextarea({
+  //   highlight: highlights
+  // });
 }
 
 //add new label
@@ -537,8 +537,10 @@ function addLabel(name, color = null) {
 
 //update height on window resize and keep scroll position
 function resize() {
+  $('.highlight').offset(textArea.offset());
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
+  $('.highlight').css('height', textArea.height);
 }
 
 // generate random name
@@ -553,7 +555,7 @@ function makeRandColor() {
   });
 }
 
-function loadJsonData(data, obliterate = false) {
+function loadJsonData(filename = "", data, obliterate = false) {
   console.log('Displaying new data from mlalgorithm');
   if (obliterate) {
     tagModel = new TagModel();
@@ -592,11 +594,41 @@ function loadJsonData(data, obliterate = false) {
 
   // alert errors
   if (invalidFiles.length > 0) {
-    let warning = "";
+    let warning = filename + ":\n";
     invalidFiles.forEach(function (string) {
       warning += string;
     });
-    alert(warning);
+    return warning;
+  }
+}
+
+function makeHighlights() {
+  $('.hwt-backdrop').remove();
+  if (tagModel.currentDoc === null) {
+    return;
+  }
+  let labelSortedAnnos = tagModel.currentDoc.getAnnotationsByLabel();
+  let text = tagModel.currentDoc.text;
+  for (let anno of labelSortedAnnos) {
+    console.log(anno);
+    var highlights = $('<div/>', {
+      class: "hwt-highlights hwt-content"
+    });
+    let lastIndex = 0;
+    for (let a of anno) {
+      let string = highlights.html() + text.substring(lastIndex, a.range.startPosition);
+      string += '<mark class="label_' + a.label + '">' + text.substring(a.range.startPosition, a.range.endPosition) + '</mark>';
+      lastIndex = a.range.endPosition;
+      highlights.html(string);
+    }
+    if (lastIndex !== text.length) {
+      highlights.html(highlights.html() + text.substring(lastIndex, text.length));
+    }
+    highlightArea.prepend(
+      $('<div/>', {
+        class: 'hwt-backdrop'
+      }).append(highlights)
+    );
   }
 }
 
