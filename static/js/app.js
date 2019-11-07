@@ -38,6 +38,8 @@ $('#sendML').on('click', function () {
   console.log("Sending data to ML");
 
   formData.append("jsonUpload", blob);
+  formData.append("save-model", $("#save-model").is(':checked'));
+  formData.append("load-model", $("#load-model").is(':checked'));
   $.ajax({
     type: "POST",
     url: "mldata",

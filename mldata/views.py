@@ -29,7 +29,28 @@ def index(request):
 
         print("Preparing to run main Capstone_backend (spacy stuff)")
         #train the model!
-        model = main(None, data, 30)
+        model = None
+
+        # Save/Load based on checkboxes on the webpage
+        if(request.POST.get("save-model") == "false" and request.POST.get("load-model") == "false"):
+            model = main(None, data, 30)
+            print("NOT Saving Model")
+            print("Model not loaded")
+
+        elif(request.POST.get("save-model") == "true" and request.POST.get("load-model") == "false"):
+            model = main("models/", data, 30)
+            print("Saving Model")
+            print("Model not loaded")
+        
+        elif(request.POST.get("save-model") == "false" and request.POST.get("load-model") == "true"):
+            model = main(None, data, 30, "models/")
+            print("Loading Exising Model")
+            print("Model will not be saved")
+        
+        elif(request.POST.get("save-model") == "True" and request.POST.get("load-model") == "true"):
+            model = main("models/", data, 30, "models/")
+            print("Loading Exising Model")
+            print("Model will be saved")
 
         #test the model!
         outputFromML = test(model, data)
@@ -37,6 +58,7 @@ def index(request):
         # output = json.dumps(outputFromML)
         endTime = time.time()
         print("Elapsed Time: " + str(endTime-startTime))
+
         return HttpResponse(outputFromML, content_type='application/json')
 
 # def APItest(request):
