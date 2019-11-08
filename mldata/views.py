@@ -47,7 +47,7 @@ def index(request):
             print("Loading Exising Model")
             print("Model will not be saved")
         
-        elif(request.POST.get("save-model") == "True" and request.POST.get("load-model") == "true"):
+        elif(request.POST.get("save-model") == "true" and request.POST.get("load-model") == "true"):
             model = main("models/", data, 30, "models/")
             print("Loading Exising Model")
             print("Model will be saved")
