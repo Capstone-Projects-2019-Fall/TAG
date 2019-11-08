@@ -15,8 +15,8 @@ $(document).on("mousedown", function (e) {
   if ($(e.target).parents("#delete-menu").length === 0) {
     // Hide it
     delete_menu.hide(100);
-    delete_menu.text('')
-  };
+    delete_menu.text('');
+  }
 });
 
 // download highlights
@@ -27,15 +27,14 @@ $('#download').on('click', function () {
     alert('Error: No data to download!');
     return;
   }
+  let zip = tagModel.getAsZip();
+  zip.generateAsync({type:"blob"}).then(function(content) {
+    saveAs(content, "annotations.zip");
+  });
 
-  // file download
-  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
-  var url = window.URL.createObjectURL(blob);
-  console.log("Generated object URL: " + url);
-  document.getElementById('download_link').href = url;
-  document.getElementById('download_link').click();
-  window.URL.revokeObjectURL(url);
 });
+
+
 
 // send to mldata
 $('#sendML').on('click', function () {
@@ -151,7 +150,7 @@ textArea.on('contextmenu', function (e) {
   deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
 
   if (deleteList.length > 0) {
-    delete_menu.append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
+    delete_menu.append('<h6>Delete Annotation:</h6><hr style="margin: 0;">');
     for (let i = 0; i < deleteList.length; i++) {
       delete_menu.append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(deleteList[i].label) + ';"><b>' + deleteList[i].label.trunc(10) + ': </b>' + deleteList[i].content.trunc(20) + '</li>');
     }
@@ -296,7 +295,7 @@ delete_menu.on('click', 'li', function () {
   if ($(this).hasClass('delete-anno')) {
     let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
     tagModel.removeAnnotation(deleteList[deleteIndex]);
-  } 
+  }
   // delete label
   else if ($(this).hasClass('delete-label')) {
     tagModel.deleteCategory();
@@ -337,7 +336,7 @@ $(window).on('resize', function () {
 
 //add new document
 function addDoc(doc) {
-  tagModel.addDoc(doc)
+  tagModel.addDoc(doc);
   tagModel.setCurrentDoc(doc.title);
   textArea.html(tagModel.currentDoc.text);
   resize();
@@ -351,7 +350,7 @@ function addDoc(doc) {
     }));
   renderTextareaHighlights();
   $('#doc-list').scrollTop($('#doc-list').prop('scrollHeight'));
-};
+}
 
 //Actually draws the highlights on the textarea.
 function renderTextareaHighlights() {
@@ -391,7 +390,7 @@ function renderTextareaHighlights() {
     });
 
     if (tagModel.currentDoc.annotations.length > 0) {
-      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1]
+      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1];
       $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
       $('#recentArea').css('display', 'block');
     } else {
@@ -494,7 +493,7 @@ function loadJsonData(data, obliterate = false) {
     doc.annotations.forEach(function (annotation) {
       if (tagModel.categoryIndex(annotation.label) === -1) {
         addLabel(annotation.label);
-      };
+      }
       tagModel.addAnnotation(annotation.range, annotation.label);
     });
   });
