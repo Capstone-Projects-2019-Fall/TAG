@@ -193,7 +193,6 @@ class Doc {
     };
     // get the difference between a's end and b's start 
     let difference = b.range.startPosition - a.range.endPosition;
-    console.log(difference);
     // create content with spaces
     var content = a.content + b.content.substring(difference);
 

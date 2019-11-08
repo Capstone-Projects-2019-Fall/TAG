@@ -30,7 +30,7 @@ $('#download').on('click', function () {
     return;
   }
   let zip = tagModel.getAsZip();
-  zip.generateAsync({type:"blob"}).then(function(content) {
+  zip.generateAsync({ type: "blob" }).then(function (content) {
     saveAs(content, "annotations.zip");
   });
 
@@ -158,12 +158,16 @@ textArea.on('mouseup', function (e) {
         endPosition: textArea[0].selectionEnd
       };
 
+      let belongs = tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory);
+
       if (aKeyPressed) {
         tagModel.addAnnotation(range, tagModel.currentCategory);
         renderHighlights();
       } else if (dKeyPressed) {
-        tagModel.removeAnnotationByRange(range);
-        renderHighlights();
+        if (belongs.length > 0) {
+          tagModel.removeAnnotationByRange(range);
+          renderHighlights();
+        }
       } else {
         delete_menu.css({
           top: e.pageY + 'px',
@@ -368,7 +372,9 @@ delete_menu.on('click', 'li', function () {
       startPosition: parseInt(value[0]),
       endPosition: parseInt(value[1])
     };
-    tagModel.removeAnnotationByRange(range);
+    if (tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory).length > 0) {
+      tagModel.removeAnnotationByRange(range);
+    }
   }
   // 
   else if ($(this).hasClass('delete-anno')) {
@@ -466,7 +472,7 @@ function renderHighlights() {
       let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1];
       $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
       $('#recentArea').css('display', 'block');
-    } 
+    }
     // hide it otherwise
     else {
       $('#recentArea').css('display', 'none');
@@ -651,5 +657,5 @@ String.prototype.trunc = function (n, truncAfterWord = false) {
   if (this.length <= n) { return this; }
   let subString = this.substr(0, n - 1);
   let truncString = (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
-  return (truncString.length === 1 ? subString.substring(0, subString.length-1) + "…" : truncString);
+  return (truncString.length === 1 ? subString.substring(0, subString.length - 1) + "…" : truncString);
 };
