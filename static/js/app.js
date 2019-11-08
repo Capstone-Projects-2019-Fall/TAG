@@ -161,18 +161,18 @@ textArea.on('mouseup', function (e) {
 
       if (aKeyPressed) {
         tagModel.addAnnotation(range, tagModel.currentCategory);
-        renderTextareaHighlights();
+        renderHighlights();
       } else if (dKeyPressed) {
         tagModel.removeAnnotationByRange(range);
-        renderTextareaHighlights();
+        renderHighlights();
       } else {
         delete_menu.css({
           top: e.pageY + 'px',
           left: e.pageX + 'px'
         });
         delete_menu.append('<h6>Which?</h6><hr style="margin: 0;">');
-        delete_menu.append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: green;">Add</li>');
-        delete_menu.append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: red;">Delete</li>');
+        delete_menu.append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #28A745; color: white;">Add</li>');
+        delete_menu.append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #DC3545; color: white;">Delete</li>');
         delete_menu.show(100);
       }
     }
@@ -295,7 +295,7 @@ label_list.on('blur', '.label-name', function () {
   $('#label-selected').attr('value', newName);
 
   tagModel.renameCategory(newName);
-  renderTextareaHighlights();
+  renderHighlights();
 });
 
 //invoke colorpicker on icon click
@@ -315,7 +315,7 @@ $('#colorChangePicker').on('change', function () {
   );
   tagModel.changeColor(this.value);
   this.value = "black";
-  renderTextareaHighlights();
+  renderHighlights();
 });
 
 // add document button
@@ -330,7 +330,7 @@ doc_list.on('mouseup', '.doc-name', function (e) {
   $('#doc-selected').attr('id', '');
   $(this).attr('id', 'doc-selected');
   textArea.html(tagModel.currentDoc.text);
-  renderTextareaHighlights();
+  renderHighlights();
   resize();
   $(window).scrollTop(0);
 });
@@ -401,7 +401,7 @@ delete_menu.on('click', 'li', function () {
       $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
     }
   }
-  renderTextareaHighlights();
+  renderHighlights();
   delete_menu.hide(100);
 });
 
@@ -429,16 +429,16 @@ function addDoc(doc) {
       html: doc.title
     })
   );
-  renderTextareaHighlights();
+  renderHighlights();
   doc_list.scrollTop(doc_list.prop('scrollHeight'));
 };
 
 //Actually draws the highlights on the textarea.
-function renderTextareaHighlights() {
+function renderHighlights() {
   console.log("Rendering");
-  //array to hold everything that needs to be highlighted in doc
-
+  // clear annotation list
   $('#anno-list').empty();
+  // create sections for each category
   tagModel.categories.forEach(function (category) {
     $('#anno-list').append(
       $('<h6/>', {
@@ -452,10 +452,9 @@ function renderTextareaHighlights() {
     );
   });
 
-  //loop through the stored annotations and append to the array as a dictionary
   if (tagModel.currentDoc != null) {
+    // add each annotation to their respective categories
     tagModel.currentDoc.annotations.forEach(function (annotation) {
-
       $('.anno-group[value="' + annotation.label + '"]').append(
         $('<li/>', {
           class: 'annotation roundCorner',
@@ -463,23 +462,19 @@ function renderTextareaHighlights() {
         }).text(annotation.content.trunc(20, true))
       );
     });
-
+    // update most recent annotation
     if (tagModel.currentDoc.annotations.length > 0) {
       let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1]
       $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
       $('#recentArea').css('display', 'block');
-    } else {
-      $('#recent').empty();
+    } 
+    // hide it otherwise
+    else {
       $('#recentArea').css('display', 'none');
     }
   }
-
+  // (do magic) create highlights
   makeHighlights();
-
-  //then highlight based on that array
-  // $('textarea').highlightWithinTextarea({
-  //   highlight: highlights
-  // });
 }
 
 //add new label
@@ -555,6 +550,7 @@ function makeRandColor() {
   });
 }
 
+// 
 function loadJsonData(filename = "", data, obliterate = false) {
   console.log('Displaying new data from mlalgorithm');
   if (obliterate) {
@@ -588,11 +584,11 @@ function loadJsonData(filename = "", data, obliterate = false) {
 
   // update everything
   textArea.html(tagModel.currentDoc.text);
-  renderTextareaHighlights();
+  renderHighlights();
   resize();
   $(window).scrollTop(0);
 
-  // alert errors
+  // return errors
   if (invalidFiles.length > 0) {
     let warning = filename + ":\n";
     invalidFiles.forEach(function (string) {
@@ -602,34 +598,47 @@ function loadJsonData(filename = "", data, obliterate = false) {
   }
 }
 
+// make all highlights
 function makeHighlights() {
+  // clear old ones
   $('.hwt-backdrop').remove();
-  if (tagModel.currentDoc === null) {
+  // no document // do nothing // (=== doesn't seem to work here)
+  if (tagModel.currentDoc == null) {
     return;
   }
+  // get all annnotations by label
   let labelSortedAnnos = tagModel.currentDoc.getAnnotationsByLabel();
-  let offset =0
+  let text = tagModel.currentDoc.text;
+  // calculate offset for height
+  let offset = 0;
   if (labelSortedAnnos.length > 1) {
     offset = 4.6 / (labelSortedAnnos.length - 1);
   }
+  // inital padding height
   let padding = 0;
-  let text = tagModel.currentDoc.text;
-  for (let anno of labelSortedAnnos) {
-    console.log(anno);
+  // do each category
+  for (let category of labelSortedAnnos) {
+    // create highlight area
     var highlights = $('<div/>', {
       class: "hwt-highlights hwt-content"
     });
+    // keep tack of index of text
     let lastIndex = 0;
-    for (let a of anno) {
-      let string = highlights.html() + text.substring(lastIndex, a.range.startPosition);
-      string += '<mark class="label_' + a.label + '" style="padding: ' + padding + 'px 0;">' + text.substring(a.range.startPosition, a.range.endPosition) + '</mark>';
-      lastIndex = a.range.endPosition;
+    // do each annotation for current category
+    for (let anno of category) {
+      // Add text before highlight then the highlight itself
+      let string = highlights.html() + text.substring(lastIndex, anno.range.startPosition);
+      string += '<mark class="label_' + anno.label + '" style="padding: ' + padding + 'px 0;">' + text.substring(anno.range.startPosition, anno.range.endPosition) + '</mark>';
+      lastIndex = anno.range.endPosition;
       highlights.html(string);
     }
+    //update padding size
     padding += offset;
+    // add trailing text
     if (lastIndex !== text.length) {
       highlights.html(highlights.html() + text.substring(lastIndex, text.length));
     }
+    // push as first child // important for order
     highlightArea.prepend(
       $('<div/>', {
         class: 'hwt-backdrop'
@@ -638,9 +647,10 @@ function makeHighlights() {
   }
 }
 
+// truncate string and add ellipsis // truncAfterWord will only truncate on spaces // returns entire word if string contains no spaces
 String.prototype.trunc = function (n, truncAfterWord = false) {
   if (this.length <= n) { return this; }
   let subString = this.substr(0, n - 1);
   let truncString = (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
-  return (truncString.length === 1 ? truncString : subString);
+  return (truncString.length === 1 ? subString.substring(0, subString.length-1) + "…" : truncString);
 };

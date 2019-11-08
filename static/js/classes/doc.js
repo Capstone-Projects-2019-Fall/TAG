@@ -21,9 +21,8 @@ class Doc {
     // check all indices
     for (let i = 0; i < this.annotations.length; i++) {
       let current = this.annotations[i];
-      // label specifier
+      // exclude those that don't belong to label
       if (label) {
-        // exclude those that don't belong to label
         if (label !== current.label) {
           continue;
         }
@@ -83,30 +82,25 @@ class Doc {
   deleteByRange(range, label) {
     // get all indices that range belongs in
     let indices = this.getIndicesByRange(range, label);
-    // array of new annotations to add
     let push = [];
     // check all marked indices (back to front to prevent mispositioning when deleting)
     for (let i = indices.length - 1; i >= 0; i--) {
       let current = this.annotations[indices[i]];
       // deleting range leaves a head
       if (range.startPosition > current.range.startPosition) {
-        // new range to add
         var range1 = {
           startPosition: current.range.startPosition,
           endPosition: range.startPosition
         };
-        // new content
         var content1 = current.content.substring(0, range.startPosition - current.range.startPosition);
         push.push(new Annotation(range1, content1, label));
       }
       // range range leaves a tail
       if (range.endPosition < current.range.endPosition) {
-        // new range to add
         var range2 = {
           startPosition: range.endPosition,
           endPosition: current.range.endPosition
         };
-        // new content
         var content2 = current.content.substring(range.endPosition - current.range.startPosition);
         push.push(new Annotation(range2, content2, label));
       }
@@ -171,7 +165,7 @@ class Doc {
   compareAnnotations(a, b) {
     // smaller start position
     if (a.range.startPosition < b.range.startPosition) {
-      // greater end position // encapsulated
+      // greater end position >> encapsulated
       if (a.range.endPosition >= b.range.endPosition) {
         return a;
       }
@@ -180,7 +174,7 @@ class Doc {
     }
 
     // greater start position
-    // smaller end position // encapsulated
+    // smaller end position >> encapsulated
     if (a.range.endPosition <= b.range.endPosition) {
       return b;
     }
