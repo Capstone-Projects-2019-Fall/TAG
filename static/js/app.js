@@ -1,10 +1,23 @@
 //jshint esversion:6
 
 /* ---------- page setup ---------- */
-var textArea = $('#doc-view');
 var tagModel = new TagModel();
+var textArea = $('#doc-view');
+var label_list = $("#label-list");
+var delete_menu = $('#delete-menu');
+var deleteList = [];
 
 // --------------events-------------- //
+
+// clicked anywhere
+$(document).on("mousedown", function (e) {
+  // If the clicked element is not the menu
+  if ($(e.target).parents("#delete-menu").length === 0) {
+    // Hide it
+    delete_menu.hide(100);
+    delete_menu.text('');
+  }
+});
 
 // download highlights
 $('#download').on('click', function () {
@@ -14,15 +27,14 @@ $('#download').on('click', function () {
     alert('Error: No data to download!');
     return;
   }
+  let zip = tagModel.getAsZip();
+  zip.generateAsync({type:"blob"}).then(function(content) {
+    saveAs(content, "annotations.zip");
+  });
 
-  // file download
-  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
-  var url = window.URL.createObjectURL(blob);
-  console.log("Generated object URL: " + url);
-  document.getElementById('download_link').href = url;
-  document.getElementById('download_link').click();
-  window.URL.revokeObjectURL(url);
 });
+
+
 
 // send to mldata
 $('#sendML').on('click', function () {
@@ -63,25 +75,48 @@ $("#fileInputControl").on("change", function () {
   console.log("Found " + this.files.length + " files");
   // add each file to documents
   $(document.body).css('cursor', 'wait');
+  let invalidFiles = [];
   [].forEach.call(this.files, function (file) {
-    // clean up name of string
+    // clean up name of string and check if belongs
     let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
     if (tagModel.docIndex(fileName) === -1) {
-      // not a text file
-      if (fileName.match(/.*\.txt$/g) === null) {
-        console.log("Not a text file");
-        return
+      // check text file
+      if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
+        // read, create, and add file
+        let fileReader = new FileReader(file);
+        fileReader.onload = function () {
+          let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
+          console.log("Created Doc: " + fileName);
+          addDoc(newDoc);
+        };
+        fileReader.readAsText(file);
       }
-      // read, create, and add file
-      let fileReader = new FileReader(file);
-      fileReader.onload = function () {
-        let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
-        console.log("Created Doc: " + fileName);
-        addDoc(newDoc);
-      };
-      fileReader.readAsText(file);
-    } else {
-      console.log("File already uploaded")
+      // check json file
+      else if (fileName.match(/.*\.json$/g) !== null) {
+        // read, create, and add file
+        let fileReader = new FileReader(file);
+        fileReader.onload = function () {
+          console.log("Adding Json Doc: " + fileName);
+          let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
+          loadJsonData(JSON.parse(newJson));
+        };
+        fileReader.readAsText(file);
+      }
+      // wasn't one of the file types
+      else {
+        invalidFiles.push("File type not supported for: '" + fileName + "'\n");
+      }
+    }
+    // name matches one of the files already uploaded
+    else {
+      invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
+    }
+    if (invalidFiles.length > 0) {
+      let warning = "";
+      invalidFiles.forEach(function (string) {
+        warning += string;
+      });
+      alert(warning);
     }
   });
   $(document.body).css('cursor', 'default');
@@ -104,10 +139,8 @@ textArea.on('mouseup', function (e) {
       'endPosition': textArea[0].selectionEnd
     };
     if (range.startPosition < range.endPosition) {
-      let annotationCreated = tagModel.addAnnotation(range, tagModel.currentCategory);
+      tagModel.addAnnotation(range, tagModel.currentCategory);
       console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
-      $('#recent').text(annotationCreated.content.trunc(50, true));
-      addToList(annotationCreated.content);
     } else {
       return;
     }
@@ -119,13 +152,14 @@ textArea.on('mouseup', function (e) {
 textArea.on('contextmenu', function (e) {
   event.preventDefault();
   let position = textArea[0].selectionStart;
-  let annotations = tagModel.getAnnotationsAtPos(position);
-  if (annotations.length > 0) {
-    $('#delete-menu').append('<h6>Delete Annotation:</h6><hr style="margin: 0;">')
-    for (let i = 0; i < annotations.length; i++) {
-      $('#delete-menu').append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(annotations[i].label) + ';"><b>' + annotations[i].label.trunc(10) + ': </b>' + annotations[i].content.trunc(20) + '</li>');
+  deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
+
+  if (deleteList.length > 0) {
+    delete_menu.append('<h6>Delete Annotation:</h6><hr style="margin: 0;">');
+    for (let i = 0; i < deleteList.length; i++) {
+      delete_menu.append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(deleteList[i].label) + ';"><b>' + deleteList[i].label.trunc(10) + ': </b>' + deleteList[i].content.trunc(20) + '</li>');
     }
-    $('#delete-menu').show(100).
+    delete_menu.show(100).
       css({
         top: e.pageY + 'px',
         left: e.pageX + 'px'
@@ -133,39 +167,15 @@ textArea.on('contextmenu', function (e) {
   }
 });
 
-// clicked the menu
-$(document).on("mousedown", function (e) {
-  // If the clicked element is not the menu
-  if ($(e.target).parents("#delete-menu").length === 0) {
-    // Hide it
-    tagModel.clearDeleteList();
-    $("#delete-menu").hide(100);
-    $("#delete-menu").text('')
-  };
-});
-
-// on annotation delete menu click, delete selected annotation
-$("#delete-menu").on('click', '.delete-anno', function () {
-  let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
-  tagModel.removeAnnotation(tagModel.getDeleteItem(deleteIndex));
-  renderTextareaHighlights();
-  // Hide it AFTER the action was triggered
-  $("#delete-menu").hide(100);
-});
-
 // create new label
 $('#add-label').on('click', function () {
-  // todo add name checking // no spaces
-  // todo change to real add function
   var newLabel = makeRandName();
   console.log("CSS: Creating new category: [" + newLabel + "]");
   addLabel(newLabel);
 });
 
-//change the label selected
-$('#label-list').on('mouseup', '.label', function (e) {
-  console.log("Selected label: [" + this.getAttribute('value') + "]");
-
+//change the document's label context
+label_list.on('mouseup', '.label', function () {
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
   $('.label').attr('id', '');                   //remove label-selected from all
@@ -173,32 +183,24 @@ $('#label-list').on('mouseup', '.label', function (e) {
 });
 
 // on label right click
-$('#label-list').on('contextmenu', function (e) {
+label_list.on('contextmenu', function (e) {
   event.preventDefault();
-  $('#delete-menu').append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
-  $('#delete-menu').show(100).
+  delete_menu.append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
+  delete_menu.show(100).
     css({
       top: e.pageY + 'px',
       left: e.pageX + 'px'
     });
 });
 
-// clicked delete label
-$("#delete-menu").on('click', '.delete-label', function () {
-  tagModel.deleteCategory();
-  console.log('Category Deleted');
-  resize();
-  $('#label-selected').remove();
-  if (tagModel.currentDoc != null) {
-    $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
+label_list.on('keypress', '.label-name', function (e) {
+  if (e.which === 13) {
+    $(this).blur();
   }
-  renderTextareaHighlights();
-  // Hide it AFTER the action was triggered
-  $("#delete-menu").hide(100);
 });
 
 //edit label name
-$('#label-list').on('dblclick', '.label-name', function () {
+label_list.on('dblclick', '.label-name', function () {
   //enble editing
   this.contentEditable = true;
   //open textbox
@@ -206,7 +208,7 @@ $('#label-list').on('dblclick', '.label-name', function () {
 });
 
 //stopped editing label name
-$('#label-list').on('blur', '.label-name', function () {
+label_list.on('blur', '.label-name', function () {
   //disable editing
   this.contentEditable = false;
 
@@ -245,7 +247,7 @@ $('#label-list').on('blur', '.label-name', function () {
 });
 
 //invoke colorpicker on icon click
-$('#label-list').on('click', '.colorChange', function () {
+label_list.on('click', '.colorChange', function () {
   console.log('dropperClicked!');
   $('#colorChangePicker').click();   //invoke color picker
 });
@@ -261,6 +263,7 @@ $('#colorChangePicker').on('change', function () {
   );
   tagModel.changeColor(this.value);
   this.value = "black";
+  renderTextareaHighlights();
 });
 
 // add document button
@@ -283,31 +286,48 @@ $('#doc-list').on('mouseup', '.doc-name', function (e) {
 // right click document list
 $('#doc-list').on('contextmenu', function (e) {
   event.preventDefault();
-  $('#delete-menu').append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
-  $('#delete-menu').show(100).
+  delete_menu.append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
+  delete_menu.show(100).
     css({
       top: e.pageY + 'px',
       left: e.pageX + 'px'
     });
 });
 
-// clicked delete document
-$("#delete-menu").on('click', '.delete-doc', function () {
-  tagModel.deleteDoc();
-  console.log('Document Deleted');
-  if (tagModel.currentDoc != null) {
-    textArea.html(tagModel.currentDoc.text);
-  } else {
-    textArea.html('');
+// clicked delete
+delete_menu.on('click', 'li', function () {
+  // delete annotation
+  if ($(this).hasClass('delete-anno')) {
+    let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
+    tagModel.removeAnnotation(deleteList[deleteIndex]);
   }
-  resize();
-  $('#doc-selected').remove();
-  if (tagModel.currentDoc != null) {
-    $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
+  // delete label
+  else if ($(this).hasClass('delete-label')) {
+    tagModel.deleteCategory();
+    console.log('Category Deleted');
+    resize();
+    $('#label-selected').remove();
+    if (tagModel.currentDoc != null) {
+      $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
+    }
+  }
+  // delete document
+  else if ($(this).hasClass('delete-doc')) {
+    tagModel.deleteDoc();
+    console.log('Document Deleted');
+    if (tagModel.currentDoc != null) {
+      textArea.html(tagModel.currentDoc.text);
+    } else {
+      textArea.html('');
+    }
+    resize();
+    $('#doc-selected').remove();
+    if (tagModel.currentDoc != null) {
+      $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
+    }
   }
   renderTextareaHighlights();
-  // Hide it AFTER the action was triggered
-  $("#delete-menu").hide(100);
+  delete_menu.hide(100);
 });
 
 // update size when window is resized
@@ -321,7 +341,7 @@ $(window).on('resize', function () {
 
 //add new document
 function addDoc(doc) {
-  tagModel.addDoc(doc)
+  tagModel.addDoc(doc);
   tagModel.setCurrentDoc(doc.title);
   textArea.html(tagModel.currentDoc.text);
   resize();
@@ -335,12 +355,27 @@ function addDoc(doc) {
     }));
   renderTextareaHighlights();
   $('#doc-list').scrollTop($('#doc-list').prop('scrollHeight'));
-};
+}
 
 //Actually draws the highlights on the textarea.
 function renderTextareaHighlights() {
+  console.log("Rendering");
   //array to hold everything that needs to be highlighted in doc
   let highlights = [];
+
+  $('#anno-list').empty();
+  tagModel.categories.forEach(function (category) {
+    $('#anno-list').append(
+      $('<h6/>', {
+        html: category.name
+      })
+    ).append(
+      $('<ul/>', {
+        class: 'anno-group',
+        value: category.name
+      })
+    );
+  });
 
   //loop through the stored annotations and append to the array as a dictionary
   if (tagModel.currentDoc != null) {
@@ -350,7 +385,23 @@ function renderTextareaHighlights() {
         className: 'label_' + annotation.label
       };
       highlights.push(single_highlight);
+
+      $('.anno-group[value="' + annotation.label + '"]').append(
+        $('<li/>', {
+          class: 'annotation roundCorner',
+          style: 'background-color: ' + tagModel.getColor(annotation.label)
+        }).text(annotation.content.trunc(20, true))
+      );
     });
+
+    if (tagModel.currentDoc.annotations.length > 0) {
+      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1];
+      $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
+      $('#recentArea').css('display', 'block');
+    } else {
+      $('#recent').empty();
+      $('#recentArea').css('display', 'none');
+    }
   }
 
   //then highlight based on that array
@@ -393,19 +444,6 @@ function addLabel(name, color = null) {
     // go to new label's postion
     $('#label-list').scrollTop($('#label-list').prop('scrollHeight'));
 
-    // add to annotation list
-    $('#anno-list').append(
-      $('<h4/>', {
-        class: 'ml-2',
-        html: name
-      })
-    ).append(
-      $('<div/>', {
-        class: 'list-group',
-        value: name
-      })
-    );
-
     // first color => make current category the color
     if (tagModel.categories.length === 1) {
       tagModel.currentCategory = name;
@@ -416,26 +454,18 @@ function addLabel(name, color = null) {
   }
 }
 
-function addToList(content) {
-  if (tagModel.currentCategory != null) {
-    $('.list-group[value="' + tagModel.currentCategory + '"]').append(
-      $('<ul/>').text(content.trunc(20, true))
-    );
-    console.log('Success!\nAdded ' + content + ' to ' + tagModel.currentCategory + ' annotation list.');
-  }
-}
-
 //update height on window resize and keep scroll position
 function resize() {
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
 }
 
-// make fake name // delete when done
+// generate random name
 function makeRandName() {
   return parseInt(Math.random() * Math.pow(10, 14)).toString(36);
 }
 
+// generate random color
 function makeRandColor() {
   return "#000000".replace(/0/g, function () {
     return (~~(Math.random() * 10) + 6).toString(16);
@@ -450,23 +480,43 @@ function loadJsonData(data, obliterate = false) {
     $('.highlight-style').remove();
     $('.doc-name').remove();
   }
+
+  // for invalid files
+  let invalidFiles = [];
+
   // add remove annotation from annotation list
   data.forEach(function (doc) {
+    // check if file belongs
+    if (tagModel.docIndex(doc.title) > -1) {
+      invalidFiles.push("File already uploaded for: '" + doc.title + "'\n");
+      return;
+    }
+    // create and add doc
     var newDoc = new Doc(doc.title, doc.text);
     addDoc(newDoc);
     tagModel.currentDoc = newDoc;
     doc.annotations.forEach(function (annotation) {
       if (tagModel.categoryIndex(annotation.label) === -1) {
         addLabel(annotation.label);
-      };
+      }
       tagModel.addAnnotation(annotation.range, annotation.label);
     });
   });
 
+  // update everything
   textArea.html(tagModel.currentDoc.text);
   renderTextareaHighlights();
   resize();
   $(window).scrollTop(0);
+
+  // alert errors
+  if (invalidFiles.length > 0) {
+    let warning = "";
+    invalidFiles.forEach(function (string) {
+      warning += string;
+    });
+    alert(warning);
+  }
 }
 
 String.prototype.trunc = function (n, truncAfterWord = false) {

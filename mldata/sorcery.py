@@ -55,7 +55,6 @@ def magic(input):
                     labels[index].words.add(cleanWord)
 
     for doc in documents:                                                               # annotate for all documents
-        print('fuck')
         for label in labels:                                                            # do each label
             coordsList = []
             for word in label.words:                                                    # check for each word
@@ -63,6 +62,8 @@ def magic(input):
                 for m in re.finditer(reWord, doc.text):                                   # find start and end position of all instances
                     coordsList.append((m.start(), m.end()))
             coordsList.sort(key=lambda x: x[0])                                         # sort by start position
+            if len(coordsList) == 0:
+                continue
             currentCoords = coordsList[0]                                               # starting with first annotation
             if currentCoords != None:                                                   # check to make sure there is an annotation
                 for i in range(1, len(coordsList)):                                     # iterate through each annotation
