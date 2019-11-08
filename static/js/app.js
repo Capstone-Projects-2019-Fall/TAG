@@ -17,8 +17,8 @@ $(document).on("mousedown", function (e) {
   if ($(e.target).parents("#delete-menu").length === 0) {
     // Hide it
     delete_menu.hide(100);
-    delete_menu.text('')
-  };
+    delete_menu.text('');
+  }
 });
 
 // download highlights
@@ -29,15 +29,14 @@ $('#download').on('click', function () {
     alert('Error: No data to download!');
     return;
   }
+  let zip = tagModel.getAsZip();
+  zip.generateAsync({type:"blob"}).then(function(content) {
+    saveAs(content, "annotations.zip");
+  });
 
-  // file download
-  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
-  var url = window.URL.createObjectURL(blob);
-  console.log("Generated object URL: " + url);
-  document.getElementById('download_link').href = url;
-  document.getElementById('download_link').click();
-  window.URL.revokeObjectURL(url);
 });
+
+
 
 // send to mldata
 $('#sendML').on('click', function () {
@@ -416,7 +415,7 @@ $(window).on('resize', function () {
 
 //add new document
 function addDoc(doc) {
-  tagModel.addDoc(doc)
+  tagModel.addDoc(doc);
   tagModel.setCurrentDoc(doc.title);
   textArea.html(tagModel.currentDoc.text);
   resize();
@@ -464,7 +463,7 @@ function renderHighlights() {
     });
     // update most recent annotation
     if (tagModel.currentDoc.annotations.length > 0) {
-      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1]
+      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1];
       $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
       $('#recentArea').css('display', 'block');
     } 
@@ -577,7 +576,7 @@ function loadJsonData(filename = "", data, obliterate = false) {
     doc.annotations.forEach(function (annotation) {
       if (tagModel.categoryIndex(annotation.label) === -1) {
         addLabel(annotation.label);
-      };
+      }
       tagModel.addAnnotation(annotation.range, annotation.label);
     });
   });
