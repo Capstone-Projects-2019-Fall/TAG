@@ -76,9 +76,10 @@ class TagModel {
 
   renameCategory(newName) {
     // update category name of each annotation
+    let currentCategory = this.currentCategory;
     this.openDocs.forEach(function (doc) {
       doc.annotations.forEach(function (annotation) {
-        if (annotation.label === this.currentCategory) {
+        if (annotation.label === currentCategory) {
           annotation.label = newName;
         }
       });
