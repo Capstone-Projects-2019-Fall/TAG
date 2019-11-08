@@ -1,0 +1,24 @@
+{
+  "name": "TAG",
+  "version": "1.0.0",
+  "description": "Text Annotation GUI",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/qunit/bin/qunit.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cis-cs-capstone-course/TAG.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cis-cs-capstone-course/TAG/issues"
+  },
+  "homepage": "https://github.com/cis-cs-capstone-course/TAG#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "qunit": "^2.9.3"
+  }
+}

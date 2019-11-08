@@ -73,7 +73,7 @@ class TagModel {
     // update category name of each annotation
     this.openDocs.forEach(function (doc) {
       doc.annotations.forEach(function (annotation) {
-        if (annotation.label === tagModel.currentCategory) {
+        if (annotation.label === this.currentCategory) {
           annotation.label = newName;
         }
       })
