@@ -72,51 +72,81 @@ $("#fileInputControl").on("change", function () {
   $(document.body).css('cursor', 'wait');
   let invalidFiles = [];
   [].forEach.call(this.files, function (file) {
-    // clean up name of string and check if belongs
-    let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
-    if (tagModel.docIndex(fileName) === -1) {
-      // check text file
-      if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
-        // read, create, and add file
-        let fileReader = new FileReader(file);
-        fileReader.onload = function () {
-          let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
-          console.log("Created Doc: " + fileName);
-          addDoc(newDoc);
-        };
-        fileReader.readAsText(file);
-      }
-      // check json file
-      else if (fileName.match(/.*\.json$/g) !== null) {
-        // read, create, and add file
-        let fileReader = new FileReader(file);
-        fileReader.onload = function () {
-          console.log("Adding Json Doc: " + fileName);
-          let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
-          loadJsonData(JSON.parse(newJson));
-        };
-        fileReader.readAsText(file);
-      }
-      // wasn't one of the file types
-      else {
-        invalidFiles.push("File type not supported for: '" + fileName + "'\n");
-      }
-    }
-    // name matches one of the files already uploaded
-    else {
-      invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
-    }
-    if (invalidFiles.length > 0) {
-      let warning = "";
-      invalidFiles.forEach(function (string) {
-        warning += string;
-      });
-      alert(warning);
-    }
+    uploadDocFromFile(file, invalidFiles);
   });
+  if (invalidFiles.length > 0) {
+    let warning = "";
+    invalidFiles.forEach(function (string) {
+      warning += string;
+    });
+    alert(warning);
+  }
   $(document.body).css('cursor', 'default');
   this.value = "";
 });
+
+//
+function uploadDocFromFile(file, invalidFiles){
+  // clean up name of string and check if belongs
+  // let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
+  let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
+  console.log("Have file: ", fileName);
+  if (fileName.match(/.*\.zip$/g) !== null){
+    console.log("Found a zip file");
+    uploadDocsFromZipFile(file);
+  } // if is zip
+  else if (tagModel.docIndex(fileName) === -1) {
+    // check text file
+    if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
+      // read, create, and add file
+      console.log("File is txt file :", fileName);
+      let fileReader = new FileReader(file);
+      fileReader.onload = function () {
+        let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
+        console.log("Created Doc: " + fileName);
+        addDoc(newDoc);
+      };
+      fileReader.readAsText(file);
+    }
+    // check json file
+    else if (fileName.match(/.*\.json$/g) !== null) {
+      // read, create, and add file
+      let fileReader = new FileReader(file);
+      console.log("File is a json file");
+      fileReader.onload = function () {
+        console.log("Adding Json Doc: " + fileName);
+        let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
+        loadJsonData(JSON.parse(newJson));
+      };
+      fileReader.readAsText(file);
+    }
+    // wasn't one of the file types
+    else {
+      invalidFiles.push("File type not supported for: '" + fileName + "'\n");
+    }
+  }
+  // name matches one of the files already uploaded
+  else {
+    invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
+  }
+}
+
+function uploadDocsFromZipFile(file){
+  // let file = this.files[0];
+  JSZip.loadAsync(file).then(function (zip) {
+    Object.keys(zip.files).forEach(function (fileName) {
+      if(fileName.match(/^__MACOSX/g) !== null){
+        console.log("Ignoring __MACOSX compression file: " + fileName);
+      }
+      else if (fileName.match(/.*\.json$/g) !== null) {
+        console.log(fileName + " is a json file");
+        zip.files[fileName].async('string').then(function (fileData) {
+           loadJsonData([JSON.parse(fileData)]);
+        });//end zip.files[]
+      }// if filename match
+    }); //for each statmetn
+  });// load async promise
+}
 
 // on mouse release, highlight selected text
 textArea.on('mouseup', function (e) {
