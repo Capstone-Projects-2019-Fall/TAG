@@ -90,7 +90,7 @@ function searchForText() {
             }
         });
     }
-    renderTextareaHighlights();
+    renderHighlights();
 }
 
 function regexEscape(s) {
