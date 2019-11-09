@@ -16,8 +16,7 @@
 
   <!-- Custom styles for this template -->
   <link href="{% static "css/styles.css" %}" rel="stylesheet">
-  <link href="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.css" %}"
-    rel="stylesheet">
+  <link href="{% static "css/Highlight.css" %}" rel="stylesheet">
   <link rel="shortcut icon" href="#" />
 </head>
 
@@ -89,8 +88,10 @@
       <div class="col-lg-8">
         <div class="container">
           <div class="border rounded-lg my-2 bg-light">
-            <div id="content" class="my-5 mx-4">
-              <textarea id="doc-view" readonly="true"></textarea>
+            <div id="content" class="my-5 mx-5">
+              <div id="highlightArea" class="hwt-container">
+                <textarea id="doc-view" class="hwt-content hwt-input" readonly="true"></textarea>
+              </div>
             </div>
           </div>
         </div>
@@ -140,7 +141,6 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-  <script src="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.js" %}"></script>
   <script src="{% static "node_modules/jszip/dist/jszip.js" %}"></script>
   <script src="{% static "node_modules/file-saver/src/FileSaver.js" %}"></script>
   <script src="{% static "js/classes/annotation.js" %}"></script>
