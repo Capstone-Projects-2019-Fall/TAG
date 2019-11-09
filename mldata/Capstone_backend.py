@@ -95,9 +95,10 @@ def test(nlp, data):
         returnData = []
         for ent in doc.ents:
             annotation = annotationClass(ent.label_, ent.start_char, ent.end_char, ent.text)
-            print("Found entity: %d in %s", annotation.__dict__, d['title'])
+            print("Found entity: %s in %s" % (ent.text, d['title']))
             returnData.append(annotation.__dict__)
         docs.append(documentClass(d['title'], d['text'], returnData).__dict__)
+        # print("Found %d entities", doc.ents.count)
     return json.dumps(docs)
 
 if __name__ == '__main__':
