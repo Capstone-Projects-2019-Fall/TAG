@@ -164,7 +164,7 @@ class Doc {
   // compare annotations and specify how to merge
   compareAnnotations(a, b) {
     // smaller start position
-    if (a.range.startPosition < b.range.startPosition) {
+    if (a.range.startPosition <= b.range.startPosition) {
       // greater end position >> encapsulated
       if (a.range.endPosition >= b.range.endPosition) {
         return a;
@@ -179,7 +179,7 @@ class Doc {
       return b;
     }
     // greater end postion // merge
-    if (a.range.endPosition > b.range.endPosition) {
+    if (a.range.endPosition >= b.range.endPosition) {
       return this.mergeAnnotations(b, a);
     }
   }
