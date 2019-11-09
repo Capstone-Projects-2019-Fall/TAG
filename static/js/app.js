@@ -370,7 +370,7 @@ delete_menu.on('click', 'li', function () {
     tagModel.addAnnotation(range, tagModel.currentCategory);
     console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
   }
-  // 
+  //
   else if ($(this).hasClass('delete-anno-part')) {
     let value = $(this).attr('value').split(' ');
     var range = {
@@ -381,7 +381,7 @@ delete_menu.on('click', 'li', function () {
       tagModel.removeAnnotationByRange(range);
     }
   }
-  // 
+  //
   else if ($(this).hasClass('delete-anno')) {
     let deleteIndex = parseInt($(this).attr('value').replace('delete_anno_', ''));
     tagModel.removeAnnotation(deleteList[deleteIndex]);
@@ -560,8 +560,8 @@ function makeRandColor() {
   });
 }
 
-// 
-function loadJsonData(filename = "", data, obliterate = false) {
+//
+function loadJsonData(data, obliterate = false, filename = "") {
   console.log('Displaying new data from mlalgorithm');
   if (obliterate) {
     tagModel = new TagModel();

@@ -86,6 +86,7 @@ def main(output_dir, data_path, n_iter, model=None):
 
 def test(nlp, data):
     # nlp = spacy.load(model)  # load existing spaCy model
+    nlp = spacy.load('en_core_web_sm')
     # print("Loaded model '%s'" % model)
     docs = []
     for d in data:
