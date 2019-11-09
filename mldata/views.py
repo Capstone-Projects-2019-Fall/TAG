@@ -33,23 +33,24 @@ def index(request):
 
         # Save/Load based on checkboxes on the webpage
         if(request.POST.get("save-model") == "false" and request.POST.get("load-model") == "false"):
-            model = main(None, data, 30)
+            # model = main(None, data, 30)
             print("NOT Saving Model")
-            print("Model not loaded")
+            print("UsingSpacy Pretrained")
 
         elif(request.POST.get("save-model") == "true" and request.POST.get("load-model") == "false"):
+
             model = main("models/", data, 30)
-            print("Saving Model")
+            print("Training Empty Model")
             print("Model not loaded")
-        
+
         elif(request.POST.get("save-model") == "false" and request.POST.get("load-model") == "true"):
             model = main(None, data, 30, "models/")
-            print("Loading Exising Model")
+            print("Training Exising Model")
             print("Model will not be saved")
-        
+
         elif(request.POST.get("save-model") == "true" and request.POST.get("load-model") == "true"):
             model = main("models/", data, 30, "models/")
-            print("Loading Exising Model")
+            print("Training Exising Model")
             print("Model will be saved")
 
         #test the model!
