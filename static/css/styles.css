@@ -125,6 +125,7 @@ ul {
 }
 
 .hide-scroll:hover {
+  overflow-y: auto; /* default for overlay not supported */
   overflow-y: overlay;
 }
 

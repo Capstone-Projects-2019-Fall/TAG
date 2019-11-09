@@ -1,0 +1,63 @@
+.hwt-container {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	display: inline-block;
+	position: relative;
+	overflow: hidden !important;
+	-webkit-text-size-adjust: none !important;
+	border: none;
+}
+
+.hwt-backdrop {
+	margin: 0;
+	padding: 0;
+	position: absolute !important;
+	top: 0 !important;
+	right: -99px !important;
+	bottom: 0 !important;
+	left: 0 !important;
+	border: none;
+	padding-right: 99px !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+}
+
+.hwt-highlights {
+	margin: 0;
+	padding: 0;
+	width: auto !important;
+	height: auto !important;
+	border: none;
+	white-space: pre-wrap !important;
+	word-wrap: break-word !important;
+	color: transparent !important;
+	overflow: hidden !important;
+}
+
+.hwt-input {
+	margin: 0;
+	padding: 0;
+	display: block !important;
+	position: relative !important;
+	margin: 0;
+	padding: 0;
+	border: none;
+	font: inherit;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+}
+
+.hwt-content {
+	margin: 0;
+	padding: 0;
+	border: none;
+	line-height: 2em;
+	background: none !important;
+}
+
+.hwt-content mark {
+	margin: 0;
+	padding: 0;
+	color: inherit;
+}

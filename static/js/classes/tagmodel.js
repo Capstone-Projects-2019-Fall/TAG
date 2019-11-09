@@ -44,12 +44,17 @@ class TagModel {
     let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
     let annotationToAdd = new Annotation(range, content, category);
     console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + category + "]");
-    this.currentDoc.annotations.push(annotationToAdd);
+    return this.currentDoc.sortedPush(annotationToAdd);
   }
 
   removeAnnotation(annotation) {
     console.log("Removing annotation: '" + annotation.content + "' from [" + this.currentCategory + "]");
     this.currentDoc.updateAnnotationList(annotation);
+  }
+
+  removeAnnotationByRange(range) {
+    console.log("Removing part of annotation: " + this.currentDoc.text.substring(range.startPosition, range.endPosition));
+    this.currentDoc.deleteByRange(range, this.currentCategory);
   }
 
   // ----- Categories ----- //
@@ -71,12 +76,13 @@ class TagModel {
 
   renameCategory(newName) {
     // update category name of each annotation
+    let currentCategory = this.currentCategory;
     this.openDocs.forEach(function (doc) {
       doc.annotations.forEach(function (annotation) {
-        if (annotation.label === tagModel.currentCategory) {
+        if (annotation.label === currentCategory) {
           annotation.label = newName;
         }
-      })
+      });
     });
 
     //then update the label name in the category list
@@ -115,5 +121,19 @@ class TagModel {
 
   exportAsString() {
     return JSON.stringify(this.openDocs);
+  }
+
+  getAsZip(){
+    var zip = new JSZip();
+    zip.file("all_docs.json", this.exportAsString());
+    console.log("Added 'all_docs.json' to zip");
+    var docs = zip.folder("docs");
+    console.log("Added folder 'docs' to zip");
+    this.openDocs.forEach(function(doc){
+      let title = doc.title +".json";
+      docs.file(title, JSON.stringify(doc));
+      console.log("Added " + title + " to folder 'docs'");
+    });
+    return zip;
   }
 }
