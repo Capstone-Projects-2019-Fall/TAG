@@ -1,9 +1,13 @@
-{% extends "generic.html" %}
-{% block title %} Create an Account {% endblock %}
+{% block title %} <h1>Create an Account</h1> {% endblock %}
 
 {% block content %}
 <form method="POST" class="form-group"> {% csrf_token %}
     {{ form }}
     <button type="submit" class="btn btn-success">Register</button>
+    <div>
+        <p>Already have an account? Login below</p>
+    </div>
+    <a href="{% url 'login' %}" class="button">Login</a>
+
 </form>
 {% endblock %}
