@@ -85,6 +85,7 @@ $("#fileInputControl").on("change", function () {
   this.value = "";
 });
 
+//
 function uploadDocFromFile(file, invalidFiles){
   // clean up name of string and check if belongs
   // let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
@@ -136,18 +137,25 @@ function uploadDocsFromZipFile(file){
     Object.keys(zip.files).forEach(function (fileName) {
       if(fileName.match(/^__MACOSX/g) !== null){
         console.log("Ignoring __MACOSX compression file: " + fileName);
-      }else{
-        zip.files[fileName].async('string').then(function (fileContents) {
-          if (fileName.match(/.*\.json$/g) !== null) {
-            console.log(fileName + " is a json file");
-           loadJsonData([JSON.parse(fileContents)]);
-          }//end json matches
-          else if (fileName.match(/.*\.txt/g) !== null){
-            console.log(fileName + " is a txt file");
-            //HANDLE TXT FILE INPUT
-          }//end elseif txt
+      }
+      //check whether it's text file
+      else if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
+        // read, create, and add file
+        console.log("File is txt file :", fileName);
+        let fileReader = new FileReader(file);
+        fileReader.onload = function () {
+          let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
+          console.log("Created Doc: " + fileName);
+          addDoc(newDoc);
+        };
+        fileReader.readAsText(file);
+      }
+      else if (fileName.match(/.*\.json$/g) !== null) {
+        console.log(fileName + " is a json file");
+        zip.files[fileName].async('string').then(function (fileData) {
+           loadJsonData([JSON.parse(fileData)]);
         });//end zip.files[]
-      }// endelse 
+      }// if filename match
     }); //for each statmetn
   });// load async promise
 }
