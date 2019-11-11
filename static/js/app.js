@@ -142,13 +142,22 @@ function uploadDocsFromZipFile(file){
       else if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
         // read, create, and add file
         console.log("File is txt file :", fileName);
-        let fileReader = new FileReader(file);
-        fileReader.onload = function () {
-          let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
-          console.log("Created Doc: " + fileName);
-          addDoc(newDoc);
-        };
-        fileReader.readAsText(file);
+
+        zip.files[fileName].async('string').then(function (fileData) {
+           let newDoc = new Doc(fileName, fileData);
+           console.log("Created Doc: " + fileName);
+           addDoc(newDoc);
+        });//end zip.files[]
+
+
+        //OLD CODE --FILE READER CODE--
+        // let fileReader = new FileReader(file);
+        // fileReader.onload = function () {
+        //   let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
+        //   console.log("Created Doc: " + fileName);
+        //   addDoc(newDoc);
+        // };
+        // fileReader.readAsText(file);
       }
       else if (fileName.match(/.*\.json$/g) !== null) {
         console.log(fileName + " is a json file");
