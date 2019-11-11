@@ -1,2 +1,2 @@
 # TAG
-Text Annotation GUI test
+Text Annotation GUI
