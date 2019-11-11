@@ -1,124 +1,281 @@
 //jshint esversion:6
 
-var testContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet nisl suscipit adipiscing. Consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis. Non arcu risus quis varius quam quisque id diam. Mauris augue neque gravida in fermentum. Auctor elit sed vulputate mi sit amet mauris commodo. Urna cursus eget nunc scelerisque viverra mauris in aliquam sem. Vulputate mi sit amet mauris. Feugiat nisl pretium fusce id velit ut tortor pretium. Leo duis ut diam quam. Eu consequat ac felis donec et odio. Amet venenatis urna cursus eget nunc scelerisque viverra mauris. Tortor vitae purus faucibus ornare suspendisse sed nisi lacus sed. Enim nulla aliquet porttitor lacus luctus. Velit egestas dui id ornare arcu odio ut sem nulla. \nRisus nullam eget felis eget nunc lobortis mattis aliquam faucibus. Maecenas pharetra convallis posuere morbi leo urna. Est ante in nibh mauris cursus mattis molestie a. Tortor vitae purus faucibus ornare suspendisse sed. Suscipit tellus mauris a diam. Scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique senectus. Nunc consequat interdum varius sit amet mattis. Adipiscing commodo elit at imperdiet dui accumsan. Pretium fusce id velit ut tortor pretium viverra. Dictumst vestibulum rhoncus est pellentesque elit. Mus mauris vitae ultricies leo integer malesuada nunc vel. Mauris nunc congue nisi vitae suscipit tellus mauris a. Arcu risus quis varius quam quisque. Dictum varius duis at consectetur lorem donec massa sapien faucibus. Bibendum ut tristique et egestas. \nDictum sit amet justo donec enim diam vulputate ut. Maecenas pharetra convallis posuere morbi leo. Et sollicitudin ac orci phasellus egestas tellus. Ornare suspendisse sed nisi lacus. At volutpat diam ut venenatis tellus in metus vulputate. Nullam ac tortor vitae purus. Iaculis nunc sed augue lacus viverra vitae congue eu. Dolor sit amet consectetur adipiscing. Eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum. Enim nec dui nunc mattis enim ut tellus. Velit laoreet id donec ultrices tincidunt arcu non sodales. Pretium lectus quam id leo. Purus non enim praesent elementum facilisis leo vel fringilla est. Risus in hendrerit gravida rutrum. Diam quis enim lobortis scelerisque fermentum dui. Quam quisque id diam vel quam. Sit amet consectetur adipiscing elit ut aliquam purus. \nUltrices mi tempus imperdiet nulla malesuada pellentesque. Leo a diam sollicitudin tempor id eu nisl nunc. Porta nibh venenatis cras sed. Tellus molestie nunc non blandit massa. Sed faucibus turpis in eu mi. Pretium lectus quam id leo in vitae turpis massa sed. At quis risus sed vulputate odio ut enim. Risus viverra adipiscing at in tellus integer feugiat scelerisque. Pellentesque nec nam aliquam sem. Bibendum enim facilisis gravida neque convallis a. Pretium fusce id velit ut tortor pretium viverra suspendisse. Ornare aenean euismod elementum nisi quis eleifend quam adipiscing vitae. Nullam non nisi est sit amet facilisis magna etiam. Dictum non consectetur a erat. Urna cursus eget nunc scelerisque viverra mauris in. \nSuscipit adipiscing bibendum est ultricies integer quis auctor elit. Dolor sit amet consectetur adipiscing. Erat pellentesque adipiscing commodo elit at imperdiet dui accumsan. Sit amet volutpat consequat mauris nunc congue nisi. Ornare aenean euismod elementum nisi quis eleifend quam adipiscing vitae. Quis varius quam quisque id diam vel quam elementum pulvinar. Amet venenatis urna cursus eget nunc. Augue ut lectus arcu bibendum. Pretium viverra suspendisse potenti nullam ac tortor vitae purus faucibus. Penatibus et magnis dis parturient montes nascetur ridiculus mus. In aliquam sem fringilla ut morbi tincidunt augue. Imperdiet massa tincidunt nunc pulvinar sapien et ligula. Amet mattis vulputate enim nulla aliquet porttitor lacus luctus. Amet risus nullam eget felis eget nunc lobortis mattis. A iaculis at erat pellentesque. Integer vitae justo eget magna fermentum iaculis eu. Pretium lectus quam id leo in vitae. \nTempor commodo ullamcorper a lacus vestibulum sed. Nec feugiat nisl pretium fusce id velit. Aliquam sem et tortor consequat. Urna nunc id cursus metus aliquam eleifend mi. Sed blandit libero volutpat sed cras. Arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque. Bibendum at varius vel pharetra. Amet risus nullam eget felis eget nunc lobortis mattis aliquam. Lorem ipsum dolor sit amet consectetur adipiscing elit ut aliquam. Suspendisse sed nisi lacus sed viverra. Enim sit amet venenatis urna cursus. Vivamus at augue eget arcu dictum varius. Lacus sed viverra tellus in hac habitasse. Dictum fusce ut placerat orci nulla pellentesque dignissim. Volutpat lacus laoreet non curabitur gravida. Neque egestas congue quisque egestas diam in arcu. Id diam vel quam elementum pulvinar etiam. Enim sed faucibus turpis in. Amet consectetur adipiscing elit duis. Et magnis dis parturient montes nascetur. \nCommodo ullamcorper a lacus vestibulum sed arcu non odio euismod. Eget velit aliquet sagittis id consectetur purus ut faucibus pulvinar. In ornare quam viverra orci sagittis eu volutpat. Eget est lorem ipsum dolor sit amet consectetur. Est ante in nibh mauris cursus mattis molestie a iaculis. Iaculis nunc sed augue lacus viverra vitae congue eu consequat. Lacus suspendisse faucibus interdum posuere lorem ipsum. Arcu felis bibendum ut tristique. Odio tempor orci dapibus ultrices. Sagittis eu volutpat odio facilisis mauris. Netus et malesuada fames ac turpis egestas maecenas pharetra. Morbi enim nunc faucibus a pellentesque sit. Eget nunc scelerisque viverra mauris. Vitae aliquet nec ullamcorper sit amet risus nullam. Consectetur a erat nam at lectus urna duis convallis convallis. Cras adipiscing enim eu turpis egestas pretium aenean pharetra. Id leo in vitae turpis. A erat nam at lectus urna duis. Augue neque gravida in fermentum et sollicitudin ac orci. \nAdipiscing enim eu turpis egestas pretium aenean pharetra. Ullamcorper a lacus vestibulum sed arcu non. Egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Amet venenatis urna cursus eget nunc scelerisque viverra mauris in. Lorem ipsum dolor sit amet consectetur. Urna nec tincidunt praesent semper feugiat nibh. Ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget. Risus feugiat in ante metus. Velit scelerisque in dictum non consectetur a erat. Risus commodo viverra maecenas accumsan lacus. Est ante in nibh mauris cursus mattis. \nMagnis dis parturient montes nascetur ridiculus. Sit amet nisl purus in mollis nunc. Vitae nunc sed velit dignissim. In arcu cursus euismod quis viverra nibh cras pulvinar. Feugiat in ante metus dictum at tempor commodo. Dui vivamus arcu felis bibendum ut tristique. Vulputate odio ut enim blandit volutpat maecenas volutpat. Tincidunt tortor aliquam nulla facilisi cras fermentum. Faucibus vitae aliquet nec ullamcorper sit amet risus nullam. Scelerisque eu ultrices vitae auctor eu augue ut. Mauris in aliquam sem fringilla ut morbi. Eu turpis egestas pretium aenean pharetra magna ac placerat vestibulum. \nSem fringilla ut morbi tincidunt augue interdum. Faucibus nisl tincidunt eget nullam non nisi est. Nam at lectus urna duis convallis convallis. Sagittis orci a scelerisque purus semper eget duis at tellus. Duis convallis convallis tellus id interdum velit. Vestibulum lorem sed risus ultricies tristique nulla aliquet enim. Id donec ultrices tincidunt arcu non sodales neque sodales. Senectus et netus et malesuada fames ac turpis egestas. Porta non pulvinar neque laoreet suspendisse interdum consectetur libero. Nam at lectus urna duis convallis convallis tellus id interdum. Est ullamcorper eget nulla facilisi etiam dignissim diam quis. Nulla aliquet porttitor lacus luctus accumsan tortor posuere ac ut. \nAdipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna. Consectetur adipiscing elit ut aliquam purus sit amet. Nibh tellus molestie nunc non blandit massa enim. A diam sollicitudin tempor id eu nisl. In iaculis nunc sed augue. Cras sed felis eget velit. Faucibus vitae aliquet nec ullamcorper sit amet risus. Proin sagittis nisl rhoncus mattis rhoncus urna. Porttitor lacus luctus accumsan tortor posuere ac ut consequat. Magnis dis parturient montes nascetur ridiculus. Eget dolor morbi non arcu risus. Velit egestas dui id ornare arcu odio. Eleifend quam adipiscing vitae proin sagittis nisl. At augue eget arcu dictum varius duis at consectetur lorem. Integer feugiat scelerisque varius morbi enim nunc. Etiam non quam lacus suspendisse faucibus interdum posuere. Facilisis sed odio morbi quis commodo odio aenean sed. Fringilla ut morbi tincidunt augue interdum. Nunc scelerisque viverra mauris in. Pellentesque dignissim enim sit amet. \nAnte metus dictum at tempor commodo ullamcorper a lacus vestibulum. Volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Vestibulum rhoncus est pellentesque elit. Porttitor leo a diam sollicitudin tempor id. Magna fringilla urna porttitor rhoncus. Tincidunt lobortis feugiat vivamus at augue eget arcu dictum. Fames ac turpis egestas integer eget aliquet nibh praesent. Sed blandit libero volutpat sed cras ornare. Quis eleifend quam adipiscing vitae proin. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat. Eget mauris pharetra et ultrices. Amet commodo nulla facilisi nullam vehicula ipsum a arcu. Aliquet enim tortor at auctor urna nunc id cursus.';
-
 /* ---------- page setup ---------- */
-var textArea = $('#doc-view');
 var tagModel = new TagModel();
+var textArea = $('#doc-view');
+var highlightArea = $('#highlightArea');
+var label_list = $("#label-list");
+var delete_menu = $('#delete-menu');
+var doc_list = $('#doc-list');
+var deleteList = [];
 
-//testing purposes //remove when implementing dynamic adding
-addDoc(makeFakeDoc());
-addLabel(makeRandName());
+// --------------events-------------- //
 
-
-$(document).ready(function() {
-  $("#fileInputControl").on("change", fileInputControlChangeEventHandler);
+// clicked anywhere
+$(document).on("mousedown", function (e) {
+  // If the clicked element is not the menu
+  if ($(e.target).parents("#delete-menu").length === 0) {
+    // Hide it
+    delete_menu.hide(100);
+    delete_menu.text('');
+  }
 });
 
-function fileInputControlChangeEventHandler(event) {
-  let fileInputControl = event.target;
-  let files = fileInputControl.files;
-  let firstFile = files[0];
-  console.log("Found File: ");
-  console.log(firstFile);
-  let fileReader = new FileReader();
-  fileReader.onload = function(event){
-    let fileContents = fileReader.result;
-    let newDoc = new Doc(firstFile.name, fileContents);
-    console.log("Created Doc: ");
-    console.log(newDoc);
-    addDoc(newDoc);
-  };
-
-  fileReader.readAsText(firstFile);
-}
-//download highlights
-$('#download').click(function () {
+// download highlights
+$('#download').on('click', function () {
   console.log("JSON download requested...");
+  // no files found
   if (tagModel.openDocs.length === 0) {
     alert('Error: No data to download!');
     return;
   }
+  let zip = tagModel.getAsZip();
+  zip.generateAsync({ type: "blob" }).then(function (content) {
+    saveAs(content, "annotations.zip");
+  });
 
-  console.log("download clicked");
+});
+
+
+
+// send to mldata
+$('#sendML').on('click', function () {
+  // no files found
+  if (tagModel.openDocs.length === 0) {
+    alert('Error: No data to send!');
+    return;
+  }
+  // prepare data
+
   var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
-  var url = window.URL.createObjectURL(blob);
-  console.log("Generated object URL: " + url);
-  document.getElementById('download_link').href = url;
-  document.getElementById('download_link').click();
-  window.URL.revokeObjectURL(url);
+  var formData = new FormData();
+  console.log("Sending data to ML");
 
-  console.log("Revoked URL");
-
+  formData.append("jsonUpload", blob);
+  formData.append("save-model", $("#save-model").is(':checked'));
+  formData.append("load-model", $("#load-model").is(':checked'));
+  $.ajax({
+    type: "POST",
+    url: "mldata",
+    contentType: false,
+    processData: false,
+    cache: false,
+    enctype: "multipart/form-data",
+    data: formData,
+    success: function (data) {
+      console.log("Data received from algorithm");
+      loadJsonData(data, true);
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+      console.log("Send failed: \nStatus: " + textStatus + "\nError: " + errorThrown);
+    }
+  });
 });
 
-//on mouse1 release
-textArea.on('mouseup', function () {
-  //if pressed with alt key...
-  if (event.altKey) {
-    //...then remove the annotation
-    let position = textArea[0].selectionStart;
-    tagModel.removeAnnotation(position);
+// add document
+$("#fileInputControl").on("change", function () {
+  console.log("Found " + this.files.length + " files");
+  // add each file to documents
+  $(document.body).css('cursor', 'wait');
+  let invalidFiles = [];
+  [].forEach.call(this.files, function (file) {
+    // clean up name of string and check if belongs
+    let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
+    if (tagModel.docIndex(fileName) === -1) {
+      // check text file
+      if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
+        // read, create, and add file
+        let fileReader = new FileReader(file);
+        fileReader.onload = function () {
+          let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
+          console.log("Created Doc: " + fileName);
+          addDoc(newDoc);
+        };
+        fileReader.readAsText(file);
+      }
+      // check json file
+      else if (fileName.match(/.*\.json$/g) !== null) {
+        // read, create, and add file
+        let fileReader = new FileReader(file);
+        fileReader.onload = function () {
+          console.log("Adding Json Doc: " + fileName);
+          let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
+          let errors = loadJsonData(JSON.parse(newJson));
+          if (errors.length > 0) {
+            invalidFiles.push(errors);
+          }
+        };
+        fileReader.readAsText(file);
+      }
+      // wasn't one of the file types
+      else {
+        invalidFiles.push("File type not supported for: '" + fileName + "'\n");
+      }
+    }
+    // name matches one of the files already uploaded
+    else {
+      invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
+    }
+  });
+  if (invalidFiles.length > 0) {
+    let warning = "";
+    invalidFiles.forEach(function (string) {
+      warning += string;
+    });
+    alert(warning);
   }
+  $(document.body).css('cursor', 'default');
+  this.value = "";
+});
 
-  else {
+var aKeyPressed = false;
+var dKeyPressed = false;
+$(window).keydown(function (e) {
+  if (e.which === 65) {
+    aKeyPressed = true;
+  } else if (e.which === 68) {
+    dKeyPressed = true;
+  }
+}).keyup(function (e) {
+  if (e.which === 65) {
+    aKeyPressed = false;
+  } else if (e.which === 68) {
+    dKeyPressed = false;
+  }
+});
+
+// on mouse release, highlight selected text
+textArea.on('mouseup', function (e) {
+  if (e.which === 1) {
     if (tagModel.currentCategory === null) {
-      alert('Error: Please select a category first');
+      alert('Error: Please create a label!');
       return;
     }
-    let range = {
-      'startPosition': textArea[0].selectionStart,
-      'endPosition': textArea[0].selectionEnd
-    };
-    if (range.startPosition < range.endPosition) {
-      let annotationCreated = tagModel.addAnnotation(range, tagModel.currentCategory);
-      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
-      $('#recent').text(annotationCreated.content.trunc(50, true));
-      addToList(annotationCreated.content);
-    } else {
+    if (tagModel.currentDoc === null) {
+      alert('Error: Please add a document!');
       return;
     }
 
+    let range = {};
+    if (textArea[0].selectionStart < textArea[0].selectionEnd) {
+      range = {
+        startPosition: textArea[0].selectionStart,
+        endPosition: textArea[0].selectionEnd
+      };
+
+      let belongs = tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory);
+
+      if (aKeyPressed) {
+        tagModel.addAnnotation(range, tagModel.currentCategory);
+        renderHighlights();
+      } else if (dKeyPressed) {
+        if (belongs.length > 0) {
+          tagModel.removeAnnotationByRange(range);
+          renderHighlights();
+        }
+      } else {
+        delete_menu.css({
+          top: e.pageY + 'px',
+          left: e.pageX + 'px'
+        });
+        delete_menu.append('<h6>Which?</h6><hr style="margin: 0;">');
+        delete_menu.append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #28A745; color: white;">Add</li>');
+        delete_menu.append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #DC3545; color: white;">Delete</li>');
+        delete_menu.show(100);
+      }
+    }
   }
-  renderTextareaHighlights();
 });
 
+// on right click, show annotations at position to delete
+textArea.on('contextmenu', function (e) {
+  event.preventDefault();
+  let position = textArea[0].selectionStart;
+  deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
+
+  if (deleteList.length > 0) {
+    delete_menu.append(
+      $('<h6/>', {
+        html: 'Delete Annotation:'
+      })
+    ).append(
+      $('<hr/>', {
+        style: 'margin: 0;'
+      })
+    );
+    for (let i = 0; i < deleteList.length; i++) {
+      delete_menu.append(
+        $('<li/>', {
+          class: 'delete-anno',
+          value: 'delete_anno_' + i,
+          style: 'background-color:' + tagModel.getColor(deleteList[i].label),
+          html: '<b>' + deleteList[i].label.trunc(10) + ': </b>'
+        }).append(
+          deleteList[i].content.trunc(20)
+        )
+      ).show(100).
+        css({
+          top: e.pageY + 'px',
+          left: e.pageX + 'px'
+        });
+    }
+  }
+});
+
+// create new label
 $('#add-label').on('click', function () {
-  // todo add name checking // no spaces
-  // todo change to real add function
   var newLabel = makeRandName();
   console.log("CSS: Creating new category: [" + newLabel + "]");
   addLabel(newLabel);
 });
 
 //change the document's label context
-$('#label-list').on('click', '.label', function () {
-  console.log("Selected label: [" + this.getAttribute('value') + "]");
-
+label_list.on('mouseup', '.label', function () {
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
-  //remove label-selected from all
-  $('.label').attr('id', '');
-  //add label-selected to clicked
-  $(this).attr('id', 'label-selected');
+  $('.label').attr('id', '');                   //remove label-selected from all
+  $(this).attr('id', 'label-selected');         //add label-selected to clicked
+});
+
+// on label right click
+label_list.on('contextmenu', function (e) {
+  event.preventDefault();
+  delete_menu.append(
+    $('<li/>', {
+      class: 'delete-label',
+      html: '<b>delete</b>'
+    })
+  ).show(100).
+    css({
+      top: e.pageY + 'px',
+      left: e.pageX + 'px'
+    });
 });
 
 //edit label name
-$('#label-list').on('dblclick', '.label-name', function () {
+label_list.on('dblclick', '.label-name', function () {
   //enble editing
   this.contentEditable = true;
   //open textbox
   $(this).focus().select();
 });
 
+// user pressed enter on label name change
+label_list.on('keypress', '.label-name', function (e) {
+  if (e.which === 13) {
+    $(this).blur();
+  }
+});
+
 //stopped editing label name
-$('#label-list').on('blur', '.label-name', function () {
+label_list.on('blur', '.label-name', function () {
   //disable editing
   this.contentEditable = false;
 
   //fix whitespace and create new label name with no spaces (class names can't have spaces)
   $(this).text($(this).text().trim());
-  let newName = $(this).text().replace(/ /g, "_");
+  let newName = $(this).text().replace(/\s/g, "_").replace(/[\W]/g, '');
+  console.log("Attempting to change label name from " + tagModel.currentCategory + " to " + newName);
 
   //check if the name is the same as previous
   if (newName === tagModel.currentCategory) {
@@ -127,7 +284,7 @@ $('#label-list').on('blur', '.label-name', function () {
   }
 
   //check for valid label name
-  if ((tagModel.checkCategory(newName) >= 0) || newName === '') {
+  if ((tagModel.categoryIndex(newName) >= 0) || newName === '') {
     console.log('Aborting: Invalid label name: "' + newName + '"');
     $(this).text(tagModel.currentCategory);
     return;
@@ -138,53 +295,124 @@ $('#label-list').on('blur', '.label-name', function () {
   $('head').append(
     $('<style/>', {
       id: newName + '-style',
-      html: '.hwt-content .label_' + newName + ' {background-color:' + tagModel.getColor(newName) + ';}'
+      html: '.hwt-content .label_' + newName + ' {background-color:' + tagModel.getColor(tagModel.currentCategory) + ';}'
     })
   );
 
   // update category name in list
-  $('.label[value=' + tagModel.currentCategory + ']').attr('value', newName);
+  $('#label-selected').attr('value', newName);
 
   tagModel.renameCategory(newName);
-  renderTextareaHighlights();
+  renderHighlights();
 });
 
 //invoke colorpicker on icon click
-$('#label-list').on('click', '.colorChange', function () {
-  $(this).parent().children('input').click();   //invoke color picker
+label_list.on('click', '.colorChange', function () {
+  console.log('dropperClicked!');
+  $('#colorChangePicker').click();   //invoke color picker
 });
 
 //change label color
-$('#label-list').on('change', '.colorChangePicker', function () {
-  console.log('Highlight color changed to: ' + this.value);
+$('#colorChangePicker').on('change', function () {
+  console.log('colorPicked: ' + this.value);
 
   //update colors on page
-  $('.label[value=' + tagModel.currentCategory + ']').css('background-color', this.value);
+  $('#label-selected').css('background-color', this.value);
   $('#' + tagModel.currentCategory + '-style').html(
-  '.hwt-content .label_' + tagModel.currentCategory + ' {background-color: ' + this.value + ';}'
+    '.hwt-content .label_' + tagModel.currentCategory + ' {background-color: ' + this.value + ';}'
   );
   tagModel.changeColor(this.value);
+  this.value = "black";
+  renderHighlights();
 });
 
 // add document button
 $('#add-document').on('click', function () {
   // todo add name checking // no spaces
-  // todo change to real add function
-
-  // var newDoc = makeFakeDoc();
-  //
-  // addDoc(newDoc);
   $('#fileInputControl').click();
 });
 
-// change document render
-$('#doc-list').on('click', '.doc-name', function () {
-  console.log("doc-name-click: " + this.getAttribute('value'));
+// change document
+doc_list.on('mouseup', '.doc-name', function (e) {
   tagModel.setCurrentDoc(this.getAttribute('value'));
+  $('#doc-selected').attr('id', '');
+  $(this).attr('id', 'doc-selected');
   textArea.html(tagModel.currentDoc.text);
-  renderTextareaHighlights();
+  renderHighlights();
   resize();
   $(window).scrollTop(0);
+});
+
+// right click document list
+doc_list.on('contextmenu', function (e) {
+  event.preventDefault();
+  delete_menu.append(
+    $('<li/>', {
+      class: 'delete-doc',
+      html: '<b>delete</b>'
+    })
+  ).show(100).
+    css({
+      top: e.pageY + 'px',
+      left: e.pageX + 'px'
+    });
+});
+
+// clicked delete
+delete_menu.on('click', 'li', function () {
+  // delete annotation
+  if ($(this).hasClass('add-anno')) {
+    let value = $(this).attr('value').split(' ');
+    var range = {
+      startPosition: parseInt(value[0]),
+      endPosition: parseInt(value[1])
+    };
+    tagModel.addAnnotation(range, tagModel.currentCategory);
+    console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
+  }
+  //
+  else if ($(this).hasClass('delete-anno-part')) {
+    let value = $(this).attr('value').split(' ');
+    var range = {
+      startPosition: parseInt(value[0]),
+      endPosition: parseInt(value[1])
+    };
+    if (tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory).length > 0) {
+      tagModel.removeAnnotationByRange(range);
+    }
+  }
+  //
+  else if ($(this).hasClass('delete-anno')) {
+    let deleteIndex = parseInt($(this).attr('value').replace('delete_anno_', ''));
+    tagModel.removeAnnotation(deleteList[deleteIndex]);
+  }
+  // delete label
+  else if ($(this).hasClass('delete-label')) {
+    tagModel.deleteCategory();
+    console.log('Category Deleted');
+    resize();
+    $('#label-selected').remove();
+    if (tagModel.currentDoc != null) {
+      $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
+    }
+  }
+  // delete document
+  else if ($(this).hasClass('delete-doc')) {
+    tagModel.deleteDoc();
+    console.log('Document Deleted');
+    if (tagModel.currentDoc != null) {
+      textArea.html(tagModel.currentDoc.text);
+    } else {
+      textArea.html('');
+    }
+    resize();
+    $('#doc-selected').remove();
+    if (tagModel.currentDoc != null) {
+      $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
+    }
+  }
+  renderHighlights();
+  delete_menu.hide(100);
 });
 
 // update size when window is resized
@@ -194,48 +422,74 @@ $(window).on('resize', function () {
   $(window).scrollTop(scrollPercent * $(document).height());
 });
 
-/* ---------------functions---------------- */
+// ----- functions ----- //
 
 //add new document
 function addDoc(doc) {
   tagModel.addDoc(doc);
-
-  if (tagModel.openDocs.length === 1) {
-    tagModel.setCurrentDoc(doc.title);
-    textArea.html(tagModel.currentDoc.text);
-    resize();
-  }
-  $('#doc-list').append(
+  tagModel.setCurrentDoc(doc.title);
+  textArea.html(tagModel.currentDoc.text);
+  resize();
+  $('#doc-selected').attr('id', '');
+  doc_list.append(
     $('<h6/>', {
+      id: 'doc-selected',
       class: 'doc-name',
       value: doc.title,
       html: doc.title
-    }));
-}
+    })
+  );
+  renderHighlights();
+  doc_list.scrollTop(doc_list.prop('scrollHeight'));
+};
 
 //Actually draws the highlights on the textarea.
-function renderTextareaHighlights() {
-  //array to hold everything that needs to be highlighted in doc
-  let highlights = [];
-
-  //loop through the stored annotations and append to the array as a dictionary
-  tagModel.currentDoc.annotations.forEach(function (annotation) {
-    let single_highlight = {
-      highlight: [annotation.range.startPosition, annotation.range.endPosition],
-      className: 'label_' + annotation.label
-    };
-    highlights.push(single_highlight);
+function renderHighlights() {
+  console.log("Rendering");
+  // clear annotation list
+  $('#anno-list').empty();
+  // create sections for each category
+  tagModel.categories.forEach(function (category) {
+    $('#anno-list').append(
+      $('<h6/>', {
+        html: category.name
+      })
+    ).append(
+      $('<ul/>', {
+        class: 'anno-group',
+        value: category.name
+      })
+    );
   });
 
-  //then highlight based on that array
-  $('textarea').highlightWithinTextarea({
-    highlight: highlights
-  });
+  if (tagModel.currentDoc != null) {
+    // add each annotation to their respective categories
+    tagModel.currentDoc.annotations.forEach(function (annotation) {
+      $('.anno-group[value="' + annotation.label + '"]').append(
+        $('<li/>', {
+          class: 'annotation roundCorner',
+          style: 'background-color: ' + tagModel.getColor(annotation.label)
+        }).text(annotation.content.trunc(20, true))
+      );
+    });
+    // update most recent annotation
+    if (tagModel.currentDoc.annotations.length > 0) {
+      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1];
+      $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
+      $('#recentArea').css('display', 'block');
+    }
+    // hide it otherwise
+    else {
+      $('#recentArea').css('display', 'none');
+    }
+  }
+  // (do magic) create highlights
+  makeHighlights();
 }
 
 //add new label
 function addLabel(name, color = null) {
-  if (tagModel.checkCategory(name) === -1) {
+  if (tagModel.categoryIndex(name) === -1) {
     if (color === null) {
       color = makeRandColor();
     }
@@ -245,30 +499,36 @@ function addLabel(name, color = null) {
     $('head').append(
       $('<style/>', {
         id: name + '-style',
+        class: 'highlight-style',
         html: '.hwt-content .label_' + name + ' {background-color: ' + color + ';}'
       })
     );
 
-    // add label to page
+    // select new category
+    tagModel.currentCategory = name;
+    $('#label-selected').attr('id', '');
+
+    // add category to page
     $('#label-list').append(
       $('<div/>', {
         class: 'list-group-item py-2 px-3 label',
+        id: 'label-selected',
         value: name,
-        style: "background-color: " + color,
-        html: '<div class="label-name">' + name + '</div><img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange" style="float: right;"><input class="colorChangePicker" type="color" style="height:0; width:0; visibility: hidden;">'
-      }));
-
-    $('#anno-list').append(
-      $('<h4/>', {
-        class: 'ml-2',
-        html: name
-      })
-    ).append(
-      $('<div/>', {
-        class: 'list-group',
-        value: name
-      })
+        style: "background-color: " + color
+      }).append(
+        $('<img/>', {
+          class: 'colorChange',
+          src: 'https://img.icons8.com/metro/24/000000/color-dropper.png',
+        })
+      ).append(
+        $('<div/>', {
+          class: 'label-name'
+        }).text(name)
+      )
     );
+
+    // go to new label's postion
+    $('#label-list').scrollTop($('#label-list').prop('scrollHeight'));
 
     // first color => make current category the color
     if (tagModel.categories.length === 1) {
@@ -280,48 +540,127 @@ function addLabel(name, color = null) {
   }
 }
 
-function addToList(content) {
-  if (tagModel.currentCategory != null) {
-    $('.list-group[value="' + tagModel.currentCategory + '"]').append(
-      $('<ul/>').text(content.trunc(20, true))
-    );
-    console.log('Success!\nAdded ' + content + ' to ' + tagModel.currentCategory + ' annotation list.');
-  }
-}
-
 //update height on window resize and keep scroll position
 function resize() {
+  $('.highlight').offset(textArea.offset());
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
+  $('.highlight').css('height', textArea.height);
 }
 
-// make fake document  // delete when done
-function makeFakeDoc() {
-  let randName = makeRandName();
-  let startPosition = randomIntFromInterval(0, parseInt(testContent.length / 4));
-  let endPosition = randomIntFromInterval(startPosition, testContent.length);
-  var newDocument = new Doc(randName, testContent.substring(startPosition, endPosition));
-
-  function randomIntFromInterval(min, max) { // min and max included
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
-  return newDocument;
-}
-
-// make fake name // delete when done
+// generate random name
 function makeRandName() {
   return parseInt(Math.random() * Math.pow(10, 14)).toString(36);
 }
 
+// generate random color
 function makeRandColor() {
   return "#000000".replace(/0/g, function () {
     return (~~(Math.random() * 10) + 6).toString(16);
   });
 }
 
-String.prototype.trunc = function (n, truncAfterWord) {
+//
+function loadJsonData(data, obliterate = false, filename = "") {
+  console.log('Displaying new data from mlalgorithm');
+  if (obliterate) {
+    tagModel = new TagModel();
+    $('.label').remove();
+    $('.highlight-style').remove();
+    $('.doc-name').remove();
+  }
+
+  // for invalid files
+  let invalidFiles = [];
+
+  // add remove annotation from annotation list
+  data.forEach(function (doc) {
+    // check if file belongs
+    if (tagModel.docIndex(doc.title) > -1) {
+      invalidFiles.push("File already uploaded for: '" + doc.title + "'\n");
+      return;
+    }
+    // create and add doc
+    var newDoc = new Doc(doc.title, doc.text);
+    addDoc(newDoc);
+    tagModel.currentDoc = newDoc;
+    doc.annotations.forEach(function (annotation) {
+      if (tagModel.categoryIndex(annotation.label) === -1) {
+        addLabel(annotation.label);
+      }
+      tagModel.addAnnotation(annotation.range, annotation.label);
+    });
+  });
+
+  // update everything
+  textArea.html(tagModel.currentDoc.text);
+  renderHighlights();
+  resize();
+  $(window).scrollTop(0);
+
+  // return errors
+  if (invalidFiles.length > 0) {
+    let warning = filename + ":\n";
+    invalidFiles.forEach(function (string) {
+      warning += string;
+    });
+    return warning;
+  }
+}
+
+// make all highlights
+function makeHighlights() {
+  // clear old ones
+  $('.hwt-backdrop').remove();
+  // no document // do nothing // (=== doesn't seem to work here)
+  if (tagModel.currentDoc == null) {
+    return;
+  }
+  // get all annnotations by label
+  let labelSortedAnnos = tagModel.currentDoc.getAnnotationsByLabel();
+  let text = tagModel.currentDoc.text;
+  // calculate offset for height
+  let offset = 0;
+  if (labelSortedAnnos.length > 1) {
+    offset = 4.6 / (labelSortedAnnos.length - 1);
+  }
+  // inital padding height
+  let padding = 0;
+  // do each category
+  for (let category of labelSortedAnnos) {
+    // create highlight area
+    var highlights = $('<div/>', {
+      class: "hwt-highlights hwt-content"
+    });
+    // keep tack of index of text
+    let lastIndex = 0;
+    // do each annotation for current category
+    for (let anno of category) {
+      // Add text before highlight then the highlight itself
+      let string = highlights.html() + text.substring(lastIndex, anno.range.startPosition);
+      string += '<mark class="label_' + anno.label + '" style="padding: ' + padding + 'px 0;">' + text.substring(anno.range.startPosition, anno.range.endPosition) + '</mark>';
+      lastIndex = anno.range.endPosition;
+      highlights.html(string);
+    }
+    //update padding size
+    padding += offset;
+    // add trailing text
+    if (lastIndex !== text.length) {
+      highlights.html(highlights.html() + text.substring(lastIndex, text.length));
+    }
+    // push as first child // important for order
+    highlightArea.prepend(
+      $('<div/>', {
+        class: 'hwt-backdrop'
+      }).append(highlights)
+    );
+  }
+}
+
+// truncate string and add ellipsis // truncAfterWord will only truncate on spaces // returns entire word if string contains no spaces
+String.prototype.trunc = function (n, truncAfterWord = false) {
   if (this.length <= n) { return this; }
-  var subString = this.substr(0, n - 1);
-  return (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
+  let subString = this.substr(0, n - 1);
+  let truncString = (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
+  return (truncString.length === 1 ? subString.substring(0, subString.length - 1) + "…" : truncString);
 };

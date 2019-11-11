@@ -2,11 +2,13 @@
 
 class TagModel {
   constructor() {
-    this.currentDoc = {};
+    this.currentDoc = null;
     this.openDocs = [];
     this.currentCategory = null;
     this.categories = [];
   }
+
+  // ----- documents ----- //
 
   addDoc(doc) {
     console.log("Adding document: '" + doc.title + "'");
@@ -14,24 +16,48 @@ class TagModel {
   }
 
   setCurrentDoc(name) {
+    console.log("Set current document to: '" + name + "'");
     this.currentDoc = this.openDocs.find(doc => doc.title === name);
-    console.log("Set current document to: '" + this.currentDoc.title + "'");
   }
 
-  addAnnotation(range) {
+  docIndex(name) {
+    for (let index = 0; index < this.openDocs.length; index++) {
+      if (this.openDocs[index].title === name) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  deleteDoc() {
+    let docToDelete = this.currentDoc;
+    this.openDocs = this.openDocs.filter(function (doc) {
+      return doc != docToDelete;
+    });
+    this.currentDoc = this.openDocs[0];
+  }
+
+  // ----- annotations ----- //
+
+  addAnnotation(range, category) {
     //validate annotation first, throw error if dumbo
-    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition).trim();
-    let annotationToAdd = new Annotation(range, content, this.currentCategory);
-    console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + this.currentCategory + "]");
-    this.currentDoc.annotations.push(annotationToAdd);
-    return annotationToAdd;
+    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
+    let annotationToAdd = new Annotation(range, content, category);
+    console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + category + "]");
+    return this.currentDoc.sortedPush(annotationToAdd);
   }
 
-  removeAnnotation(position) {
-    let annotationToRemove = this.currentDoc.getAnnotation(position);
-    console.log("Removing annotation: '" + annotationToRemove.content + "' from [" + this.currentCategory + "]");
-    this.currentDoc.updateAnnotationList(annotationToRemove);
+  removeAnnotation(annotation) {
+    console.log("Removing annotation: '" + annotation.content + "' from [" + this.currentCategory + "]");
+    this.currentDoc.updateAnnotationList(annotation);
   }
+
+  removeAnnotationByRange(range) {
+    console.log("Removing part of annotation: " + this.currentDoc.text.substring(range.startPosition, range.endPosition));
+    this.currentDoc.deleteByRange(range, this.currentCategory);
+  }
+
+  // ----- Categories ----- //
 
   addCategory(name, color) {
     let newCategory = new Category(name, color);
@@ -39,7 +65,7 @@ class TagModel {
     this.categories.push(newCategory);
   }
 
-  checkCategory(name) {
+  categoryIndex(name) {
     for (let index = 0; index < this.categories.length; index++) {
       if (this.categories[index].name === name) {
         return index;
@@ -49,37 +75,65 @@ class TagModel {
   }
 
   renameCategory(newName) {
-    //iterate through the annotations and update their labels
-    let count = 0;
-    this.currentDoc.annotations.forEach(function (annotation) {
-      if (annotation.label === tagModel.currentCategory) {
-        count++;
-        console.log("Relabeling [" + annotation.label + "] to [" + newName + "]");
-        annotation.label = newName;
-      }
+    // update category name of each annotation
+    let currentCategory = this.currentCategory;
+    this.openDocs.forEach(function (doc) {
+      doc.annotations.forEach(function (annotation) {
+        if (annotation.label === currentCategory) {
+          annotation.label = newName;
+        }
+      });
     });
 
     //then update the label name in the category list
     this.categories.find(category => category.name === this.currentCategory).name = newName;
+    console.log("Relabeled category: [" + this.currentCategory + "] to [" + newName + "]");
     this.currentCategory = newName;
-
-    console.log("Relabeled " + count + " annotations.");
   }
 
-  removeCategory() {
-    this.categories.splice(this.checkCategory)
+  deleteCategory() {
+    let categoryToDelete = this.currentCategory;
+    this.openDocs.forEach(function (doc) {
+      doc.annotations = doc.annotations.filter(function (annotation) {
+        return annotation.label != categoryToDelete;
+      });
+    });
+    this.categories.splice(this.categories.indexOf(this.categories.find(category => category.name === this.currentCategory)), 1);
+    if (this.categories.length > 0) {
+      this.currentCategory = this.categories[0].name;
+    } else {
+      this.currentCategory = null;
+    }
   }
+
+  // ----- color ----- //
 
   changeColor(color) {
     // update color in category list
     this.categories.find(category => category.name === this.currentCategory).color = color;
   }
 
-  getColor() {
-    return this.categories.find(category => category.name === this.currentCategory).color;
+  getColor(labelname) {
+    return this.categories.find(category => category.name === labelname).color;
   }
+
+  // ----- export ----- //
 
   exportAsString() {
     return JSON.stringify(this.openDocs);
+  }
+
+  getAsZip(){
+    var zip = new JSZip();
+    zip.file("all_docs.json", this.exportAsString());
+    console.log("Added 'all_docs.json' to zip");
+    var docs = zip.folder("docs");
+    console.log("Added folder 'docs' to zip");
+    this.openDocs.forEach(function(doc){
+      let title = doc.title +".json";
+      docs.file(title, JSON.stringify(doc));
+      console.log("Added " + title + " to folder 'docs'");
+    });
+    return zip;
   }
 }
