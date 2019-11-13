@@ -8,7 +8,7 @@ var label_list = $("#label-list");
 var delete_menu = $('#delete-menu');
 var doc_list = $('#doc-list');
 var deleteList = [];
-
+var mostRecentIndex = -1;
 // --------------events-------------- //
 
 // clicked anywhere
@@ -35,8 +35,6 @@ $('#download').on('click', function () {
   });
 
 });
-
-
 
 // send to mldata
 $('#sendML').on('click', function () {
@@ -161,12 +159,13 @@ textArea.on('mouseup', function (e) {
       let belongs = tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory);
 
       if (aKeyPressed) {
-        tagModel.addAnnotation(range, tagModel.currentCategory);
+        mostRecentIndex = tagModel.addAnnotation(range, tagModel.currentCategory);
         renderHighlights();
         clearSelection();
       } else if (dKeyPressed) {
         if (belongs.length > 0) {
           tagModel.removeAnnotationByRange(range);
+          mostRecentIndex = -1;
           renderHighlights();
           clearSelection();
         }
@@ -335,6 +334,7 @@ doc_list.on('mouseup', '.doc-name', function (e) {
   $('#doc-selected').attr('id', '');
   $(this).attr('id', 'doc-selected');
   textArea.text(tagModel.currentDoc.text.escapeHtml());
+  mostRecentIndex = -1;
   renderHighlights();
   resize();
   $(window).scrollTop(0);
@@ -355,19 +355,32 @@ doc_list.on('contextmenu', function (e) {
     });
 });
 
+// clicked annotation // go to highlight position
+$('.annotation').on('click', function() {
+  let annoNum = $(this).attr('value');
+  goToAnno(annoNum);
+});
+
+// annotation list // clicked annotation // go to highlight position
+$('#anno-list').on('click', 'li', function() {
+  let annoNum = $(this).attr('value');
+  goToAnno(annoNum);
+});
+
 // clicked delete
 delete_menu.on('click', 'li', function () {
-  // delete annotation
+  delete_menu.hide(100);
+  // add annotation
   if ($(this).hasClass('add-anno')) {
     let value = $(this).attr('value').split(' ');
     var range = {
       startPosition: parseInt(value[0]),
       endPosition: parseInt(value[1])
     };
-    tagModel.addAnnotation(range, tagModel.currentCategory);
+    mostRecentIndex = tagModel.addAnnotation(range, tagModel.currentCategory);
     console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
   }
-  // 
+  // delete partial highlight
   else if ($(this).hasClass('delete-anno-part')) {
     let value = $(this).attr('value').split(' ');
     var range = {
@@ -377,11 +390,13 @@ delete_menu.on('click', 'li', function () {
     if (tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory).length > 0) {
       tagModel.removeAnnotationByRange(range);
     }
+    mostRecentIndex = -1;
   }
-  // 
+  // delete full highlight
   else if ($(this).hasClass('delete-anno')) {
     let deleteIndex = parseInt($(this).attr('value').replace('delete_anno_', ''));
     tagModel.removeAnnotation(deleteList[deleteIndex]);
+    mostRecentIndex = -1;
   }
   // delete label
   else if ($(this).hasClass('delete-label')) {
@@ -392,6 +407,7 @@ delete_menu.on('click', 'li', function () {
     if (tagModel.currentDoc != null) {
       $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
     }
+    mostRecentIndex = -1;
   }
   // delete document
   else if ($(this).hasClass('delete-doc')) {
@@ -407,9 +423,9 @@ delete_menu.on('click', 'li', function () {
     if (tagModel.currentDoc != null) {
       $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
     }
+    mostRecentIndex = -1;
   }
   renderHighlights();
-  delete_menu.hide(100);
 });
 
 // update size when window is resized
@@ -436,53 +452,10 @@ function addDoc(doc) {
       html: doc.title.escapeHtml()
     })
   );
+  mostRecentIndex = -1;
   renderHighlights();
   doc_list.scrollTop(doc_list.prop('scrollHeight'));
 };
-
-//Actually draws the highlights on the textarea.
-function renderHighlights() {
-  console.log("Rendering");
-  // clear annotation list
-  $('#anno-list').empty();
-  // create sections for each category
-  tagModel.categories.forEach(function (category) {
-    $('#anno-list').append(
-      $('<h6/>', {
-        html: category.name
-      })
-    ).append(
-      $('<ul/>', {
-        class: 'anno-group',
-        value: category.name
-      })
-    );
-  });
-
-  if (tagModel.currentDoc != null) {
-    // add each annotation to their respective categories
-    tagModel.currentDoc.annotations.forEach(function (annotation) {
-      $('.anno-group[value="' + annotation.label + '"]').append(
-        $('<li/>', {
-          class: 'annotation roundCorner',
-          style: 'background-color: ' + tagModel.getColor(annotation.label)
-        }).text(annotation.content.trunc(20, true).escapeHtml())
-      );
-    });
-    // update most recent annotation
-    if (tagModel.currentDoc.annotations.length > 0) {
-      let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1];
-      $('#recent').text(lastAnno.content.trunc(20, true).escapeHtml()).css('background-color', tagModel.getColor(lastAnno.label));
-      $('#recentArea').css('display', 'block');
-    }
-    // hide it otherwise
-    else {
-      $('#recentArea').css('display', 'none');
-    }
-  }
-  // (do magic) create highlights
-  makeHighlights();
-}
 
 //add new label
 function addLabel(name, color = null) {
@@ -555,7 +528,7 @@ function makeRandColor() {
   });
 }
 
-// 
+// import json data
 function loadJsonData(filename = "", data, obliterate = false) {
   console.log('Displaying new data from mlalgorithm');
   if (obliterate) {
@@ -603,9 +576,11 @@ function loadJsonData(filename = "", data, obliterate = false) {
   }
 }
 
-// make all highlights
-function makeHighlights() {
-  // clear old ones
+// make all highlights and annotation list
+function renderHighlights() {
+  // clear old annotation list
+  $('#anno-list').empty();
+  // clear old highlights
   $('.hwt-backdrop').remove();
   // no document // do nothing // (=== doesn't seem to work here)
   if (tagModel.currentDoc == null) {
@@ -621,8 +596,24 @@ function makeHighlights() {
   }
   // inital padding height
   let padding = 0;
+  // set annotation number
+  let annoNum = 0;
   // do each category
   for (let category of labelSortedAnnos) {
+    // annotations list
+    if (category.length === 0) {
+      continue;
+    }
+    $('#anno-list').append(
+      $('<h6/>', {
+        html: category[0].label
+      })
+    ).append(
+      $('<ul/>', {
+        class: 'anno-group',
+        value: category[0].label
+      })
+    );
     // create highlight area
     var highlights = $('<div/>', {
       class: "hwt-highlights hwt-content"
@@ -632,10 +623,20 @@ function makeHighlights() {
     let newText = '';
     // do each annotation for current category
     for (let anno of category) {
+      // add annotation to label
+      $('.anno-group[value="' + anno.label + '"]').append(
+        $('<li/>', {
+          class: 'annotation roundCorner',
+          style: 'background-color: ' + tagModel.getColor(anno.label),
+          value: annoNum
+        }).text(anno.content.trunc(20, true).escapeHtml())
+      );
+
       // Add text before highlight then the highlight itself
       newText += text.substring(lastIndex, anno.range.startPosition);
-      newText += '<mark class="label_' + anno.label + '" style="padding: ' + padding + 'px 0;">' + text.substring(anno.range.startPosition, anno.range.endPosition) + '</mark>';
+      newText += '<mark class="highlight label_' + anno.label + '" value="' + annoNum + '" style="padding: ' + padding + 'px 0;">' + text.substring(anno.range.startPosition, anno.range.endPosition) + '</mark>';
       lastIndex = anno.range.endPosition;;
+      annoNum += 1;
     }
     //update padding size
     padding += offset;
@@ -651,11 +652,24 @@ function makeHighlights() {
       }).append(highlights)
     );
   }
+  // update most recent
+  if (mostRecentIndex != -1) {
+    $('#recent').text(tagModel.currentDoc.annotations[mostRecentIndex].content.trunc(20, true).escapeHtml()).css('background-color', tagModel.getColor(tagModel.currentDoc.annotations[mostRecentIndex].label)).attr('value', mostRecentIndex);
+    $('#recentArea').css('display', 'block');
+  }
+  // hide it otherwise
+  else {
+    $('#recentArea').css('display', 'none');
+  }
 }
 
 function clearSelection() {
   var selection = window.getSelection ? window.getSelection() : document.selection ? document.selection : null;
   if (selection) selection.empty ? selection.empty() : selection.removeAllRanges();
+}
+
+function goToAnno (num) {
+  $(window).scrollTop($('.highlight[value="' + num + '"]').offset().top - 60);
 }
 
 // pass as safe text
