@@ -7,6 +7,10 @@ class Doc {
     this.annotations = [];
   }
 
+  deleteAnnotationByIndex(index) {
+    this.annotations.splice(index, 1);
+  }
+
   // get all annotations at this position
   getAnnotationsAtPos(position) {
     let annotations = this.annotations.filter(function (annotation) {

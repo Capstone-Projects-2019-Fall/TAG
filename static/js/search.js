@@ -4,12 +4,12 @@ $('#textType').on('click', function () {
         $("#regex").show();
         $(this).val('text').fadeOut(200, function() {
             $(this).text('txt').fadeIn();
-        }).fadeIn(200);
+        }).fadeIn(100);
     } else {
         $("#regex").hide();
         $(this).val('regex').fadeOut(200, function() {
             $(this).text('re')
-        }).fadeIn(200);
+        }).fadeIn(100);
     }
 });
 

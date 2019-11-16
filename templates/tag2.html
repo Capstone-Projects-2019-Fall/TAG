@@ -6,6 +6,7 @@
     <style>
         html {
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -21,10 +22,6 @@
         .container {
             box-sizing: border-box;
             padding: 2em;
-        }
-
-        .roundCorner {
-            border-radius: 1em;
         }
 
         #leftContainer {
@@ -78,6 +75,7 @@
         #content {
             background-color: white;
             min-height: calc(100vh - 5.2em);
+            border-radius: 1em;
         }
 
         #rightContainer {
@@ -123,13 +121,13 @@
             border-right: 1px gray solid;
             transition: background-color 0.3s ease, font-size 0.3s ease;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         #textType:hover {
             background-color: #e563b6;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15.5px;
         }
 
         #search-box {
@@ -161,7 +159,8 @@
             border: none;
         }
 
-        h1 {
+        h1,
+        h2 {
             color: white;
             margin: .5em 0;
         }
@@ -233,6 +232,53 @@
             background-color: #5052B5;
         }
 
+        #anno-list {
+            overflow: hidden;
+            margin: 0 -2em;
+            max-height: 45%;
+        }
+
+        #anno-list:hover {
+            overflow-y: overlay;
+        }
+        
+        .annoHeader {
+            margin: .3em 2em;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .anno-group {
+            padding: 0;
+        }
+
+        .annotation {
+            cursor: pointer;
+            min-height: 1em;
+            padding: .75em 2em;
+            word-wrap: break-word;
+            font-size: 16px;
+            font-weight: bold;
+            list-style-position: inside;   
+        }
+
+        .dropArrow {
+            float: right;
+            height: 1.5em;
+            transition: transform 0.3s ease;
+        }
+
+        .upsideDown {
+            transform: rotateX(180deg);
+        }
+
+        #recentArea {
+            display: none;
+        }
+        #recent {
+            margin: 0 -2em;
+        }
+
         #delete-menu {
             display: none;
             z-index: 2;
@@ -296,7 +342,7 @@
         <div id="logoContainer">
             <a href="../"><img id="logo" src="{% static "images/Tag1.png" %}" alt="" /></a>
         </div>
-        <div id="searchContainer" class="roundCorner">
+        <div id="searchContainer">
             <button id="textType" value="text">txt</button>
             <input id="search-box" type="search">
             <button></button>
@@ -323,23 +369,23 @@
     <div id="buttonContainer"></div>
     <div id="center" class="container"></div>
     <div id="centerContainer" class="container">
-            <div id="content" class="container roundCorner">
-                <div id="highlightArea" class="hwt-container">
-                    <textarea id="doc-view" class="hwt-content hwt-input" readonly="true"></textarea>
-                </div>
+        <div id="content" class="container">
+            <div id="highlightArea" class="hwt-container">
+                <textarea id="doc-view" class="hwt-content hwt-input" readonly="true"></textarea>
             </div>
+        </div>
     </div>
     <div id="rightContainer" class="container">
         <h1>Annotations</h1>
         <hr>
-        <div id="recentArea" style="display: none">
-            <h1>Most Recent Highlight</h6>
+        <div id="recentArea">
+            <h2>Most Recent Highlight</h6>
                 <ul class="anno-group">
-                    <li id="recent" class="annotation roundCorner"></li>
+                    <li id="recent" class="annotation"></li>
                 </ul>
-                <hr>
+            <hr>
         </div>
-        <div id='anno-list' class=''></div>
+        <div id='anno-list'></div>
     </div>
     </div>
 

@@ -62,7 +62,7 @@ $('#sendML').on('click', function () {
     data: formData,
     success: function (data) {
       console.log("Data received from algorithm");
-      loadJsonData(data, true);
+      loadJsonData(data, obliterate = true);
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
       console.log("Send failed: \nStatus: " + textStatus + "\nError: " + errorThrown);
@@ -98,9 +98,9 @@ $("#fileInputControl").on("change", function () {
         fileReader.onload = function () {
           console.log("Adding Json Doc: " + fileName);
           let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
-          let errors = loadJsonData(JSON.parse(newJson));
+          let errors = loadJsonData(JSON.parse(newJson), fileName);
           if (errors.length > 0) {
-            invalidFiles.push(errors);
+            alert(errors);        // because of async, these get pushed after the alert goes off, thus having to alert for each instead
           }
         };
         fileReader.readAsText(file);
@@ -115,6 +115,7 @@ $("#fileInputControl").on("change", function () {
       invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
     }
   });
+  // alert about invalid files
   if (invalidFiles.length > 0) {
     let warning = "";
     invalidFiles.forEach(function (string) {
@@ -244,7 +245,7 @@ label_list.on('contextmenu', function (e) {
   delete_menu.append(
     $('<li/>', {
       class: 'delete-label',
-      html: '<b>delete</b>'
+      html: '<b>Delete</b>'
     })
   ).show(100).
     css({
@@ -351,7 +352,7 @@ doc_list.on('contextmenu', function (e) {
   delete_menu.append(
     $('<li/>', {
       class: 'delete-doc',
-      html: '<b>delete</b>'
+      html: '<b>Delete</b>',
     })
   ).show(100).
     css({
@@ -363,13 +364,13 @@ doc_list.on('contextmenu', function (e) {
 // clicked annotation // go to highlight position
 $('.annotation').on('click', function() {
   let annoNum = $(this).attr('value');
-  goToAnno(annoNum);
+  jumpToAnno(annoNum);
 });
 
 // annotation list // clicked annotation // go to highlight position
 $('#anno-list').on('click', 'li', function() {
   let annoNum = $(this).attr('value');
-  goToAnno(annoNum);
+  jumpToAnno(annoNum);
 });
 
 // clicked delete
@@ -428,6 +429,10 @@ delete_menu.on('click', 'li', function () {
     if (tagModel.currentDoc != null) {
       $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
     }
+    mostRecentIndex = -1;
+  } else if ($(this).hasClass('delete-anno-list')) {
+    let value = $(this).attr('value');
+    tagModel.removeAnnotationByIndex(value);
     mostRecentIndex = -1;
   }
   renderHighlights();
@@ -534,9 +539,9 @@ function makeRandColor() {
 }
 
 // import json data
-function loadJsonData(data, obliterate = false, filename = "") {
-  console.log('Displaying new data from mlalgorithm');
+function loadJsonData(data, filename = "", obliterate = false, ) {
   if (obliterate) {
+    console.log('Displaying new data');
     tagModel = new TagModel();
     $('.label').remove();
     $('.highlight-style').remove();
@@ -579,6 +584,7 @@ function loadJsonData(data, obliterate = false, filename = "") {
     });
     return warning;
   }
+  return '';
 }
 
 // make all highlights and annotation list
@@ -610,8 +616,9 @@ function renderHighlights() {
       continue;
     }
     $('#anno-list').append(
-      $('<h6/>', {
-        html: category[0].label
+      $('<h2/>', {
+        html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDown.png>',
+        class: 'annoHeader'
       })
     ).append(
       $('<ul/>', {
@@ -631,7 +638,7 @@ function renderHighlights() {
       // add annotation to label
       $('.anno-group[value="' + anno.label + '"]').append(
         $('<li/>', {
-          class: 'annotation roundCorner',
+          class: 'annotation',
           style: 'background-color: ' + tagModel.getColor(anno.label),
           value: annoNum
         }).text(anno.content.trunc(20, true).escapeHtml())
@@ -673,8 +680,8 @@ function clearSelection() {
   if (selection) selection.empty ? selection.empty() : selection.removeAllRanges();
 }
 
-function goToAnno (num) {
-  $(window).scrollTop($('.highlight[value="' + num + '"]').offset().top - 60);
+function jumpToAnno (num) {
+  $(window).scrollTop($('.highlight[value="' + num + '"]').offset().top);
 }
 
 // pass as safe text

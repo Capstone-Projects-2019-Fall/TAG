@@ -57,6 +57,14 @@ class TagModel {
     this.currentDoc.deleteByRange(range, this.currentCategory);
   }
 
+  removeAnnotationByIndex(index) {
+    // console.log(index);
+    // console.log(this.currentDoc);
+    // console.log(this.currentDoc.annotations);
+    console.log("Removing annotation: '" + this.currentDoc.annotations[index].content + "' from [" + this.currentDoc.annotations[index].label + "]");
+    this.currentDoc.deleteAnnotationByIndex(index);
+  }
+
   // ----- Categories ----- //
 
   addCategory(name, color) {
