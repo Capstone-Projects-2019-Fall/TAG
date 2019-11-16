@@ -64,8 +64,19 @@
             width: 68%;
         }
 
+        #center {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: url({% static "css/images/intro.svg" %});
+            background-size: 70% 70%;
+        }
+
         #content {
             background-color: white;
+            min-height: calc(100vh - 5.2em);
         }
 
         #rightContainer {
@@ -219,7 +230,6 @@
 
         #doc-selected {
             background-color: #5052B5;
-            color: black;
         }
 
         #delete-menu {
@@ -310,12 +320,13 @@
         </div>
     </div>
     <div id="buttonContainer"></div>
+    <div id="center" class="container"></div>
     <div id="centerContainer" class="container">
-        <div id="content" class="container roundCorner">
-            <div id="highlightArea" class="hwt-container">
-                <textarea id="doc-view" class="hwt-content hwt-input" readonly="true"></textarea>
+            <div id="content" class="container roundCorner">
+                <div id="highlightArea" class="hwt-container">
+                    <textarea id="doc-view" class="hwt-content hwt-input" readonly="true"></textarea>
+                </div>
             </div>
-        </div>
     </div>
     <div id="rightContainer" class="container">
         <h1>Annotations</h1>
