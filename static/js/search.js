@@ -1,9 +1,15 @@
 // hide flags
-$('#text-type').on('change', function () {
+$('#textType').on('click', function () {
     if ($(this).val() == 'regex') {
-        $("#regex-flags").show();
+        $("#regex").show();
+        $(this).val('text').fadeOut(200, function() {
+            $(this).text('txt').fadeIn();
+        }).fadeIn(200);
     } else {
-        $("#regex-flags").hide();
+        $("#regex").hide();
+        $(this).val('regex').fadeOut(200, function() {
+            $(this).text('re')
+        }).fadeIn(200);
     }
 });
 
@@ -49,10 +55,10 @@ function searchForText() {
 
     // build regex expression
     let regex = null;
-    if ($("#text-type").children("option:selected").val() === "plain-text") {
-        regex = new RegExp("\\b" + regexEscape(searching) + "\\b", 'g');
-    } else {
+    if ($("#textType").val() === "regex") {
         regex = new RegExp(searching, flags);
+    } else {
+        regex = new RegExp("\\b" + regexEscape(searching) + "\\b", 'g');
     }
 
     // add annotation

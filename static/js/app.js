@@ -179,8 +179,8 @@ textArea.on('mouseup', function (e) {
           left: e.pageX + 'px'
         });
         delete_menu.append('<h6>Which?</h6><hr style="margin: 0;">');
-        delete_menu.append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #28A745; color: white;">Add</li>');
-        delete_menu.append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #DC3545; color: white;">Delete</li>');
+        delete_menu.append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #b7e8c7; font-weight: bold;">Add</li>');
+        delete_menu.append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #ef778c; font-weight: bold;">Delete</li>');
         delete_menu.show(100);
       }
     }

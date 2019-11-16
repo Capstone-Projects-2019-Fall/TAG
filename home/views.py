@@ -7,3 +7,6 @@ def home(request):
 
 def tag(request):
     return render(request, 'tag.html')
+
+def tag2(request):
+    return render(request, 'tag2.html')
