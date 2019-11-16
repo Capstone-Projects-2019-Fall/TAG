@@ -61,3 +61,7 @@
 	padding: 0;
 	color: inherit;
 }
+
+.highlight {
+	top: 0 !important;
+}

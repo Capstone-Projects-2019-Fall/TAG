@@ -98,6 +98,7 @@ function searchForText() {
                 tagModel.removeAnnotation(annotation);
             }
         });
+        mostRecentIndex = -1;
     }
     renderHighlights();
 }
