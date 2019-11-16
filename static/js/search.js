@@ -75,6 +75,9 @@ function searchForText() {
                 regex.lastIndex++;
                 continue;
             }
+            if (match[0].trim() === '') {
+                continue;
+            }
 
             // not empty
             let range = {
