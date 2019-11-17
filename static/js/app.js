@@ -457,7 +457,7 @@ function addDoc(doc) {
   doc_list.append(
     $('<h6/>', {
       id: 'doc-selected',
-      class: 'doc-name',
+      class: 'doc-name hoverWhite',
       value: doc.title.escapeHtml(),
       html: doc.title.escapeHtml()
     })
@@ -491,7 +491,7 @@ function addLabel(name, color = null) {
     // add category to page
     $('#label-list').append(
       $('<div/>', {
-        class: 'list-group-item py-2 px-3 label',
+        class: 'list-group-item hoverWhite label',
         id: 'label-selected',
         value: name,
         style: "background-color: " + color
@@ -617,8 +617,8 @@ function renderHighlights() {
     }
     $('#anno-list').append(
       $('<h2/>', {
-        html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDown.png>',
-        class: 'annoHeader'
+        html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
+        class: 'annoHeader hoverWhite'
       })
     ).append(
       $('<ul/>', {
@@ -638,7 +638,7 @@ function renderHighlights() {
       // add annotation to label
       $('.anno-group[value="' + anno.label + '"]').append(
         $('<li/>', {
-          class: 'annotation',
+          class: 'annotation hoverWhite',
           style: 'background-color: ' + tagModel.getColor(anno.label),
           value: annoNum
         }).text(anno.content.trunc(20, true).escapeHtml())

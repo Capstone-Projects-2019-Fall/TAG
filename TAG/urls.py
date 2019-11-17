@@ -22,5 +22,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('mldata', include('mldata.urls')),
     path('tag', views.tag, name = 'tag'),
-    path('tag2', views.tag2, name = 'tag2'),
 ]

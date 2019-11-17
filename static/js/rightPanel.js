@@ -12,13 +12,13 @@ $('#rightContainer').on('click', function () {
 });
 
 $(document).on('click', function (e) {
-    if (!$(e.target).is('#rightContainer') && !$('#rightContainer').has(e.target).length && !$(e.target).is('#delete-anno-list')) {
+    if (!$(e.target).is('#rightContainer') && !$('#rightContainer').has(e.target).length && !$('#delete-menu').has(e.target).length) {
         $('#rightContainer').css('right', '-28%');
     }
 });
 
 $('#anno-list').on('click', '.annoHeader', function () {
-    $(this).next('ul').toggle(200);
+    $(this).next('ul').slideToggle(200);
     $(this).children('.dropArrow').toggleClass('upsideDown');
 });
 

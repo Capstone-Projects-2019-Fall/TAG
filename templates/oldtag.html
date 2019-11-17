@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>TAG Annotator</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- Custom styles for this template -->
+  <link href="{% static "css/styles.css" %}" rel="stylesheet">
+  <link href="{% static "css/highlight.css" %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="shortcut icon" href="#" />
+
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">TAG</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="input-group mb-0">
+          <div class="input-group-prepend">
+            <button type="button" id="search-button"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </div>
+          <input type="text" id="search-box" class="form-control" placeholder="Search document..." aria-label="Search">
+          <div class="input-group-append">
+            <select id="text-type">
+              <option id="plain-text" value="plain-text">Plain Text</option>
+              <option id="regex" value="regex">Regex</option>
+            </select>
+          </div>
+          <div class="input-group-append">
+              <select id="search-type">
+                <option value="add">Search to Highlight</option>
+                <option value="delete">Search to Delete</option>
+              </select>
+            </div>
+            <div class="input-group-append">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="regex-flags" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: none;">
+                      Flags
+                    </button>
+                    <form class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="i"> Case-insensitive (i)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="m"> Multiline mode (m)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="s"> Dotall Mode (s)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="u"> Unicode Support (u)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="y"> Sticky Mode (y)</label>
+                    </form>
+                  </div>
+            </div>
+        </div>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <!-- Labels -->
+  <div id="content-body" class="container-fluid">
+    <div class="row">
+      <div class="d-none d-lg-block d-md-block col-lg-3 col-md-4">
+        <div class="sticky">
+          <div class="my-2 row bg-dark text-light rounded-lg">
+            <div class="col-lg-12 mt-2 mb-3">
+              <h2 class="mt-3">Labels
+                <div id="add-label" class='add-btn' style="float: right;">+</div>
+              </h2>
+              <hr>
+              <div id="label-list" class="list-group hide-scroll"></div> <!-- Important -->
+            </div>
+          </div>
+          <div class="my-3 row bg-dark text-light rounded-lg">
+            <div id="Documents" class="col-lg-12 mt-2 mb-3">
+              <h2 class="mt-3">Documents
+                <div id="add-document" class='add-btn' style="float: right;">+</div>
+              </h2>
+              <hr>
+              <div id="doc-list" class="ml-2 hide-scroll"></div> <!-- Important -->
+            </div>
+          </div>
+          <div class="my-3 row">
+            <div id="export-container" class="col-lg-12 btn-group">
+              <button id="download" type="button" class="btn btn-primary col-lg-6">Download</button>
+              <button id="sendML" type="button" class="btn btn-success col-lg-6">Annotate</button>
+            </div>
+          </div>
+          <div>
+            <input type="checkbox" id="save-model" value="save-model">
+            <label for="save-model" style="color: white;">Save model</label>
+          </div>
+          <div>
+            <input type="checkbox" id="load-model" value="Load-model">
+            <label for="save-model" style="color: white;">Load model</label>
+          </div>
+        </div>
+      </div>
+      <!-- /.col-lg-2 -->
+
+      <!-- Center Highlight Area -->
+      <div class="col-lg-8">
+        <div class="container">
+          <div class="border rounded-lg my-2 bg-light">
+            <div id="content" class="my-5 mx-5">
+              <div id="highlightArea" class="hwt-container">
+                <textarea id="doc-view" class="hwt-content hwt-input" readonly="true"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.col-lg-8 -->
+
+      <!-- Annotations -->
+      <div class="d-none d-lg-block text-light col-lg-2">
+        <div class="sticky">
+          <div class="my-2 row bg-dark rounded-lg">
+            <div class="col-lg-12 mt-2 mb-3 mx-2">
+              <h2 class="mt-3">Annotations</h2>
+              <hr>
+              <div id="recentArea" style="display: none">
+                <h6 class="mt-3">Most Recent Highlight</h6>
+                <ul class="anno-group">
+                  <li id="recent" class="annotation roundCorner"></li>
+                </ul>
+                <hr>
+              </div>
+              <div id='anno-list' class="mt-2 mb-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.col-lg-2 -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+  <ul id="delete-menu"></ul>
+  <input id="colorChangePicker" class="noDisplay" type="color">
+  <input id="fileInputControl" class="noDisplay" type="file" accept="text/plain,.json" multiple>
+  <a id="download_link" class="noDisplay" download="annotations.json" href=””></a>
+
+  <!-- Footer -->
+  <footer class="py-2 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; TAG (Temple University) 2019</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="{% static "node_modules/jszip/dist/jszip.js" %}"></script>
+  <script src="{% static "node_modules/file-saver/src/FileSaver.js" %}"></script>
+  <script src="{% static "js/classes/annotation.js" %}"></script>
+  <script src="{% static "js/classes/category.js" %}"></script>
+  <script src="{% static "js/classes/doc.js" %}"></script>
+  <script src="{% static "js/classes/tagmodel.js" %}"></script>
+  <script src="{% static "js/app.js" %}"></script>
+  <script src="{% static "js/search.js" %}"></script>
+  <script src="{% static "js/chosen.jquery.min.js" %}"></script>
+</body>
+
+</html>

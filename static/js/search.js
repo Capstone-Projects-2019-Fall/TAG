@@ -1,24 +1,58 @@
-// hide flags
+var send = $('#searchSend');
+$("#regexFlags").hide();
+$("#flags").hide();
+
+// toggle text-regex
 $('#textType').on('click', function () {
-    if ($(this).val() == 'regex') {
-        $("#regex").show();
-        $(this).val('text').fadeOut(200, function() {
-            $(this).text('txt').fadeIn();
+    if ($(this).val() === 'regex') {
+        $('#regexFlags').animate({width: 'toggle'}, 200);
+        $('#searchEntry').animate({width: '90%'}, 200);
+        $(this).val('text');
+        $(this).children('div').fadeOut(200, function() {
+            $(this).text('txt');
         }).fadeIn(100);
+        $('#flags').hide(100);
     } else {
-        $("#regex").hide();
-        $(this).val('regex').fadeOut(200, function() {
-            $(this).text('re')
+        $('#regexFlags').animate({width: 'toggle'}, 200);;
+        $('#searchEntry').animate({width: '70%'}, 200);
+        $(this).val('regex');
+        $(this).children('div').fadeOut(200, function() {
+            $(this).text('re');
         }).fadeIn(100);
     }
 });
 
+// toggle add-delete
+$('#searchToggle').on('click', function () {
+    if (send.val() === 'add') {
+        send.val('delete');
+        send.children('div').fadeOut(200, function() {
+            $(this).text('delete')
+        }).fadeIn(100);
+    } else {
+        send.val('add');
+        send.children('div').fadeOut(200, function() {
+            $(this).text('add')
+        }).fadeIn(100);
+    }
+});
+
+$('#regexFlags').on('click', function() {
+    $("#flags").fadeToggle(100);
+});
+
+$(document).on('click', function(e) {
+    if (!$(e.target).is('#regexFlags') && !$(e.target).is('#flags') && !$('#flags').has(e.target).length) {
+        $('#flags').fadeOut(100);
+    }
+});
+
 // Searching using the search button
-$("#search-button").on("click", function () {
+send.on("click", function () {
     searchForText();
 });
 
-$("#search-box").on("keypress", function (e) {
+$("#searchEntry").on("keypress", function (e) {
     if (e.which === 13) {
         if (!$(this).val()) {
             return;
@@ -41,11 +75,13 @@ function searchForText() {
     }
 
     // Get the text the user is searching for
-    var searching = document.getElementById("search-box").value;
-    if (searching == "" || searching.trim() == "") {
+    var searchString = $("#searchEntry").val();
+    $("#searchEntry").val("");
+    if (searchString == "" || searchString.trim() == "") {
         alert("Please enter the text you want to highlight");
         return;
     }
+    
 
     // Get flags selected from dropdown;
     var flags = "g";
@@ -56,13 +92,13 @@ function searchForText() {
     // build regex expression
     let regex = null;
     if ($("#textType").val() === "regex") {
-        regex = new RegExp(searching, flags);
+        regex = new RegExp(searchString, flags);
     } else {
-        regex = new RegExp("\\b" + regexEscape(searching) + "\\b", 'g');
+        regex = new RegExp("\\b" + regexEscape(searchString) + "\\b", 'g');
     }
 
     // add annotation
-    if ($("#search-type").children("option:selected").val() === "add") {
+    if (send.val() === "add") {
         console.log("Searching to highlight");
 
         //Get the contents of the entire document
