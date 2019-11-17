@@ -3,8 +3,10 @@
 /* ---------- page setup ---------- */
 var tagModel = new TagModel();
 var textArea = $('#doc-view');
+var highlightArea = $('#highlightArea');
 var label_list = $("#label-list");
 var delete_menu = $('#delete-menu');
+var doc_list = $('#doc-list');
 var deleteList = [];
 
 // --------------events-------------- //
@@ -28,7 +30,7 @@ $('#download').on('click', function () {
     return;
   }
   let zip = tagModel.getAsZip();
-  zip.generateAsync({type:"blob"}).then(function(content) {
+  zip.generateAsync({ type: "blob" }).then(function (content) {
     saveAs(content, "annotations.zip");
   });
 
@@ -44,9 +46,14 @@ $('#sendML').on('click', function () {
     return;
   }
   // prepare data
+
   var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
   var formData = new FormData();
+  console.log("Sending data to ML");
+
   formData.append("jsonUpload", blob);
+  formData.append("save-model", $("#save-model").is(':checked'));
+  formData.append("load-model", $("#load-model").is(':checked'));
   $.ajax({
     type: "POST",
     url: "mldata",
@@ -65,7 +72,7 @@ $('#sendML').on('click', function () {
   });
 });
 
-// on file change, add document
+// add document
 $("#fileInputControl").on("change", function () {
   console.log("Found " + this.files.length + " files");
   // add each file to documents
@@ -84,6 +91,7 @@ $("#fileInputControl").on("change", function () {
   $(document.body).css('cursor', 'default');
   this.value = "";
 });
+
 
 //
 function uploadDocFromFile(file, invalidFiles){
@@ -129,8 +137,33 @@ function uploadDocFromFile(file, invalidFiles){
   else {
     invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
   }
+
+if (invalidFiles.length > 0) {
+    let warning = "";
+    invalidFiles.forEach(function (string) {
+      warning += string;
+    });
+    alert(warning);
+  }
+  $(document.body).css('cursor', 'default');
+  this.value = "";
 }
 
+var aKeyPressed = false;
+var dKeyPressed = false;
+$(window).keydown(function (e) {
+  if (e.which === 65) {
+    aKeyPressed = true;
+  } else if (e.which === 68) {
+    dKeyPressed = true;
+  }
+}).keyup(function (e) {
+  if (e.which === 65) {
+    aKeyPressed = false;
+  } else if (e.which === 68) {
+    dKeyPressed = false;
+  }
+});
 function uploadDocsFromZipFile(file){
   // let file = this.files[0];
   JSZip.loadAsync(file).then(function (zip) {
@@ -147,17 +180,7 @@ function uploadDocsFromZipFile(file){
            let newDoc = new Doc(fileName, fileData);
            console.log("Created Doc: " + fileName);
            addDoc(newDoc);
-        });//end zip.files[]
-
-
-        //OLD CODE --FILE READER CODE--
-        // let fileReader = new FileReader(file);
-        // fileReader.onload = function () {
-        //   let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
-        //   console.log("Created Doc: " + fileName);
-        //   addDoc(newDoc);
-        // };
-        // fileReader.readAsText(file);
+        });
       }
       else if (fileName.match(/.*\.json$/g) !== null) {
         console.log(fileName + " is a json file");
@@ -168,6 +191,7 @@ function uploadDocsFromZipFile(file){
     }); //for each statmetn
   });// load async promise
 }
+
 
 // on mouse release, highlight selected text
 textArea.on('mouseup', function (e) {
@@ -180,17 +204,35 @@ textArea.on('mouseup', function (e) {
       alert('Error: Please add a document!');
       return;
     }
-    let range = {
-      'startPosition': textArea[0].selectionStart,
-      'endPosition': textArea[0].selectionEnd
-    };
-    if (range.startPosition < range.endPosition) {
-      tagModel.addAnnotation(range, tagModel.currentCategory);
-      console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
-    } else {
-      return;
+
+    let range = {};
+    if (textArea[0].selectionStart < textArea[0].selectionEnd) {
+      range = {
+        startPosition: textArea[0].selectionStart,
+        endPosition: textArea[0].selectionEnd
+      };
+
+      let belongs = tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory);
+
+      if (aKeyPressed) {
+        tagModel.addAnnotation(range, tagModel.currentCategory);
+        renderHighlights();
+      } else if (dKeyPressed) {
+        if (belongs.length > 0) {
+          tagModel.removeAnnotationByRange(range);
+          renderHighlights();
+        }
+      } else {
+        delete_menu.css({
+          top: e.pageY + 'px',
+          left: e.pageX + 'px'
+        });
+        delete_menu.append('<h6>Which?</h6><hr style="margin: 0;">');
+        delete_menu.append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #28A745; color: white;">Add</li>');
+        delete_menu.append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #DC3545; color: white;">Delete</li>');
+        delete_menu.show(100);
+      }
     }
-    renderTextareaHighlights();
   }
 });
 
@@ -201,15 +243,31 @@ textArea.on('contextmenu', function (e) {
   deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
 
   if (deleteList.length > 0) {
-    delete_menu.append('<h6>Delete Annotation:</h6><hr style="margin: 0;">');
+    delete_menu.append(
+      $('<h6/>', {
+        html: 'Delete Annotation:'
+      })
+    ).append(
+      $('<hr/>', {
+        style: 'margin: 0;'
+      })
+    );
     for (let i = 0; i < deleteList.length; i++) {
-      delete_menu.append('<li class="delete-anno" value="delete_anno_' + i + '" style="background-color:' + tagModel.getColor(deleteList[i].label) + ';"><b>' + deleteList[i].label.trunc(10) + ': </b>' + deleteList[i].content.trunc(20) + '</li>');
+      delete_menu.append(
+        $('<li/>', {
+          class: 'delete-anno',
+          value: 'delete_anno_' + i,
+          style: 'background-color:' + tagModel.getColor(deleteList[i].label),
+          html: '<b>' + deleteList[i].label.trunc(10) + ': </b>'
+        }).append(
+          deleteList[i].content.trunc(20)
+        )
+      ).show(100).
+        css({
+          top: e.pageY + 'px',
+          left: e.pageX + 'px'
+        });
     }
-    delete_menu.show(100).
-      css({
-        top: e.pageY + 'px',
-        left: e.pageX + 'px'
-      });
   }
 });
 
@@ -231,18 +289,16 @@ label_list.on('mouseup', '.label', function () {
 // on label right click
 label_list.on('contextmenu', function (e) {
   event.preventDefault();
-  delete_menu.append('<li class="delete-label" value=""><b>' + 'delete' + '</b></li>');
-  delete_menu.show(100).
+  delete_menu.append(
+    $('<li/>', {
+      class: 'delete-label',
+      html: '<b>delete</b>'
+    })
+  ).show(100).
     css({
       top: e.pageY + 'px',
       left: e.pageX + 'px'
     });
-});
-
-label_list.on('keypress', '.label-name', function (e) {
-  if (e.which === 13) {
-    $(this).blur();
-  }
 });
 
 //edit label name
@@ -251,6 +307,13 @@ label_list.on('dblclick', '.label-name', function () {
   this.contentEditable = true;
   //open textbox
   $(this).focus().select();
+});
+
+// user pressed enter on label name change
+label_list.on('keypress', '.label-name', function (e) {
+  if (e.which === 13) {
+    $(this).blur();
+  }
 });
 
 //stopped editing label name
@@ -289,7 +352,7 @@ label_list.on('blur', '.label-name', function () {
   $('#label-selected').attr('value', newName);
 
   tagModel.renameCategory(newName);
-  renderTextareaHighlights();
+  renderHighlights();
 });
 
 //invoke colorpicker on icon click
@@ -309,7 +372,7 @@ $('#colorChangePicker').on('change', function () {
   );
   tagModel.changeColor(this.value);
   this.value = "black";
-  renderTextareaHighlights();
+  renderHighlights();
 });
 
 // add document button
@@ -319,21 +382,25 @@ $('#add-document').on('click', function () {
 });
 
 // change document
-$('#doc-list').on('mouseup', '.doc-name', function (e) {
+doc_list.on('mouseup', '.doc-name', function (e) {
   tagModel.setCurrentDoc(this.getAttribute('value'));
   $('#doc-selected').attr('id', '');
   $(this).attr('id', 'doc-selected');
   textArea.html(tagModel.currentDoc.text);
-  renderTextareaHighlights();
+  renderHighlights();
   resize();
   $(window).scrollTop(0);
 });
 
 // right click document list
-$('#doc-list').on('contextmenu', function (e) {
+doc_list.on('contextmenu', function (e) {
   event.preventDefault();
-  delete_menu.append('<li class="delete-doc" value=""><b>' + 'delete' + '</b></li>');
-  delete_menu.show(100).
+  delete_menu.append(
+    $('<li/>', {
+      class: 'delete-doc',
+      html: '<b>delete</b>'
+    })
+  ).show(100).
     css({
       top: e.pageY + 'px',
       left: e.pageX + 'px'
@@ -343,8 +410,29 @@ $('#doc-list').on('contextmenu', function (e) {
 // clicked delete
 delete_menu.on('click', 'li', function () {
   // delete annotation
-  if ($(this).hasClass('delete-anno')) {
-    let deleteIndex = parseInt($(this).attr("value").replace('delete_anno_', ''));
+  if ($(this).hasClass('add-anno')) {
+    let value = $(this).attr('value').split(' ');
+    var range = {
+      startPosition: parseInt(value[0]),
+      endPosition: parseInt(value[1])
+    };
+    tagModel.addAnnotation(range, tagModel.currentCategory);
+    console.log("Highlighted: " + range.startPosition + "-" + range.endPosition);
+  }
+  //
+  else if ($(this).hasClass('delete-anno-part')) {
+    let value = $(this).attr('value').split(' ');
+    var range = {
+      startPosition: parseInt(value[0]),
+      endPosition: parseInt(value[1])
+    };
+    if (tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory).length > 0) {
+      tagModel.removeAnnotationByRange(range);
+    }
+  }
+  //
+  else if ($(this).hasClass('delete-anno')) {
+    let deleteIndex = parseInt($(this).attr('value').replace('delete_anno_', ''));
     tagModel.removeAnnotation(deleteList[deleteIndex]);
   }
   // delete label
@@ -372,7 +460,7 @@ delete_menu.on('click', 'li', function () {
       $('.doc-name[value="' + tagModel.currentDoc.title + '"]').attr('id', 'doc-selected');
     }
   }
-  renderTextareaHighlights();
+  renderHighlights();
   delete_menu.hide(100);
 });
 
@@ -392,24 +480,24 @@ function addDoc(doc) {
   textArea.html(tagModel.currentDoc.text);
   resize();
   $('#doc-selected').attr('id', '');
-  $('#doc-list').append(
+  doc_list.append(
     $('<h6/>', {
       id: 'doc-selected',
       class: 'doc-name',
       value: doc.title,
       html: doc.title
-    }));
-  renderTextareaHighlights();
-  $('#doc-list').scrollTop($('#doc-list').prop('scrollHeight'));
-}
+    })
+  );
+  renderHighlights();
+  doc_list.scrollTop(doc_list.prop('scrollHeight'));
+};
 
 //Actually draws the highlights on the textarea.
-function renderTextareaHighlights() {
+function renderHighlights() {
   console.log("Rendering");
-  //array to hold everything that needs to be highlighted in doc
-  let highlights = [];
-
+  // clear annotation list
   $('#anno-list').empty();
+  // create sections for each category
   tagModel.categories.forEach(function (category) {
     $('#anno-list').append(
       $('<h6/>', {
@@ -423,15 +511,9 @@ function renderTextareaHighlights() {
     );
   });
 
-  //loop through the stored annotations and append to the array as a dictionary
   if (tagModel.currentDoc != null) {
+    // add each annotation to their respective categories
     tagModel.currentDoc.annotations.forEach(function (annotation) {
-      let single_highlight = {
-        highlight: [annotation.range.startPosition, annotation.range.endPosition],
-        className: 'label_' + annotation.label
-      };
-      highlights.push(single_highlight);
-
       $('.anno-group[value="' + annotation.label + '"]').append(
         $('<li/>', {
           class: 'annotation roundCorner',
@@ -439,21 +521,19 @@ function renderTextareaHighlights() {
         }).text(annotation.content.trunc(20, true))
       );
     });
-
+    // update most recent annotation
     if (tagModel.currentDoc.annotations.length > 0) {
       let lastAnno = tagModel.currentDoc.annotations[tagModel.currentDoc.annotations.length - 1];
       $('#recent').text(lastAnno.content.trunc(20, true)).css('background-color', tagModel.getColor(lastAnno.label));
       $('#recentArea').css('display', 'block');
-    } else {
-      $('#recent').empty();
+    }
+    // hide it otherwise
+    else {
       $('#recentArea').css('display', 'none');
     }
   }
-
-  //then highlight based on that array
-  $('textarea').highlightWithinTextarea({
-    highlight: highlights
-  });
+  // (do magic) create highlights
+  makeHighlights();
 }
 
 //add new label
@@ -483,9 +563,18 @@ function addLabel(name, color = null) {
         class: 'list-group-item py-2 px-3 label',
         id: 'label-selected',
         value: name,
-        style: "background-color: " + color,
-        html: '<img src="https://img.icons8.com/metro/24/000000/color-dropper.png" class="colorChange"><div  class="label-name">' + name + '</div>'
-      }));
+        style: "background-color: " + color
+      }).append(
+        $('<img/>', {
+          class: 'colorChange',
+          src: 'https://img.icons8.com/metro/24/000000/color-dropper.png',
+        })
+      ).append(
+        $('<div/>', {
+          class: 'label-name'
+        }).text(name)
+      )
+    );
 
     // go to new label's postion
     $('#label-list').scrollTop($('#label-list').prop('scrollHeight'));
@@ -502,8 +591,10 @@ function addLabel(name, color = null) {
 
 //update height on window resize and keep scroll position
 function resize() {
+  $('.highlight').offset(textArea.offset());
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
+  $('.highlight').css('height', textArea.height);
 }
 
 // generate random name
@@ -518,7 +609,8 @@ function makeRandColor() {
   });
 }
 
-function loadJsonData(data, obliterate = false) {
+//
+function loadJsonData(data, obliterate = false, filename = "") {
   console.log('Displaying new data from mlalgorithm');
   if (obliterate) {
     tagModel = new TagModel();
@@ -551,22 +643,73 @@ function loadJsonData(data, obliterate = false) {
 
   // update everything
   textArea.html(tagModel.currentDoc.text);
-  renderTextareaHighlights();
+  renderHighlights();
   resize();
   $(window).scrollTop(0);
 
-  // alert errors
+  // return errors
   if (invalidFiles.length > 0) {
-    let warning = "";
+    let warning = filename + ":\n";
     invalidFiles.forEach(function (string) {
       warning += string;
     });
-    alert(warning);
+    return warning;
   }
 }
 
+// make all highlights
+function makeHighlights() {
+  // clear old ones
+  $('.hwt-backdrop').remove();
+  // no document // do nothing // (=== doesn't seem to work here)
+  if (tagModel.currentDoc == null) {
+    return;
+  }
+  // get all annnotations by label
+  let labelSortedAnnos = tagModel.currentDoc.getAnnotationsByLabel();
+  let text = tagModel.currentDoc.text;
+  // calculate offset for height
+  let offset = 0;
+  if (labelSortedAnnos.length > 1) {
+    offset = 4.6 / (labelSortedAnnos.length - 1);
+  }
+  // inital padding height
+  let padding = 0;
+  // do each category
+  for (let category of labelSortedAnnos) {
+    // create highlight area
+    var highlights = $('<div/>', {
+      class: "hwt-highlights hwt-content"
+    });
+    // keep tack of index of text
+    let lastIndex = 0;
+    // do each annotation for current category
+    for (let anno of category) {
+      // Add text before highlight then the highlight itself
+      let string = highlights.html() + text.substring(lastIndex, anno.range.startPosition);
+      string += '<mark class="label_' + anno.label + '" style="padding: ' + padding + 'px 0;">' + text.substring(anno.range.startPosition, anno.range.endPosition) + '</mark>';
+      lastIndex = anno.range.endPosition;
+      highlights.html(string);
+    }
+    //update padding size
+    padding += offset;
+    // add trailing text
+    if (lastIndex !== text.length) {
+      highlights.html(highlights.html() + text.substring(lastIndex, text.length));
+    }
+    // push as first child // important for order
+    highlightArea.prepend(
+      $('<div/>', {
+        class: 'hwt-backdrop'
+      }).append(highlights)
+    );
+  }
+}
+
+// truncate string and add ellipsis // truncAfterWord will only truncate on spaces // returns entire word if string contains no spaces
 String.prototype.trunc = function (n, truncAfterWord = false) {
   if (this.length <= n) { return this; }
-  var subString = this.substr(0, n - 1);
-  return (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
+  let subString = this.substr(0, n - 1);
+  let truncString = (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
+  return (truncString.length === 1 ? subString.substring(0, subString.length - 1) + "…" : truncString);
 };

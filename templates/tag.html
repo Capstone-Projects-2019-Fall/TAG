@@ -16,9 +16,10 @@
 
   <!-- Custom styles for this template -->
   <link href="{% static "css/styles.css" %}" rel="stylesheet">
-  <link href="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.css" %}"
-    rel="stylesheet">
+  <link href="{% static "css/highlight.css" %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="shortcut icon" href="#" />
+
 </head>
 
 <body>
@@ -30,6 +31,38 @@
         aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="input-group mb-0">
+          <div class="input-group-prepend">
+            <button type="button" id="search-button"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </div>
+          <input type="text" id="search-box" class="form-control" placeholder="Search document..." aria-label="Search">
+          <div class="input-group-append">
+            <select id="text-type">
+              <option id="plain-text" value="plain-text">Plain Text</option>
+              <option id="regex" value="regex">Regex</option>
+            </select>
+          </div>
+          <div class="input-group-append">
+              <select id="search-type">
+                <option value="add">Search to Highlight</option>
+                <option value="delete">Search to Delete</option>
+              </select>
+            </div>
+            <div class="input-group-append">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="regex-flags" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: none;">
+                      Flags
+                    </button>
+                    <form class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="i"> Case-insensitive (i)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="m"> Multiline mode (m)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="s"> Dotall Mode (s)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="u"> Unicode Support (u)</label>
+                      <label class="dropdown-item"><input type="checkbox" name="flag" value="y"> Sticky Mode (y)</label>
+                    </form>
+                  </div>
+            </div>
+        </div>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
@@ -81,6 +114,14 @@
               <button id="sendML" type="button" class="btn btn-success col-lg-6">Annotate</button>
             </div>
           </div>
+          <div>
+            <input type="checkbox" id="save-model" value="save-model">
+            <label for="save-model" style="color: white;">Save model</label>
+          </div>
+          <div>
+            <input type="checkbox" id="load-model" value="Load-model">
+            <label for="save-model" style="color: white;">Load model</label>
+          </div>
         </div>
       </div>
       <!-- /.col-lg-2 -->
@@ -89,8 +130,10 @@
       <div class="col-lg-8">
         <div class="container">
           <div class="border rounded-lg my-2 bg-light">
-            <div id="content" class="my-5 mx-4">
-              <textarea id="doc-view" readonly="true"></textarea>
+            <div id="content" class="my-5 mx-5">
+              <div id="highlightArea" class="hwt-container">
+                <textarea id="doc-view" class="hwt-content hwt-input" readonly="true"></textarea>
+              </div>
             </div>
           </div>
         </div>
@@ -140,7 +183,6 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-  <script src="{% static "node_modules/highlight-within-textarea/jquery.highlight-within-textarea.js" %}"></script>
   <script src="{% static "node_modules/jszip/dist/jszip.js" %}"></script>
   <script src="{% static "node_modules/file-saver/src/FileSaver.js" %}"></script>
   <script src="{% static "js/classes/annotation.js" %}"></script>
@@ -148,6 +190,8 @@
   <script src="{% static "js/classes/doc.js" %}"></script>
   <script src="{% static "js/classes/tagmodel.js" %}"></script>
   <script src="{% static "js/app.js" %}"></script>
+  <script src="{% static "js/search.js" %}"></script>
+  <script src="{% static "js/chosen.jquery.min.js" %}"></script>
 </body>
 
 </html>

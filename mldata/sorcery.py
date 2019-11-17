@@ -7,7 +7,7 @@ class labelSet:
     def __init__(self, name):
         self.name = name
         self.words = set()      # set used for faster searches
-
+#stt
 
 class annotationClass:
     def __init__(self, name):
@@ -16,7 +16,7 @@ class annotationClass:
         self.content = ""
 
     def __repr__(self):
-        return '{"range":{"startPosition":' + str(self.range['startPosition']) + ',"endPosition":' + str(self.range['endPosition']) + '},"content":"' + self.content + '","label":"' + self.name + '"}'
+        return json.dumps('{"range":{"startPosition":' + str(self.range['startPosition']) + ',"endPosition":' + str(self.range['endPosition']) + '},"content":"' + self.content + '","label":"' + self.name + '"}')
 
 
 class documentClass:
