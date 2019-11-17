@@ -21,9 +21,9 @@ $(document).on("mousedown", function (e) {
   }
 });
 
-// download highlights
-$('#download').on('click', function () {
-  console.log("JSON download requested...");
+// download Zip
+$('#dlZip').on('click', function () {
+  console.log("Zip download requested...");
   // no files found
   if (tagModel.openDocs.length === 0) {
     alert('Error: No data to download!');
@@ -33,7 +33,22 @@ $('#download').on('click', function () {
   zip.generateAsync({ type: "blob" }).then(function (content) {
     saveAs(content, "annotations.zip");
   });
+});
 
+// download Json
+$('#dlJson').on('click', function () {
+  console.log("JSON download requested...");
+  // no files found
+  if (tagModel.openDocs.length === 0) {
+    alert('Error: No data to download!');
+    return;
+  }
+  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
+  var url = window.URL.createObjectURL(blob);
+  console.log("Generated object URL: " + url);
+  document.getElementById('download_link').href = url;
+  document.getElementById('download_link').click();
+  window.URL.revokeObjectURL(url);
 });
 
 // send to mldata
@@ -365,13 +380,13 @@ doc_list.on('contextmenu', function (e) {
 });
 
 // clicked annotation // go to highlight position
-$('.annotation').on('click', function() {
+$('.annotation').on('click', function () {
   let annoNum = $(this).attr('value');
   jumpToAnno(annoNum);
 });
 
 // annotation list // clicked annotation // go to highlight position
-$('#anno-list').on('click', 'li', function() {
+$('#anno-list').on('click', 'li', function () {
   let annoNum = $(this).attr('value');
   jumpToAnno(annoNum);
 });
@@ -492,21 +507,21 @@ function addLabel(name, color = null) {
     $('#label-selected').attr('id', '');
 
     // add category to page
-      var newLabel = $('<div/>', {
-        class: 'hoverWhite label',
-        id: 'label-selected',
-        value: name,
-        style: "background-color: " + color
-      }).append(
-        $('<img/>', {
-          class: 'colorChange',
-          src: 'https://img.icons8.com/metro/24/000000/color-dropper.png',
-        })
-      ).append(
-        $('<div/>', {
-          class: 'label-name'
-        }).text(name)
-      );
+    var newLabel = $('<div/>', {
+      class: 'hoverWhite label',
+      id: 'label-selected',
+      value: name,
+      style: "background-color: " + color
+    }).append(
+      $('<img/>', {
+        class: 'colorChange',
+        src: 'https://img.icons8.com/metro/24/000000/color-dropper.png',
+      })
+    ).append(
+      $('<div/>', {
+        class: 'label-name'
+      }).text(name)
+    );
 
     $('#label-list').append(newLabel);
 
@@ -556,7 +571,28 @@ function loadJsonData(data, filename = "", obliterate = false, ) {
   let invalidFiles = [];
 
   // add remove annotation from annotation list
-  data.forEach(function (doc) {
+  try {
+    // json array
+    data.forEach(function (doc) {
+      addJsonElement(doc);
+    });
+  } catch (err) {
+    // caught an error
+    if(err instanceof TypeError) {
+      // single json file
+      try {
+        addJsonElement(data);
+      } catch (innerErr) {
+        invalidFiles.push("Not valid Input\n")
+      }
+    } 
+    // we shouldn't be here
+    else {
+      console.log('SNAFU');
+    }
+  }
+
+  function addJsonElement(doc) {
     // check if file belongs
     if (tagModel.docIndex(doc.title) > -1) {
       invalidFiles.push("File already uploaded for: '" + doc.title + "'\n");
@@ -572,7 +608,7 @@ function loadJsonData(data, filename = "", obliterate = false, ) {
       }
       tagModel.addAnnotation(annotation.range, annotation.label);
     });
-  });
+  }
 
   // update everything
   textArea.text(tagModel.currentDoc.text.escapeHtml());
@@ -622,7 +658,8 @@ function renderHighlights() {
     $('#anno-list').append(
       $('<h2/>', {
         html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
-        class: 'annoHeader hoverWhite'
+        class: 'annoHeader hoverWhite',
+        value: tagModel.getColor(category[0].label)
       })
     ).append(
       $('<ul/>', {
@@ -684,7 +721,7 @@ function clearSelection() {
   if (selection) selection.empty ? selection.empty() : selection.removeAllRanges();
 }
 
-function jumpToAnno (num) {
+function jumpToAnno(num) {
   $(window).scrollTop($('.highlight[value="' + num + '"]').offset().top);
 }
 
@@ -702,18 +739,18 @@ String.prototype.trunc = function (n, truncAfterWord = false) {
 };
 
 // select all text in element
-jQuery.fn.selectText = function(){
+jQuery.fn.selectText = function () {
   var doc = document;
   var element = this[0];
   if (doc.body.createTextRange) {
-      var range = document.body.createTextRange();
-      range.moveToElementText(element);
-      range.select();
+    var range = document.body.createTextRange();
+    range.moveToElementText(element);
+    range.select();
   } else if (window.getSelection) {
-      var selection = window.getSelection();        
-      var range = document.createRange();
-      range.selectNodeContents(element);
-      selection.removeAllRanges();
-      selection.addRange(range);
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(element);
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 };

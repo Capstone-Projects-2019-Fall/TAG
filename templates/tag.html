@@ -9,6 +9,9 @@
 
 <body>
     <div id="leftContainer" class="container">
+        <div id="logoContainer">
+            <a href="../"><img id="logo" src="{% static "images/Tag1.png" %}" alt="" /></a>
+        </div>
         <div id="searchContainer">
             <input id="searchEntry" type="search">
             <button id="textType" class="searchButton" value="text">
@@ -17,23 +20,23 @@
             <button id="searchSend" class="searchButton" value="add">
                 <div>add</div>
             </button>
-            <button id="searchToggle" class="searchButton">></button>
-            <button id="regexFlags" class="searchButton">Flags</button>
+            <button id="searchToggle" class="searchButton">
+                <div>&gt;</div>
+            </button>
+            <button id="regexFlags" class="searchButton"><img id="flagIcon"
+                    src="{% static "images/flagWhite.png" %}"></button>
             <form id="flags">
-                <label class="hoverWhite"><input type="checkbox" name="flag" value="i"><span></span> &nbsp;(i)
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="i"><span></span> &nbsp;(i)
                     Case-insensitive </label>
-                <label class="hoverWhite"><input type="checkbox" name="flag" value="m"><span></span> &nbsp;(m) Multiline
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="m"><span></span> &nbsp;(m) Multiline
                     mode</label>
-                <label class="hoverWhite"><input type="checkbox" name="flag" value="s"><span></span> &nbsp;(s) Dotall
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="s"><span></span> &nbsp;(s) Dotall
                     Mode </label>
-                <label class="hoverWhite"><input type="checkbox" name="flag" value="u"><span></span> &nbsp;(u) Unicode
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="u"><span></span> &nbsp;(u) Unicode
                     Support </label>
-                <label class="hoverWhite"><input type="checkbox" name="flag" value="y"><span></span> &nbsp;(y) Sticky
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="y"><span></span> &nbsp;(y) Sticky
                     Mode </label>
             </form>
-        </div>
-        <div id="logoContainer">
-            <a href="../"><img id="logo" src="{% static "images/Tag1.png" %}" alt="" /></a>
         </div>
 
         <h1>Labels
@@ -50,8 +53,17 @@
         <div id="doc-list" class="listWrapper">
 
         </div>
+        <div id="bButtonContainer">
+            <button id="downloadBtn" class="bButton">Download</button>
+            <button id="loadBtn" class="bButton">Load</button>
+            <button id="trainBtn" class="bButton">Train</button>
+            <button id="annotateBtn" class="bButton">Annotate</button>
+        </div>
+        <div id="dlContainer">
+            <button id="dlZip" class="dlButton">Download Zip</button>
+            <button id="dlJson" class="dlButton">Download Json</button>
+        </div>
     </div>
-    <div id="buttonContainer"></div>
     <div id="center" class="container"></div>
     <div id="centerContainer" class="container">
         <div id="content" class="container">
@@ -74,11 +86,13 @@
     </div>
     </div>
 
+    <!-- No display -->
     <ul id="delete-menu"></ul>
     <input id="colorChangePicker" class="noDisplay" type="color">
     <input id="fileInputControl" class="noDisplay" type="file" accept="text/plain,.json" multiple>
     <a id="download_link" class="noDisplay" download="annotations.json" href=””></a>
 
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script src="{% static "node_modules/jszip/dist/jszip.js" %}"></script>
@@ -88,6 +102,7 @@
     <script src="{% static "js/classes/doc.js" %}"></script>
     <script src="{% static "js/classes/tagmodel.js" %}"></script>
     <script src="{% static "js/app.js" %}"></script>
+    <script src="{% static "js/leftPanel.js" %}"></script>
     <script src="{% static "js/rightPanel.js" %}"></script>
     <script src="{% static "js/search.js" %}"></script>
     <script src="{% static "js/chosen.jquery.min.js" %}"></script>

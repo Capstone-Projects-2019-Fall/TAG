@@ -11,10 +11,9 @@ $('#textType').on('click', function () {
         $(this).children('div').fadeOut(200, function() {
             $(this).text('txt');
         }).fadeIn(100);
-        $('#flags').hide(100);
     } else {
         $('#regexFlags').animate({width: 'toggle'}, 200);;
-        $('#searchEntry').animate({width: '70%'}, 200);
+        $('#searchEntry').animate({width: '80%'}, 200);
         $(this).val('regex');
         $(this).children('div').fadeOut(200, function() {
             $(this).text('re');
@@ -25,11 +24,17 @@ $('#textType').on('click', function () {
 // toggle add-delete
 $('#searchToggle').on('click', function () {
     if (send.val() === 'add') {
+        $(this).children('div').fadeOut(200, function() {
+            $(this).text('<');
+        }).fadeIn(100);
         send.val('delete');
         send.children('div').fadeOut(200, function() {
             $(this).text('delete')
         }).fadeIn(100);
     } else {
+        $(this).children('div').fadeOut(200, function() {
+            $(this).text('>');
+        }).fadeIn(100);
         send.val('add');
         send.children('div').fadeOut(200, function() {
             $(this).text('add')
@@ -38,12 +43,12 @@ $('#searchToggle').on('click', function () {
 });
 
 $('#regexFlags').on('click', function() {
-    $("#flags").fadeToggle(100);
+    $("#flags").slideToggle(300);
 });
 
 $(document).on('click', function(e) {
-    if (!$(e.target).is('#regexFlags') && !$(e.target).is('#flags') && !$('#flags').has(e.target).length) {
-        $('#flags').fadeOut(100);
+    if (!$(e.target).is('#regexFlags') && !$(e.target).is('#flagIcon') && !$(e.target).is('#flags') && !$('#flags').has(e.target).length) {
+        $('#flags').slideUp(300);
     }
 });
 

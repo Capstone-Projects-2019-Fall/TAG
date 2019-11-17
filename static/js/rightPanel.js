@@ -20,6 +20,21 @@ $(document).on('click', function (e) {
 $('#anno-list').on('click', '.annoHeader', function () {
     $(this).next('ul').slideToggle(200);
     $(this).children('.dropArrow').toggleClass('upsideDown');
+    
+    // is closed // open
+    if ($(this).attr('value').charAt(0) === '-') {
+        $(this).attr('value', $(this).attr('value', ).slice(1));
+        $(this).css('background-color', '');
+        $(this).css('color', 'white');
+        $(this).children('.dropArrow').css('content', 'url("/static/images/arrowDownWhite.png")');
+    } 
+    // is opened // close
+    else {
+        $(this).css('background-color', $(this).attr('value'));
+        $(this).attr('value', '-' + $(this).attr('value'));
+        $(this).css('color', 'black');
+        $(this).children('.dropArrow').css('content', 'url("/static/images/arrowDownBlack.png")');
+    }
 });
 
 $('#anno-list').on('contextmenu', '.annotation', function (e) {

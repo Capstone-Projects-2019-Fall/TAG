@@ -133,14 +133,10 @@ class TagModel {
 
   getAsZip(){
     var zip = new JSZip();
-    zip.file("all_docs.json", this.exportAsString());
-    console.log("Added 'all_docs.json' to zip");
-    var docs = zip.folder("docs");
-    console.log("Added folder 'docs' to zip");
     this.openDocs.forEach(function(doc){
       let title = doc.title +".json";
-      docs.file(title, JSON.stringify(doc));
-      console.log("Added " + title + " to folder 'docs'");
+      zip.file(title, JSON.stringify(doc));
+      console.log("Added " + title + " to zip");
     });
     return zip;
   }

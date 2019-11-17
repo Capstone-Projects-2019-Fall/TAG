@@ -36,72 +36,9 @@ body {
   z-index: 1;
 }
 
-.listWrapper {
-  max-height: 25vh;
-  overflow: hidden;
-  margin-left: -2em;
-  margin-right: -2em;
-  margin-top: 1em;
-}
-
-.listWrapper:hover {
-  overflow: overlay;
-}
-
-#buttonContainer {
-  background-color: #b74e91;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 30%;
-  height: 7%;
-  z-index: 2;
-}
-
-#centerContainer {
-  margin-left: 30%;
-  width: 68%;
-}
-
-#center {
-  position: fixed;
-  top: 0;
-  left: 0;
-  margin-left: 30%;
-  height: 100%;
-  width: 70%;
-  background: url("/static/css/images/intro.svg") no-repeat top left;
-  background-size: 100% 100%;
-}
-
-#content {
-  background-color: white;
-  min-height: calc(100vh - 5.2em);
-  border-radius: 1em;
-}
-
-#rightContainer {
-  background-color: #312450;
-  position: fixed;
-  top: 0;
-  right: -28%;
-  width: 30%;
-  height: 100vh;
-  padding-top: 1em;
-  padding-bottom: 0;
-  z-index: 1;
-  transition: box-shadow 0.3s ease, right 0.4s ease;
-  overflow: hidden;
-}
-
-#rightContainer:hover {
-  box-shadow: 0 0 10px white;
-  overflow: overlay;
-}
-
 #logoContainer {
   text-align: center;
-  padding-bottom: 2vh;
+  margin-top: 2vh;
 }
 
 #logo {
@@ -110,7 +47,7 @@ body {
 
 #searchContainer {
   position: relative;
-  margin: -2em -2em 3.5em;
+  margin: 4vh -2em 8vh;
 }
 
 #searchEntry {
@@ -137,6 +74,7 @@ body {
   font-size: 14px;
   background-color: #5E42A6;
   color: white;
+  cursor: pointer;
   transition: background-color 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
 }
 
@@ -144,17 +82,35 @@ body {
   background-color: #b74e91 !important;
 }
 
+#searchSend {
+  padding-left: 10%;
+  width: 90%;
+  top: 3.5vh;
+  left: 0;
+}
+
+#searchToggle {
+  width: 10%;
+  top: 3.5vh;
+  right: 0;
+}
+
 #textType {
   width: 10%;
   left: 0;
+  background-color: #5052B5;
 }
 
 #regexFlags {
   background-color: #5b2548;
   color: white;
   right: 0;
-  width: 20%;
-  cursor: pointer;
+  width: 10%;
+}
+
+#flagIcon {
+  vertical-align: middle;
+  height: 2.5vh;
 }
 
 #flags {
@@ -164,21 +120,7 @@ body {
   background-color: #5b2548;
 }
 
-#searchSend {
-  width: 90%;
-  top: 3.5vh;
-  left: 0;
-  background-color: #5052B5;
-}
-
-#searchToggle {
-  width: 10%;
-  top: 3.5vh;
-  right: 0;
-  background-color: #5052B5;
-}
-
-label {
+.flagOption {
   width: calc(100% - .5em);
   display: block;
   padding: .7em 0 .7em .5em;
@@ -187,22 +129,143 @@ label {
   color: white;
 }
 
-label input {
+.flagOption input {
   display: none;
 }
 
-label span {
+.flagOption span {
   height: 10px;
   width: 10px;
   display: inline-block;
   position: relative;
 }
 
-[type=checkbox]:checked + span:before {
+.flagOption [type=checkbox]:checked + span:before {
   content: '\2714';
   position: absolute;
   top: -5px;
   left: 0;
+}
+
+#bButtonContainer {
+  position: fixed;
+  bottom: 0vh;
+  left: 0;
+  width: 30%;
+  z-index: 3;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.bButton {
+  height: 5vh;
+  border: 0;
+  outline:none;
+  font-weight: bold;
+  font-size: 13px;
+  background-color: #b74e91;
+  color: white;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
+}
+
+.bButton:hover {
+  background-color: white !important;
+  color: black !important;
+  cursor: pointer;
+}
+
+#downloadBtn, #annotateBtn, #trainBtn, #loadBtn {
+  flex: 1;
+}
+
+#dlContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 30%;
+  margin-bottom: 5vh;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.dlButton {
+  height: 5vh;
+  border: 0;
+  font-weight: bold;
+  font-size: 13px;
+  background-color: #b74e91;
+  color: white;
+  letter-spacing: 2px;
+  outline: none;
+  transition: background-color 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
+}
+
+.dlButton:hover {
+  background-color: white !important;
+  color: black !important;
+  cursor: pointer;
+}
+
+#centerContainer {
+  margin-left: 30%;
+  width: 68%;
+}
+
+/* Center */
+
+#center {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-left: 30%;
+  height: 100%;
+  width: 70%;
+  background: url("/static/css/images/intro.svg") no-repeat top left;
+  background-size: 100% 100%;
+}
+
+#content {
+  background-color: white;
+  min-height: calc(100vh - 5.2em);
+  border-radius: 1em;
+}
+
+/* Right */
+
+#rightContainer {
+  background-color: #312450;
+  position: fixed;
+  top: 0;
+  right: -28%;
+  width: 30%;
+  height: 100vh;
+  padding-top: 1em;
+  padding-bottom: 0;
+  z-index: 1;
+  transition: box-shadow 0.3s ease, right 0.4s ease;
+  overflow: hidden;
+}
+
+#rightContainer:hover {
+  box-shadow: 0 0 10px white;
+  overflow: overlay;
+}
+
+/* Other */
+
+.listWrapper {
+  max-height: 25vh;
+  overflow: hidden;
+  margin-left: -2em;
+  margin-right: -2em;
+  margin-top: 1em;
+}
+
+.listWrapper:hover {
+  overflow: overlay;
 }
 
 .addBtn {
@@ -227,6 +290,7 @@ hr {
 h1, h2 {
   color: white;
   margin: .5em 0;
+  letter-spacing: 1px;
 }
 
 .label {
@@ -297,7 +361,7 @@ h1, h2 {
 }
 
 .annoHeader:hover .dropArrow {
-  content: url("/static/images/arrowDownBlack.png");
+  content: url("/static/images/arrowDownBlack.png") !important;
 }
 
 .anno-group {
@@ -317,7 +381,7 @@ h1, h2 {
 
 .dropArrow {
   float: right;
-  height: 1.5em;
+  height: 1.3em;
   transition: transform 0.3s ease, content 0.3s ease;
 }
 
