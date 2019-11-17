@@ -228,7 +228,10 @@ textArea.on('contextmenu', function (e) {
 $('#add-label').on('click', function () {
   var newLabel = makeRandName();
   console.log("CSS: Creating new category: [" + newLabel + "]");
-  addLabel(newLabel);
+  let label = addLabel(newLabel);
+  let labelname = label.children(".label-name");
+  labelname[0].contentEditable = true;
+  labelname.focus().selectText();
 });
 
 //change the document's label context
@@ -255,11 +258,11 @@ label_list.on('contextmenu', function (e) {
 });
 
 //edit label name
-label_list.on('dblclick', '.label-name', function () {
+label_list.on('dblclick', '.label', function () {
   //enble editing
-  this.contentEditable = true;
+  $(this).children('.label-name')[0].contentEditable = true;
   //open textbox
-  $(this).focus().select();
+  $(this).children('.label-name').focus().selectText();
 });
 
 // user pressed enter on label name change
@@ -489,9 +492,8 @@ function addLabel(name, color = null) {
     $('#label-selected').attr('id', '');
 
     // add category to page
-    $('#label-list').append(
-      $('<div/>', {
-        class: 'list-group-item hoverWhite label',
+      var newLabel = $('<div/>', {
+        class: 'hoverWhite label',
         id: 'label-selected',
         value: name,
         style: "background-color: " + color
@@ -504,8 +506,9 @@ function addLabel(name, color = null) {
         $('<div/>', {
           class: 'label-name'
         }).text(name)
-      )
-    );
+      );
+
+    $('#label-list').append(newLabel);
 
     // go to new label's postion
     $('#label-list').scrollTop($('#label-list').prop('scrollHeight'));
@@ -516,6 +519,7 @@ function addLabel(name, color = null) {
   } else {
     console.log('Failed to add label "' + name + '": label already exists!');
   }
+  return newLabel;
 }
 
 //update height on window resize and keep scroll position
@@ -695,4 +699,21 @@ String.prototype.trunc = function (n, truncAfterWord = false) {
   let subString = this.substr(0, n - 1);
   let truncString = (truncAfterWord ? subString.substr(0, subString.lastIndexOf(' ')) : subString) + "…";
   return (truncString.length === 1 ? subString.substring(0, subString.length - 1) + "…" : truncString);
+};
+
+// select all text in element
+jQuery.fn.selectText = function(){
+  var doc = document;
+  var element = this[0];
+  if (doc.body.createTextRange) {
+      var range = document.body.createTextRange();
+      range.moveToElementText(element);
+      range.select();
+  } else if (window.getSelection) {
+      var selection = window.getSelection();        
+      var range = document.createRange();
+      range.selectNodeContents(element);
+      selection.removeAllRanges();
+      selection.addRange(range);
+  }
 };
