@@ -25,7 +25,7 @@ $(document).on("mousedown", function (e) {
 $('#download').on('click', function () {
   console.log("JSON download requested...");
   // no files found
-  if (tagModel.openDocs.length === 0) {
+  if (tagModel.openDocs.length === 0 || tagModel.currentDoc.annotations.length === 0) {
     alert('Error: No data to download!');
     return;
   }
