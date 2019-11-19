@@ -578,14 +578,14 @@ function loadJsonData(data, filename = "", obliterate = false, ) {
     });
   } catch (err) {
     // caught an error
-    if(err instanceof TypeError) {
+    if (err instanceof TypeError) {
       // single json file
       try {
         addJsonElement(data);
       } catch (innerErr) {
         invalidFiles.push("Not valid Input\n")
       }
-    } 
+    }
     // we shouldn't be here
     else {
       console.log('SNAFU');
@@ -655,18 +655,18 @@ function renderHighlights() {
     if (category.length === 0) {
       continue;
     }
-    $('#anno-list').append(
-      $('<h2/>', {
-        html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
-        class: 'annoHeader hoverWhite',
-        value: tagModel.getColor(category[0].label)
-      })
-    ).append(
+    var annoHeader = $('<h2/>', {
+      html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
+      class: 'annoHeader hoverWhite',
+      value: tagModel.getColor(category[0].label)
+    });
+    $('#anno-list').append(annoHeader).append(
       $('<ul/>', {
         class: 'anno-group',
         value: category[0].label
       })
     );
+    annoHeader.click();
     // create highlight area
     var highlights = $('<div/>', {
       class: "hwt-highlights hwt-content"

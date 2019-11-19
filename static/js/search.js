@@ -1,4 +1,5 @@
 var send = $('#searchSend');
+// onload hide flags
 $("#regexFlags").hide();
 $("#flags").hide();
 
@@ -42,21 +43,24 @@ $('#searchToggle').on('click', function () {
     }
 });
 
+// toggle flags menu
 $('#regexFlags').on('click', function() {
     $("#flags").slideToggle(300);
 });
 
+// hide flags when clicked outside
 $(document).on('click', function(e) {
     if (!$(e.target).is('#regexFlags') && !$(e.target).is('#flagIcon') && !$(e.target).is('#flags') && !$('#flags').has(e.target).length) {
         $('#flags').slideUp(300);
     }
 });
 
-// Searching using the search button
+// searching on search button press
 send.on("click", function () {
     searchForText();
 });
 
+// Search on enter key press
 $("#searchEntry").on("keypress", function (e) {
     if (e.which === 13) {
         if (!$(this).val()) {
@@ -66,6 +70,7 @@ $("#searchEntry").on("keypress", function (e) {
     }
 });
 
+// search function
 function searchForText() {
     // check document is made
     if (tagModel.currentDoc === null) {
@@ -144,6 +149,7 @@ function searchForText() {
     renderHighlights();
 }
 
+// escape for non regex search
 function regexEscape(s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
