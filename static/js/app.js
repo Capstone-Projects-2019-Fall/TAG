@@ -44,11 +44,7 @@ $('#dlJson').on('click', function () {
     return;
   }
   var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
-  var url = window.URL.createObjectURL(blob);
-  console.log("Generated object URL: " + url);
-  document.getElementById('download_link').href = url;
-  document.getElementById('download_link').click();
-  window.URL.revokeObjectURL(url);
+  saveAs(blob, "annotations.json");
 });
 
 // send to mldata

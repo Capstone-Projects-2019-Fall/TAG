@@ -26,15 +26,20 @@
             <button id="regexFlags" class="searchButton"><img id="flagIcon"
                     src="{% static "images/flagWhite.png" %}"></button>
             <form id="flags">
-                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="i"><span></span> &nbsp;(i)
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="i"><span></span>
+                    &nbsp;(i)
                     Case-insensitive </label>
-                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="m"><span></span> &nbsp;(m) Multiline
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="m"><span></span>
+                    &nbsp;(m) Multiline
                     mode</label>
-                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="s"><span></span> &nbsp;(s) Dotall
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="s"><span></span>
+                    &nbsp;(s) Dotall
                     Mode </label>
-                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="u"><span></span> &nbsp;(u) Unicode
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="u"><span></span>
+                    &nbsp;(u) Unicode
                     Support </label>
-                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="y"><span></span> &nbsp;(y) Sticky
+                <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="y"><span></span>
+                    &nbsp;(y) Sticky
                     Mode </label>
             </form>
         </div>
@@ -96,10 +101,9 @@
     <a id="download_link" class="noDisplay" download="annotations.json" href=””></a>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.4.1.js"
-        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-    <script src="{% static "node_modules/jszip/dist/jszip.js" %}"></script>
-    <script src="{% static "node_modules/file-saver/src/FileSaver.js" %}"></script>
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "node_modules/jszip/jszip.min.js" %}"></script>
+    <script src="{% static "node_modules/file-saver/FileSaver.js" %}"></script>
     <script src="{% static "js/classes/annotation.js" %}"></script>
     <script src="{% static "js/classes/category.js" %}"></script>
     <script src="{% static "js/classes/doc.js" %}"></script>
@@ -108,7 +112,6 @@
     <script src="{% static "js/leftPanel.js" %}"></script>
     <script src="{% static "js/rightPanel.js" %}"></script>
     <script src="{% static "js/search.js" %}"></script>
-    <script src="{% static "js/chosen.jquery.min.js" %}"></script>
 </body>
 
 </html>
