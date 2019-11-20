@@ -1,8 +1,6 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-# replace sorcery with machine learning program (.py)
-from mldata.sorcery import magic
 from mldata.Capstone_backend import main, data_converting, test
 from django.shortcuts import render
 import time
@@ -55,12 +53,7 @@ def index(request):
 
         #test the model!
         outputFromML = test(model, data)
-        #convert
-        # output = json.dumps(outputFromML)
         endTime = time.time()
         print("Elapsed Time: " + str(endTime-startTime))
 
         return HttpResponse(outputFromML, content_type='application/json')
-
-# def APItest(request):
-#     return render(request, 'APItest.html')

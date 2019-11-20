@@ -57,6 +57,14 @@ class TagModel {
     this.currentDoc.deleteByRange(range, this.currentCategory);
   }
 
+  removeAnnotationByIndex(index) {
+    // console.log(index);
+    // console.log(this.currentDoc);
+    // console.log(this.currentDoc.annotations);
+    console.log("Removing annotation: '" + this.currentDoc.annotations[index].content + "' from [" + this.currentDoc.annotations[index].label + "]");
+    this.currentDoc.deleteAnnotationByIndex(index);
+  }
+
   // ----- Categories ----- //
 
   addCategory(name, color) {
@@ -76,7 +84,7 @@ class TagModel {
 
   renameCategory(newName) {
     // update category name of each annotation
-    let currentCategory = this.currentCategory;
+    let currentCategory = this.currentCategory
     this.openDocs.forEach(function (doc) {
       doc.annotations.forEach(function (annotation) {
         if (annotation.label === currentCategory) {
@@ -125,14 +133,10 @@ class TagModel {
 
   getAsZip(){
     var zip = new JSZip();
-    zip.file("all_docs.json", this.exportAsString());
-    console.log("Added 'all_docs.json' to zip");
-    var docs = zip.folder("docs");
-    console.log("Added folder 'docs' to zip");
     this.openDocs.forEach(function(doc){
       let title = doc.title +".json";
-      docs.file(title, JSON.stringify(doc));
-      console.log("Added " + title + " to folder 'docs'");
+      zip.file(title, JSON.stringify(doc));
+      console.log("Added " + title + " to zip");
     });
     return zip;
   }

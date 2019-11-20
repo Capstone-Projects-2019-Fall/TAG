@@ -1,18 +1,67 @@
-// hide flags
-$('#text-type').on('change', function () {
-    if ($(this).val() == 'regex') {
-        $("#regex-flags").show();
+var send = $('#searchSend');
+// onload hide flags
+$("#regexFlags").hide();
+$("#flags").hide();
+
+// toggle text-regex
+$('#textType').on('click', function () {
+    if ($(this).val() === 'regex') {
+        $('#regexFlags').animate({width: 'toggle'}, 200);
+        $('#searchEntry').animate({width: '90%'}, 200);
+        $(this).val('text');
+        $(this).children('div').fadeOut(200, function() {
+            $(this).text('txt');
+        }).fadeIn(100);
     } else {
-        $("#regex-flags").hide();
+        $('#regexFlags').animate({width: 'toggle'}, 200);;
+        $('#searchEntry').animate({width: '80%'}, 200);
+        $(this).val('regex');
+        $(this).children('div').fadeOut(200, function() {
+            $(this).text('re');
+        }).fadeIn(100);
     }
 });
 
-// Searching using the search button
-$("#search-button").on("click", function () {
+// toggle add-delete
+$('#searchToggle').on('click', function () {
+    if (send.val() === 'add') {
+        $(this).children('div').fadeOut(200, function() {
+            $(this).text('<');
+        }).fadeIn(100);
+        send.val('delete');
+        send.children('div').fadeOut(200, function() {
+            $(this).text('delete')
+        }).fadeIn(100);
+    } else {
+        $(this).children('div').fadeOut(200, function() {
+            $(this).text('>');
+        }).fadeIn(100);
+        send.val('add');
+        send.children('div').fadeOut(200, function() {
+            $(this).text('add')
+        }).fadeIn(100);
+    }
+});
+
+// toggle flags menu
+$('#regexFlags').on('click', function() {
+    $("#flags").slideToggle(300);
+});
+
+// hide flags when clicked outside
+$(document).on('click', function(e) {
+    if (!$(e.target).is('#regexFlags') && !$(e.target).is('#flagIcon') && !$(e.target).is('#flags') && !$('#flags').has(e.target).length) {
+        $('#flags').slideUp(300);
+    }
+});
+
+// searching on search button press
+send.on("click", function () {
     searchForText();
 });
 
-$("#search-box").on("keypress", function (e) {
+// Search on enter key press
+$("#searchEntry").on("keypress", function (e) {
     if (e.which === 13) {
         if (!$(this).val()) {
             return;
@@ -21,6 +70,7 @@ $("#search-box").on("keypress", function (e) {
     }
 });
 
+// search function
 function searchForText() {
     // check document is made
     if (tagModel.currentDoc === null) {
@@ -35,11 +85,13 @@ function searchForText() {
     }
 
     // Get the text the user is searching for
-    var searching = document.getElementById("search-box").value;
-    if (searching == "" || searching.trim() == "") {
+    var searchString = $("#searchEntry").val();
+    $("#searchEntry").val("");
+    if (searchString == "" || searchString.trim() == "") {
         alert("Please enter the text you want to highlight");
         return;
     }
+    
 
     // Get flags selected from dropdown;
     var flags = "g";
@@ -49,14 +101,14 @@ function searchForText() {
 
     // build regex expression
     let regex = null;
-    if ($("#text-type").children("option:selected").val() === "plain-text") {
-        regex = new RegExp("\\b" + regexEscape(searching) + "\\b", 'g');
+    if ($("#textType").val() === "regex") {
+        regex = new RegExp(searchString, flags);
     } else {
-        regex = new RegExp(searching, flags);
+        regex = new RegExp("\\b" + regexEscape(searchString) + "\\b", 'gi');
     }
 
     // add annotation
-    if ($("#search-type").children("option:selected").val() === "add") {
+    if (send.val() === "add") {
         console.log("Searching to highlight");
 
         //Get the contents of the entire document
@@ -67,6 +119,9 @@ function searchForText() {
             // ignore empty
             if (match.index === regex.lastIndex) {
                 regex.lastIndex++;
+                continue;
+            }
+            if (match[0].trim() === '') {
                 continue;
             }
 
@@ -89,10 +144,12 @@ function searchForText() {
                 tagModel.removeAnnotation(annotation);
             }
         });
+        mostRecentIndex = -1;
     }
     renderHighlights();
 }
 
+// escape for non regex search
 function regexEscape(s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
