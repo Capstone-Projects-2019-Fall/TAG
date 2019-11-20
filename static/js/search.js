@@ -104,7 +104,7 @@ function searchForText() {
     if ($("#textType").val() === "regex") {
         regex = new RegExp(searchString, flags);
     } else {
-        regex = new RegExp("\\b" + regexEscape(searchString) + "\\b", 'g');
+        regex = new RegExp("\\b" + regexEscape(searchString) + "\\b", 'gi');
     }
 
     // add annotation
