@@ -548,7 +548,7 @@ function addLabel(name, color = null) {
     }).append(
       $('<img/>', {
         class: 'colorChange',
-        src: 'https://img.icons8.com/metro/24/000000/color-dropper.png',
+        src: 'static/images/dropper.png',
       })
     ).append(
       $('<div/>', {
