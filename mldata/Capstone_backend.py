@@ -33,61 +33,9 @@ def data_converting(data):
                 final_data.append((d['text'],temp))
     return final_data, label_set
 
-def main(output_dir, data_path, n_iter, model=None):
-    # """Set up the pipeline and entity recognizer, and train the new entity."""
-    random.seed(0)
-    train_data, labelset = data_converting(data_path)
-    print("Training with: ", train_data)
-    if model is not None:
-        nlp = spacy.load(model)  # load existing spaCy model
-        print("Loaded model '%s'" % model)
-    else:
-        nlp = spacy.blank("en")  # create blank Language class
-        print("Created blank 'en' model")
-    # Add entity recognizer to model if it's not in the pipeline
-    # nlp.create_pipe works for built-ins that are registered with spaCy
-    if "ner" not in nlp.pipe_names:
-        ner = nlp.create_pipe("ner")
-        nlp.add_pipe(ner)
-    # otherwise, get it, so we can add labels to it
-    else:
-        ner = nlp.get_pipe("ner")
-    for l in labelset:
-        ner.add_label(l)
-
-    # Adding extraneous labels shouldn't mess anything up
-    if model is None:
-        optimizer = nlp.begin_training()
-    else:
-        optimizer = nlp.resume_training()
-    move_names = list(ner.move_names)
-    # get names of other pipes to disable them during training
-    other_pipes = [pipe for pipe in nlp.pipe_names if pipe != "ner"]
-    with nlp.disable_pipes(*other_pipes):  # only train NER
-        sizes = compounding(1.0, 4.0, 1.001)
-        # batch up the examples using spaCy's minibatch
-        for itn in range(n_iter):
-            random.shuffle(train_data)
-            batches = minibatch(train_data, size=sizes)
-            losses = {}
-            for batch in batches:
-                texts, annotations = zip(*batch)
-                nlp.update(texts, annotations, sgd=optimizer, drop=0.35, losses=losses)
-                print("Losses", losses)
-    # save model to output directory
-    if output_dir is not None:
-        output_dir = Path(output_dir)
-        if not output_dir.exists():
-            output_dir.mkdir()
-        nlp.to_disk(output_dir)
-        print("Saved model to", output_dir)
-
-    return nlp
-
-def test(nlp, data):
+def main(data):
     # nlp = spacy.load(model)  # load existing spaCy model
-    if nlp is None:
-        nlp = spacy.load('en_core_web_sm')
+    nlp = spacy.load('en_core_web_lg')
     # print("Loaded model '%s'" % model)
     docs = []
     for d in data:

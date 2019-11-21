@@ -48,7 +48,7 @@ $('#dlJson').on('click', function () {
 });
 
 // send to mldata
-$('#sendML').on('click', function () {
+$('#annotateBtn').on('click', function () {
   // no files found
   if (tagModel.openDocs.length === 0) {
     alert('Error: No data to send!');
@@ -61,8 +61,6 @@ $('#sendML').on('click', function () {
   console.log("Sending data to ML");
 
   formData.append("jsonUpload", blob);
-  formData.append("save-model", $("#save-model").is(':checked'));
-  formData.append("load-model", $("#load-model").is(':checked'));
   $.ajax({
     type: "POST",
     url: "mldata",
