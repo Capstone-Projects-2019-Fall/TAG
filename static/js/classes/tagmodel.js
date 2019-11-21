@@ -6,7 +6,6 @@ class TagModel {
     this.openDocs = [];
     this.currentCategory = null;
     this.categories = [];
-    this.deleteList = [];
   }
 
   // ----- documents ----- //
@@ -45,27 +44,25 @@ class TagModel {
     let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
     let annotationToAdd = new Annotation(range, content, category);
     console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + category + "]");
-    this.currentDoc.annotations.push(annotationToAdd);
-    return annotationToAdd;
-  }
-
-  getAnnotationsAtPos(position) {
-    this.deleteList = this.currentDoc.getAnnotationsAtPos(position);
-    return this.deleteList;
-  }
-
-  getDeleteItem(index) {
-    return this.deleteList[index];
-  }
-
-  clearDeleteList() {
-    this.deleteList = [];
+    return this.currentDoc.sortedPush(annotationToAdd);
   }
 
   removeAnnotation(annotation) {
     console.log("Removing annotation: '" + annotation.content + "' from [" + this.currentCategory + "]");
     this.currentDoc.updateAnnotationList(annotation);
-    this.clearDeleteList();
+  }
+
+  removeAnnotationByRange(range) {
+    console.log("Removing part of annotation: " + this.currentDoc.text.substring(range.startPosition, range.endPosition));
+    this.currentDoc.deleteByRange(range, this.currentCategory);
+  }
+
+  removeAnnotationByIndex(index) {
+    // console.log(index);
+    // console.log(this.currentDoc);
+    // console.log(this.currentDoc.annotations);
+    console.log("Removing annotation: '" + this.currentDoc.annotations[index].content + "' from [" + this.currentDoc.annotations[index].label + "]");
+    this.currentDoc.deleteAnnotationByIndex(index);
   }
 
   // ----- Categories ----- //
@@ -87,12 +84,13 @@ class TagModel {
 
   renameCategory(newName) {
     // update category name of each annotation
+    let currentCategory = this.currentCategory
     this.openDocs.forEach(function (doc) {
       doc.annotations.forEach(function (annotation) {
-        if (annotation.label === this.currentCategory) {
+        if (annotation.label === currentCategory) {
           annotation.label = newName;
         }
-      })
+      });
     });
 
     //then update the label name in the category list
@@ -131,5 +129,15 @@ class TagModel {
 
   exportAsString() {
     return JSON.stringify(this.openDocs);
+  }
+
+  getAsZip(){
+    var zip = new JSZip();
+    this.openDocs.forEach(function(doc){
+      let title = doc.title +".json";
+      zip.file(title, JSON.stringify(doc));
+      console.log("Added " + title + " to zip");
+    });
+    return zip;
   }
 }

@@ -1,45 +1,315 @@
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  min-height: 100%;
+html {
+  overflow-x: hidden;
   scroll-behavior: smooth;
+  outline: none;
 }
 
 body {
+  background-color: #5e42a6;
   overflow-x: hidden;
-  padding-top: 56px;
-  background: #141516;
+  overflow-y: auto;
+  overflow-y: overlay;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'H', 'Trebuchet MS', Helvetica;
 }
 
-#content-body {
-  margin: auto;
-  max-width: 1400px;
+.hoverWhite:hover {
+  cursor: pointer;
+  background-color: white !important;
+  color: black !important;
 }
 
-h2 {
-  word-wrap: break-word;
+.container {
+  box-sizing: border-box;
+  padding: 2em;
 }
 
-.add-btn:hover {
+#leftContainer {
+  background-color: #312450;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100vh;
+  z-index: 1;
+}
+
+#logoContainer {
+  text-align: center;
+  margin-top: 2vh;
+}
+
+#logo {
+  max-height: 5vh;
+}
+
+#searchContainer {
+  position: relative;
+  margin: 4vh -2em 8vh;
+}
+
+#searchEntry {
+  box-sizing: border-box;
+  width: 90%;
+  height: 3.5vh;
+  padding: 0 2%;
+  margin: 0;
+  margin-left: 10%;
+  border: none;
+  outline:none;
+  background-color: white;
+  font-weight: bold;
+}
+
+.searchButton {
+  outline:none;
+  position: absolute;
+  height: 3.5vh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #5E42A6;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
+}
+
+.searchButton:hover {
+  background-color: #b74e91 !important;
+}
+
+#searchSend {
+  padding-left: 10%;
+  width: 90%;
+  top: 3.5vh;
+  left: 0;
+}
+
+#searchToggle {
+  width: 10%;
+  top: 3.5vh;
+  right: 0;
+}
+
+#textType {
+  width: 10%;
+  left: 0;
+  background-color: #5052B5;
+}
+
+#regexFlags {
+  background-color: #5b2548;
+  color: white;
+  right: 0;
+  width: 10%;
+}
+
+#flagIcon {
+  vertical-align: middle;
+  height: 2.5vh;
+}
+
+#flags {
+  position: absolute;
+  top: calc(3.5vh - 1px);
+  width: 100%;
+  background-color: #5b2548;
+}
+
+.flagOption {
+  width: calc(100% - .5em);
+  display: block;
+  padding: .7em 0 .7em .5em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: white;
+}
+
+.flagOption input {
+  display: none;
+}
+
+.flagOption span {
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  position: relative;
+}
+
+.flagOption [type=checkbox]:checked + span:before {
+  content: '\2714';
+  position: absolute;
+  top: -5px;
+  left: 0;
+}
+
+#bButtonContainer {
+  position: fixed;
+  bottom: 0vh;
+  left: 0;
+  width: 30%;
+  z-index: 3;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.bButton {
+  height: 5vh;
+  border: 0;
+  outline:none;
+  font-weight: bold;
+  font-size: 13px;
+  background-color: #b74e91;
+  color: white;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
+}
+
+.bButton:hover {
+  background-color: white !important;
+  color: black !important;
   cursor: pointer;
 }
 
-#label-list {
-  max-height: 26vh;
+#downloadBtn, #annotateBtn, #trainBtn {
+  flex: 1;
+}
+
+.btnGrpContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 30%;
+  margin-bottom: 5vh;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.dlButton {
+  height: 5vh;
+  border: 0;
+  font-weight: bold;
+  font-size: 13px;
+  background-color: #b74e91;
+  color: white;
+  letter-spacing: 2px;
+  outline: none;
+  transition: background-color 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
+}
+
+.dlButton:hover {
+  background-color: white !important;
+  color: black !important;
+  cursor: pointer;
+}
+
+#centerContainer {
+  margin-left: 30%;
+  width: 68%;
+}
+
+/* Center */
+
+#center {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-left: 30%;
+  height: 100%;
+  width: 70%;
+  background: url("/static/css/images/intro.svg") no-repeat top left;
+  background-size: 100% 100%;
+}
+
+#content {
+  background-color: white;
+  min-height: calc(100vh - 5.2em);
+  border-radius: 1em;
+}
+
+/* Right */
+
+#rightContainer {
+  background-color: #312450;
+  position: fixed;
+  top: 0;
+  right: -28%;
+  width: 30%;
+  height: 100vh;
+  padding-top: 1em;
+  padding-bottom: 0;
+  z-index: 1;
+  transition: box-shadow 0.3s ease, right 0.4s ease;
+  overflow: hidden;
+}
+
+#rightContainer:hover {
+  box-shadow: 0 0 10px white;
+  overflow-y: auto;
+  overflow-y: overlay;
+}
+
+/* Other */
+
+.listWrapper {
+  max-height: 24vh;
+  overflow: hidden;
+  margin-left: -2em;
+  margin-right: -2em;
+  margin-top: 1em;
+}
+
+.listWrapper:hover {
+  overflow: auto;
+  overflow: overlay;
+}
+
+.addBtn {
+  margin: -5%;
+  padding: 5%;
+  float: right;
+  color: lightgrey;
+  transition: color 0.3s ease;
+}
+
+.addBtn:hover {
+  cursor: pointer;
+  color: white;
+}
+
+hr {
+  background: linear-gradient(to right, #5e42a6, #b74e91);
+  height: 2px;
+  border: none;
+}
+
+h1, h2 {
+  color: white;
+  margin: .5em 0;
+  letter-spacing: 1px;
+}
+
+.label {
+  min-height: 1em;
+  padding: 1em 2em;
+  transition: background-color 0.3s ease;
 }
 
 .label-name {
   word-wrap: break-word;
-}
-
-.label-name:hover{
-  cursor: pointer;
-  text-decoration: underline;
+  font-size: 16px;
+  font-weight: bold;
+  outline: none;
 }
 
 #label-selected {
-  border: 3px solid black;
+  box-shadow: inset 0 0 12px black;
 }
 
 .colorChange {
@@ -48,7 +318,6 @@ h2 {
 }
 
 .colorChange:hover {
-  cursor: pointer;
   border-color: black;
   border-width: 3px;
 }
@@ -56,65 +325,78 @@ h2 {
 #doc-view {
   margin: 0;
   padding: 0;
-  resize: none; 
-  width: 100%; 
-  border:none; 
+  resize: none;
+  width: 100%;
+  border: none;
   background-color: transparent;
+  outline:none;
 }
 
 #doc-list {
-  max-height: 26vh;
   word-wrap: break-word;
-  overflow: hidden;
+  color: white;
 }
 
-.doc-name:hover {
-  cursor: pointer;
-  text-decoration: underline;
+.doc-name {
+  margin: 0;
+  min-height: 1em;
+  padding: 1em 2em;
+  word-wrap: break-word;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #doc-selected {
-  text-decoration: underline;
-}
-
-#export-container {
-  height: 5vh;
+  background-color: #5052B5;
 }
 
 #anno-list {
-  max-height: 75vh;
+  margin: 0 -2em;
 }
 
-.add-btn:hover {
-  cursor: pointer;
+.annoHeader {
+  padding: .5em 2em .3em;
+  margin: 0;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.annoHeader:hover .dropArrow {
+  content: url("/static/images/arrowDownBlack.png") !important;
+}
+
+.anno-group {
+  padding: 0;
+  margin: 0;
 }
 
 .annotation {
-  color: black;
-  text-decoration: none;
+  min-height: 1em;
+  padding: .75em 2em;
+  word-wrap: break-word;
+  font-size: 16px;
+  font-weight: bold;
+  list-style-position: inside;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.annotation:hover {
-  cursor: pointer;
-  text-decoration: underline;
+.dropArrow {
+  float: right;
+  height: 1.3em;
+  transition: transform 0.3s ease, content 0.3s ease;
 }
 
-.sticky {
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: 64px;
+.upsideDown {
+  transform: rotateX(180deg);
 }
 
-ul {
-  list-style-type: none;
+#recentArea {
+  display: none;
 }
 
-.hide-scroll {
-  overflow-y: hidden;
-}
-
-.hide-scroll:hover {
-  overflow-y: auto;
+#recent {
+  margin: 0 -2em;
 }
 
 #delete-menu {
@@ -122,24 +404,23 @@ ul {
   z-index: 2;
   position: absolute;
   overflow: hidden;
-  border: 1px solid #6b6b6b;
   background: #FAFAFA;
-  border-radius: 5px;
+  border: 2px #5E42A6 solid;
   list-style-type: none;
   padding: 0;
   margin: 0;
-  
 }
 
 #delete-menu h6 {
   margin: 10px 10px 6px;
   font-weight: bold;
+  font-size: 14px;
 }
 
 #delete-menu li {
   padding: 8px 14px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 #delete-menu li:hover {
@@ -147,30 +428,28 @@ ul {
 }
 
 .noDisplay {
-  height:0; 
-  width:0; 
+  height: 0;
+  width: 0;
   visibility: hidden;
 }
 
+/* ScrollBar */
+/* width */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
+/* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: white;
 }
- 
+
+/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background-color: #5052B5;
 }
 
+/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
-}
-
-@media (max-width: 1090px) {
-  .sticky {
-    position: static;
-    top: auto;
-  }
+  background-color: #484AA3;
 }
