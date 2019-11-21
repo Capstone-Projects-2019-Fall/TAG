@@ -71,7 +71,7 @@ $('#annotateBtn').on('click', function () {
     data: formData,
     success: function (data) {
       console.log("Data received from algorithm");
-      loadJsonData(data, obliterate = true);
+      loadJsonData(data, "", obliterate = true);
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
       console.log("Send failed: \nStatus: " + textStatus + "\nError: " + errorThrown);
