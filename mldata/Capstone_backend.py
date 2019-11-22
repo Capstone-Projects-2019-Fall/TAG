@@ -35,7 +35,7 @@ def data_converting(data):
 
 def main(data):
     # nlp = spacy.load(model)  # load existing spaCy model
-    nlp = spacy.load('en_core_web_lg')
+    nlp = spacy.load('en_core_web_sm')
     # print("Loaded model '%s'" % model)
     docs = []
     for d in data:

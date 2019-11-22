@@ -131,7 +131,7 @@ function searchForText() {
                 'endPosition': match.index + match[0].length
             };
             console.log('Found "' + match[0] + '"\nStart position: ' + range.startPosition + "\nEnd Position: " + range.endPosition);
-            tagModel.addAnnotation(range, tagModel.currentCategory);
+            mostRecentIndex = tagModel.addAnnotation(range, tagModel.currentCategory);
         }
     }
     // remove annotation
