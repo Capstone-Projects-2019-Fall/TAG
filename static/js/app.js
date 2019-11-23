@@ -592,9 +592,9 @@ function makeRandColor() {
 function loadJsonData(data, filename = "", obliterate = false, ) {
   if (obliterate) {
     console.log('Displaying new data');
-    tagModel = new TagModel();
-    $('.label').remove();
-    $('.highlight-style').remove();
+    tagModel.openDocs.forEach( function () {
+      tagModel.deleteDoc();
+    });
     $('.doc-name').remove();
   }
 
