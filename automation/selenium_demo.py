@@ -52,6 +52,20 @@ get_started = driver.find_element_by_class_name("button")
 get_started.click()
 time.sleep(2)
 
+# ML HIGHLIGHT AUTOMATION
+driver.find_element_by_id("add-document").click()
+new_doc_added = WebDriverWait(driver,20).until(EC.presence_of_element_located((By.ID, "doc-selected")))
+time.sleep(2)
+driver.find_element_by_id("annotateBtn").click()
+time.sleep(10)
+driver.find_element_by_id("downloadBtn").click()
+time.sleep(2)
+driver.find_element_by_id("dlZip").click()
+time.sleep(10)
+driver.refresh()
+time.sleep(5)
+
+# MANUAL HIGHLIGHT AUTOMATION
 # Add a test document
 driver.find_element_by_id("add-document").click()
 new_doc_added = WebDriverWait(driver,20).until(EC.presence_of_element_located((By.ID, "doc-selected")))
