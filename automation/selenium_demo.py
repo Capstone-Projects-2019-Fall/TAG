@@ -43,7 +43,7 @@ driver = webdriver.Chrome("/home/tug3260/TAG/automation/chromedriver", chrome_op
 driver.maximize_window()
 
 # Open up TAG Home Page
-driver.get("http://127.0.0.1:8000/")
+driver.get("http://tagweb.pythonanywhere.com/")
 time.sleep(2)
 
 # Navigate homepage, Click button to open up TAG Annotator
