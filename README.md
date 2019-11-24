@@ -1,4 +1,4 @@
-# TAG - Text Annotation GUI
+# TAG - Text Annotation GUI (Web-Based)
 TAG is a web-based text annotator that allows you to upload documents and highlight them using custom labels and highlight colors.
 # Features
 TAG Web has the following features:
