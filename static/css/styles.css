@@ -170,7 +170,7 @@ body {
   transition: background-color 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
 }
 
-.bButton:hover {
+.bButton:hover, .dlButton:hover, .annButton:hover {
   background-color: white !important;
   color: black !important;
   cursor: pointer;
@@ -191,7 +191,7 @@ body {
   flex-direction: column;
 }
 
-.dlButton {
+.dlButton, .annButton {
   height: 5vh;
   border: 0;
   font-weight: bold;
@@ -201,12 +201,6 @@ body {
   letter-spacing: 2px;
   outline: none;
   transition: background-color 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
-}
-
-.dlButton:hover {
-  background-color: white !important;
-  color: black !important;
-  cursor: pointer;
 }
 
 #centerContainer {
