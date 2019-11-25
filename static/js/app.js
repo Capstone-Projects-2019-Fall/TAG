@@ -44,20 +44,29 @@ $('#dlJson').on('click', function () {
     alert('Error: No data to download!');
     return;
   }
-  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
+  var blob = new Blob([tagModel.jsonifyData()], { type: 'application/JSON' });
   saveAs(blob, "annotations.json");
 });
 
-// send to mldata
-$('#annotateBtn').on('click', function () {
-  // no files found
-  if (tagModel.openDocs.length === 0) {
-    alert('Error: No data to send!');
-    return;
-  }
-  // prepare data
 
-  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
+$('.annButton').on('click', function () {
+    if (tagModel.currentDoc === null) {
+      alert("Please upload a document first!");
+      return
+    }
+  var isAllDocuments;
+
+  if (this.id === "annAll") {
+    console.log("Annotating all documents...");
+    isAllDocuments = true;
+  }
+  else {
+    console.log("Annotating document: \"" + tagModel.currentDoc.title + "\"");
+    isAllDocuments = false;
+  }
+
+  // prepare data
+  var blob = new Blob([tagModel.jsonifyData(isAllDocuments)], { type: 'application/JSON' });
   var formData = new FormData();
   console.log("Sending data to ML");
 
@@ -467,7 +476,7 @@ delete_menu.on('click', 'li', function () {
   }
   // delete document
   else if ($(this).hasClass('delete-doc')) {
-    tagModel.deleteDoc();
+    tagModel.deleteDoc(tagModel.currentDoc.title);
     console.log('Document Deleted');
     if (tagModel.currentDoc != null) {
       textArea.text(tagModel.currentDoc.text.escapeHtml());
@@ -494,7 +503,6 @@ $(window).on('resize', function () {
   resize();
   $(window).scrollTop(scrollPercent * $(document).height());
 });
-
 
 
 
@@ -601,10 +609,11 @@ function makeRandColor() {
 function loadJsonData(data, filename = "", obliterate = false, ) {
   if (obliterate) {
     console.log('Displaying new data');
-    tagModel.openDocs.forEach( function () {
-      tagModel.deleteDoc();
+
+    jQuery.each(data, function() {
+      tagModel.deleteDoc(this.title);
+      $('.doc-name[value="' + this.title + '"]').remove();
     });
-    $('.doc-name').remove();
   }
 
   // for invalid files
@@ -613,8 +622,8 @@ function loadJsonData(data, filename = "", obliterate = false, ) {
   // add remove annotation from annotation list
   try {
     // json array
-    data.forEach(function (doc) {
-      addJsonElement(doc);
+    jQuery.each(data, function () {
+      addJsonElement(this);
     });
   } catch (err) {
     // caught an error
@@ -623,7 +632,7 @@ function loadJsonData(data, filename = "", obliterate = false, ) {
       try {
         addJsonElement(data);
       } catch (innerErr) {
-        alert("Not valid json Input")
+        console.log("Not valid JSON input");
       }
     }
     // we shouldn't be here
