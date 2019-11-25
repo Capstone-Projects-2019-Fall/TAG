@@ -1,28 +1,23 @@
 import json
-import os
 import argparse
-import sys
-import random
-from pathlib import Path
 import spacy
-import re
-import string
-from spacy.util import minibatch, compounding
 
-class documentClass:
+
+class DocumentClass:
     def __init__(self, title, text, annotations):
         self.title = title
         self.text = text
         self.annotations = annotations
 
-class annotationClass:
+
+class AnnotationClass:
     def __init__(self, label, start, end, content):
         self.range = {'startPosition': start, 'endPosition': end}
         self.content = content
         self.label = label
 
-def data_converting(data):
 
+def data_converting(data):
     final_data = []; label_set = set()
     for d in data:
         if d['annotations'].count != 0:
@@ -33,21 +28,21 @@ def data_converting(data):
                 final_data.append((d['text'],temp))
     return final_data, label_set
 
+
 def main(data):
-    # nlp = spacy.load(model)  # load existing spaCy model
     nlp = spacy.load('en_core_web_sm')
-    # print("Loaded model '%s'" % model)
     docs = []
     for d in data:
         doc = nlp(d['text'])
-        returnData = []
+        return_data = []
         for ent in doc.ents:
-            annotation = annotationClass(ent.label_, ent.start_char, ent.end_char, ent.text)
+            annotation = AnnotationClass(ent.label_, ent.start_char, ent.end_char, ent.text)
             print("Found entity: %s in %s" % (ent.text, d['title']))
-            returnData.append(annotation.__dict__)
-        docs.append(documentClass(d['title'], d['text'], returnData).__dict__)
+            return_data.append(annotation.__dict__)
+        docs.append(DocumentClass(d['title'], d['text'], return_data).__dict__)
         # print("Found %d entities", doc.ents.count)
     return json.dumps(docs)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -61,7 +56,6 @@ if __name__ == '__main__':
         help="Path to the data directory."
     )
 
-
     parser.add_argument(
         '--iterations',
         type=int,
@@ -72,7 +66,6 @@ if __name__ == '__main__':
         default=None,
         help="Number of iterations to run."
     )
-
 
     args = parser.parse_args()
     main(args.model_output_dir,
