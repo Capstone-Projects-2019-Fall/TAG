@@ -28,14 +28,12 @@ class TagModel {
     return -1;
   }
 
-  deleteDoc() {
-    let docToDelete = this.currentDoc;
+  deleteDoc(docTitle) {
     this.openDocs = this.openDocs.filter(function (doc) {
-      return doc !== docToDelete;
+      return doc.title !== docTitle;
     });
     this.currentDoc = this.openDocs[0];
   }
-
 
 
 
