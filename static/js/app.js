@@ -44,8 +44,8 @@ $('#dlJson').on('click', function () {
     alert('Error: No data to download!');
     return;
   }
-  var blob = new Blob([tagModel.jsonifyData()], { type: 'application/JSON' });
-  saveAs(blob, "annotations.json");
+  var blob = new Blob([tagModel.jsonifyData(false)], { type: 'application/JSON' });
+  saveAs(blob, tagModel.currentDoc.title+ ".json");
 });
 
 
