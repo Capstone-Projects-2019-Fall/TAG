@@ -4,7 +4,6 @@
 var tagModel = new TagModel();
 var textArea = $('#doc-view');
 var highlightArea = $('#highlightArea');
-var label_list = $("#label-list");
 var delete_menu = $('#delete-menu');
 var doc_list = $('#doc-list');
 var deleteList = [];
@@ -290,7 +289,7 @@ $('#add-label').on('click', function () {
 });
 
 //change the document's label context
-label_list.on('mouseup', '.label', function () {
+$("#label-list").on('mouseup', '.label', function () {
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
   $('.label').attr('id', '');                   //remove label-selected from all
@@ -298,7 +297,7 @@ label_list.on('mouseup', '.label', function () {
 });
 
 // on label right click
-label_list.on('contextmenu', function (e) {
+$("#label-list").on('contextmenu', function (e) {
   e.preventDefault();
   delete_menu.append(
     $('<li/>', {
@@ -313,7 +312,7 @@ label_list.on('contextmenu', function (e) {
 });
 
 //edit label name
-label_list.on('dblclick', '.label', function () {
+$("#label-list").on('dblclick', '.label', function () {
   //enable editing
   $(this).children('.label-name')[0].contentEditable = true;
   //open textbox
@@ -321,14 +320,14 @@ label_list.on('dblclick', '.label', function () {
 });
 
 // user pressed enter on label name change
-label_list.on('keypress', '.label-name', function (e) {
+$("#label-list").on('keypress', '.label-name', function (e) {
   if (e.which === 13) {
     $(this).blur();
   }
 });
 
 //stopped editing label name
-label_list.on('blur', '.label-name', function () {
+$("#label-list").on('blur', '.label-name', function () {
   //disable editing
   this.contentEditable = false;
 
@@ -367,7 +366,7 @@ label_list.on('blur', '.label-name', function () {
 });
 
 //invoke colorpicker on icon click
-label_list.on('click', '.colorChange', function () {
+$("#label-list").on('click', '.colorChange', function () {
   console.log('dropperClicked!');
   $('#colorChangePicker').click();   //invoke color picker
 });
@@ -568,10 +567,10 @@ function addLabel(name, color = null) {
       }).text(name)
     );
 
-    label_list.append(newLabel);
+    $("#label-list").append(newLabel);
 
     // go to new label's position
-    label_list.scrollTop(label_list.prop('scrollHeight'));
+    $("#label-list").scrollTop($("#label-list").prop('scrollHeight'));
 
     // first color => make current category the color
     tagModel.currentCategory = name;
