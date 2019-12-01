@@ -19,7 +19,8 @@ class Doc {
     return annotations;
   }
 
-  // get all indices contained within the range // if label specified, only include those with that label
+  // get all indices contained within the range
+  // if label specified, only include those with that label
   getIndicesByRange(range, label = null) {
     var indexArr = [];
     // check all indices
@@ -45,19 +46,6 @@ class Doc {
       }
     }
     return indexArr;
-  }
-
-  // get the index of the annotation
-  getAnnotationIndex(annotation) {
-    // check all indices
-    for (let i = 0; i < this.annotations.length; i++) {
-      // found // return index
-      if (annotation === this.annotations[i]) {
-        return i;
-      }
-    }
-    // didn't find // return out of bound index
-    return -1;
   }
 
   getAnnotationsByLabel(label = '') {
@@ -114,18 +102,19 @@ class Doc {
     // add remaining annotations
     for (let annotation of push) {
       this.sortedPush(annotation);
-    };
-    return;
+    }
   }
 
-  // remove specfic annotation
+  // remove specific annotation
   updateAnnotationList(blacklistAnnotation) {
     this.annotations = this.annotations.filter(function (annotation) {
       return annotation !== blacklistAnnotation;
     });
   }
 
-  // push element into sorted position // merge if can // returns index
+  // push element into sorted position
+  // merge if can
+  // returns index
   sortedPush(annotation) {
     // get overlapping indices
     let indices = this.getIndicesByRange(annotation.range, annotation.label);
