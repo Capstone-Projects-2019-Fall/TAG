@@ -47,7 +47,7 @@ annotateContainer.on('mouseleave', function (e) {
     // mouse left container
     // check if mouse hovered download button
     let goingTo = e.relatedTarget || e.fromElement;
-    if (!$(goingTo).is('#downloadBtn')) {
+    if (!$(goingTo).is('#annotateBtn')) {
         // not button // hide
         $(this).slideUp(300);
     }
