@@ -108,3 +108,16 @@ config.ini
 
 # JetBrains
 .idea
+
+# spacy
+tokenizer
+meta.json
+ner
+parser
+tagger
+key2row
+vectors
+strings.json
+lookups.bin
+lexemes.bin
+.gitignore
