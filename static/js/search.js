@@ -152,4 +152,4 @@ function searchForText() {
 // escape for non regex search
 function regexEscape(s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-};
+}

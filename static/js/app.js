@@ -4,7 +4,6 @@
 var tagModel = new TagModel();
 var textArea = $('#doc-view');
 var highlightArea = $('#highlightArea');
-var label_list = $("#label-list");
 var delete_menu = $('#delete-menu');
 var doc_list = $('#doc-list');
 var deleteList = [];
@@ -43,20 +42,29 @@ $('#dlJson').on('click', function () {
     alert('Error: No data to download!');
     return;
   }
-  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
-  saveAs(blob, "annotations.json");
+  var blob = new Blob([tagModel.jsonifyData(false)], { type: 'application/JSON' });
+  saveAs(blob, tagModel.currentDoc.title+ ".json");
 });
 
-// send to mldata
-$('#annotateBtn').on('click', function () {
-  // no files found
-  if (tagModel.openDocs.length === 0) {
-    alert('Error: No data to send!');
-    return;
-  }
-  // prepare data
 
-  var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
+$('.annButton').on('click', function () {
+    if (tagModel.currentDoc === null) {
+      alert("Please upload a document first!");
+      return
+    }
+  var isAllDocuments;
+
+  if (this.id === "annAll") {
+    console.log("Annotating all documents...");
+    isAllDocuments = true;
+  }
+  else {
+    console.log("Annotating document: \"" + tagModel.currentDoc.title + "\"");
+    isAllDocuments = false;
+  }
+
+  // prepare data
+  var blob = new Blob([tagModel.jsonifyData(isAllDocuments)], { type: 'application/JSON' });
   var formData = new FormData();
   console.log("Sending data to ML");
 
@@ -245,7 +253,7 @@ textArea.on('mouseup', function (e) {
 
 // on right click, show annotations at position to delete
 textArea.on('contextmenu', function (e) {
-  event.preventDefault();
+  e.preventDefault();
   let position = textArea[0].selectionStart;
   deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
 
@@ -289,7 +297,7 @@ $('#add-label').on('click', function () {
 });
 
 //change the document's label context
-label_list.on('mouseup', '.label', function () {
+$("#label-list").on('mouseup', '.label', function () {
   //change label selection
   tagModel.currentCategory = this.getAttribute('value');
   $('.label').attr('id', '');                   //remove label-selected from all
@@ -297,8 +305,8 @@ label_list.on('mouseup', '.label', function () {
 });
 
 // on label right click
-label_list.on('contextmenu', function (e) {
-  event.preventDefault();
+$("#label-list").on('contextmenu', function (e) {
+  e.preventDefault();
   delete_menu.append(
     $('<li/>', {
       class: 'delete-label',
@@ -312,22 +320,22 @@ label_list.on('contextmenu', function (e) {
 });
 
 //edit label name
-label_list.on('dblclick', '.label', function () {
-  //enble editing
+$("#label-list").on('dblclick', '.label', function () {
+  //enable editing
   $(this).children('.label-name')[0].contentEditable = true;
   //open textbox
   $(this).children('.label-name').focus().selectText();
 });
 
 // user pressed enter on label name change
-label_list.on('keypress', '.label-name', function (e) {
+$("#label-list").on('keypress', '.label-name', function (e) {
   if (e.which === 13) {
     $(this).blur();
   }
 });
 
 //stopped editing label name
-label_list.on('blur', '.label-name', function () {
+$("#label-list").on('blur', '.label-name', function () {
   //disable editing
   this.contentEditable = false;
 
@@ -366,7 +374,7 @@ label_list.on('blur', '.label-name', function () {
 });
 
 //invoke colorpicker on icon click
-label_list.on('click', '.colorChange', function () {
+$("#label-list").on('click', '.colorChange', function () {
   console.log('dropperClicked!');
   $('#colorChangePicker').click();   //invoke color picker
 });
@@ -405,7 +413,7 @@ doc_list.on('mouseup', '.doc-name', function (e) {
 
 // right click document list
 doc_list.on('contextmenu', function (e) {
-  event.preventDefault();
+  e.preventDefault();
   delete_menu.append(
     $('<li/>', {
       class: 'delete-doc',
@@ -474,7 +482,7 @@ delete_menu.on('click', 'li', function () {
   }
   // delete document
   else if ($(this).hasClass('delete-doc')) {
-    tagModel.deleteDoc();
+    tagModel.deleteDoc(tagModel.currentDoc.title);
     console.log('Document Deleted');
     if (tagModel.currentDoc != null) {
       textArea.text(tagModel.currentDoc.text.escapeHtml());
@@ -502,6 +510,11 @@ $(window).on('resize', function () {
   $(window).scrollTop(scrollPercent * $(document).height());
 });
 
+
+
+
+
+
 // ----- functions ----- //
 
 //add new document
@@ -522,7 +535,7 @@ function addDoc(doc) {
   mostRecentIndex = -1;
   renderHighlights();
   doc_list.scrollTop(doc_list.prop('scrollHeight'));
-};
+}
 
 //add new label
 function addLabel(name, color = null) {
@@ -562,10 +575,10 @@ function addLabel(name, color = null) {
       }).text(name)
     );
 
-    $('#label-list').append(newLabel);
+    $("#label-list").append(newLabel);
 
     // go to new label's position
-    $('#label-list').scrollTop($('#label-list').prop('scrollHeight'));
+    $("#label-list").scrollTop($("#label-list").prop('scrollHeight'));
 
     // first color => make current category the color
     tagModel.currentCategory = name;
@@ -578,10 +591,12 @@ function addLabel(name, color = null) {
 
 //update height on window resize and keep scroll position
 function resize() {
-  $('.highlight').offset(textArea.offset());
+  let higlight = $('.highlight');
+
+  higlight.offset(textArea.offset());
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
-  $('.highlight').css('height', textArea.height);
+  higlight.css('height', textArea.height);
 }
 
 // generate random name
@@ -600,10 +615,11 @@ function makeRandColor() {
 function loadJsonData(data, filename = "", obliterate = false, ) {
   if (obliterate) {
     console.log('Displaying new data');
-    tagModel.openDocs.forEach( function () {
-      tagModel.deleteDoc();
+
+    jQuery.each(data, function() {
+      tagModel.deleteDoc(this.title);
+      $('.doc-name[value="' + this.title + '"]').remove();
     });
-    $('.doc-name').remove();
   }
 
   // for invalid files
@@ -622,7 +638,7 @@ function loadJsonData(data, filename = "", obliterate = false, ) {
       try {
         addJsonElement(data);
       } catch (innerErr) {
-        alert("Not valid json Input")
+        console.log("Not valid JSON input");
       }
     }
     // we shouldn't be here
@@ -745,7 +761,7 @@ function renderHighlights() {
     );
   }
   // update most recent
-  if (mostRecentIndex != -1) {
+  if (mostRecentIndex !== -1) {
     $('#recent').text(tagModel.currentDoc.annotations[mostRecentIndex].content.trunc(20, true).escapeHtml()).css('background-color', tagModel.getColor(tagModel.currentDoc.annotations[mostRecentIndex].label)).attr('value', mostRecentIndex);
     $('#recentArea').css('display', 'block');
   }
@@ -767,7 +783,7 @@ function jumpToAnno(num) {
 // pass as safe text
 String.prototype.escapeHtml = function () {
   return this.replace(/<|>/g, "_");
-}
+};
 
 // truncate string and add ellipsis // truncAfterWord will only truncate on spaces // returns entire word if string contains no spaces
 String.prototype.trunc = function (n, truncAfterWord = false) {
