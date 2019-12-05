@@ -1,7 +1,7 @@
   <h1 align="center">TAG</h1>
 
   <p align="center">
-    🤖 A Text-Annoted GUI powered by machine learning 🤖
+    🤖 A Text-Annotated GUI powered by machine learning 🤖
   </p>
 
 
