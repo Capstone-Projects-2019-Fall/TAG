@@ -342,36 +342,58 @@ $("#label-list").on('blur', '.label-name', function () {
   this.contentEditable = false;
 
   //fix whitespace and create new label name with no spaces (class names can't have spaces)
-  let newName = $(this).text().trim().replace(/\s+/g, "_").replace(/<|>/g, '');
-  $(this).text(newName);
+  let newLabelName = $(this).text().trim().replace(/\s+/g, "_").replace(/<|>/g, '');
+  $(this).text(newLabelName);
 
   //check if the name is the same as previous
-  if (newName === tagModel.currentCategory) {
+  if (newLabelName === tagModel.currentCategory) {
     console.log('Aborting: Category is the same name as before');
     return;
   }
 
-  //check for valid label name
-  if ((tagModel.categoryIndex(newName) >= 0) || newName === '') {
-    console.log('Aborting label name change: already exists: "' + newName + '"');
-    alert("This label already exists! Please try again.");
+  //check if user clicked off menu without first giving a label name
+  if (newLabelName === "") {
+    console.log('Aborting: Category name was not specified');
     deleteLabel();
     return;
+  }
+
+  //if this label already exists
+  if ((tagModel.categoryIndex(newLabelName) >= 0)) {
+    //and if there's no open document, then just delete the label
+    if (tagModel.currentDoc === null) {
+      console.log('Aborting label name change: already exists: "' + newLabelName + '"');
+      alert("This label already exists! Please try again.");
+      deleteLabel();
+      return;
+    }
+    //if there is a document, check for existing annotations
+    else {
+      var hasAnnotations = tagModel.currentDoc.checkIfLabelHasAnnotations(tagModel.currentCategory);
+
+      //if it has annotations, then restore the old label name
+      //if it doesnt, then we can just delete the html div and have the user start over
+      hasAnnotations ? $(this).text(tagModel.currentCategory) : deleteLabel();
+
+      console.log('Aborting label name change: already exists: "' + newLabelName + '"');
+      alert("This label already exists! Please try again.");
+      return
+    }
   }
 
   // update styling for category
   $('#' + tagModel.currentCategory + '-style').remove();
   $('head').append(
     $('<style/>', {
-      id: newName + '-style',
-      html: '.hwt-content .label_' + newName + ' {background-color:' + tagModel.getColor(tagModel.currentCategory) + ';}'
+      id: newLabelName + '-style',
+      html: '.hwt-content .label_' + newLabelName + ' {background-color:' + tagModel.getColor(tagModel.currentCategory) + ';}'
     })
   );
 
   // update category name in list
-  $('#label-selected').attr('value', newName);
+  $('#label-selected').attr('value', newLabelName);
 
-  tagModel.renameCategory(newName);
+  tagModel.renameCategory(newLabelName);
   renderHighlights();
 });
 

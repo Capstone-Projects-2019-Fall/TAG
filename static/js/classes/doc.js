@@ -52,7 +52,7 @@ class Doc {
     var annotations = [];
     // do each category
     for (let category of tagModel.categories) {
-      // specfic label
+      // specific label
       if (label !== '') {
         if (category !== tagModel.categories[label]) {
           continue;
@@ -69,6 +69,17 @@ class Doc {
     }
     return annotations;
   }
+
+
+  checkIfLabelHasAnnotations = label => {
+    for (let anno of this.annotations) {
+      if (anno.label === label) {
+        return true;
+      }
+    }
+    return false;
+  };
+
 
   // remove range from annotations (only for the specified label) // splits if necessary
   deleteByRange(range, label) {
