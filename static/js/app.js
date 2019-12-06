@@ -369,7 +369,7 @@ $("#label-list").on('blur', '.label-name', function () {
     }
     //if there is a document, check for existing annotations
     else {
-      var hasAnnotations = tagModel.currentDoc.checkIfLabelHasAnnotations(tagModel.currentCategory);
+      var hasAnnotations = tagModel.checkIfLabelHasAnnotations(tagModel.currentCategory);
 
       //if it has annotations, then restore the old label name
       //if it doesnt, then we can just delete the html div and have the user start over

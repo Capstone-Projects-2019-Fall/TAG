@@ -70,17 +70,6 @@ class Doc {
     return annotations;
   }
 
-
-  checkIfLabelHasAnnotations = label => {
-    for (let anno of this.annotations) {
-      if (anno.label === label) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-
   // remove range from annotations (only for the specified label) // splits if necessary
   deleteByRange(range, label) {
     // get all indices that range belongs in

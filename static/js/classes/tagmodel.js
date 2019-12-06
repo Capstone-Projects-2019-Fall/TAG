@@ -38,6 +38,17 @@ class TagModel {
 
 
   // ----- annotations ----- //
+  checkIfLabelHasAnnotations(label) {
+    for (let doc of this.openDocs) {
+      for (let anno of doc.annotations) {
+        if (anno.label === label) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   addAnnotation(range, category) {
     //validate annotation first, throw error if dumbo
     let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
