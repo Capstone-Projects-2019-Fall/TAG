@@ -211,9 +211,16 @@ textArea.on('mouseup', function (e) {
 
     let range = {};
     if (textArea[0].selectionStart < textArea[0].selectionEnd) {
+      var endIndex = textArea[0].selectionEnd;
+      var endChar = tagModel.getContent(endIndex);
+
+      if (endChar === " ") {
+        endIndex--;
+      }
+
       range = {
         startPosition: textArea[0].selectionStart,
-        endPosition: textArea[0].selectionEnd
+        endPosition: endIndex
       };
 
       var hasExistingAnnotation = tagModel.currentDoc.getIndicesByRange(range, tagModel.currentCategory).length > 0;
