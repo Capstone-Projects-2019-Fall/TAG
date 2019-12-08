@@ -52,7 +52,7 @@ class Doc {
     var annotations = [];
     // do each category
     for (let category of tagModel.categories) {
-      // specfic label
+      // specific label
       if (label !== '') {
         if (category !== tagModel.categories[label]) {
           continue;
@@ -60,9 +60,9 @@ class Doc {
       }
       // try each annotation
       var catAnno = [];
-      for (let anno of this.annotations) {
-        if (anno.label === category.name) {
-          catAnno.push(anno);
+      for (let i in this.annotations) {
+        if (this.annotations[i].label === category.name) {
+          catAnno.push([this.annotations[i], i]);
         }
       }
       annotations.push(catAnno);
