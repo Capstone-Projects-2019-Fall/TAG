@@ -4,6 +4,7 @@
 var tagModel = new TagModel();
 var textArea = $('#doc-view');
 var highlightArea = $('#highlightArea');
+var hiddenAnno_list = [];
 var delete_menu = $('#delete-menu');
 var doc_list = $('#doc-list');
 var deleteList = [];
@@ -508,6 +509,7 @@ delete_menu.on('click', 'li', function () {
     mostRecentIndex = -1;
   }
   renderHighlights();
+  clearSelection();
 });
 
 // update size when window is resized
@@ -690,6 +692,7 @@ function loadJsonData(data, filename = "", obliterate = false, ) {
 }
 
 // make all highlights and annotation list
+// make all highlights and annotation list
 function renderHighlights() {
   // clear old annotation list
   $('#anno-list').empty();
@@ -709,26 +712,27 @@ function renderHighlights() {
   }
   // inital padding height
   let padding = 0;
-  // set annotation number
-  let annoNum = 0;
   // do each category
   for (let category of labelSortedAnnos) {
     // annotations list
     if (category.length === 0) {
       continue;
     }
+
     var annoHeader = $('<h2/>', {
-      html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
+      html: category[0][0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
       class: 'annoHeader hoverWhite',
-      value: tagModel.getColor(category[0].label)
+      value: tagModel.getColor(category[0][0].label)
     });
     $('#anno-list').append(annoHeader).append(
       $('<ul/>', {
         class: 'anno-group',
-        value: category[0].label
+        value: category[0][0].label
       })
     );
-    annoHeader.click();
+    if (hiddenAnno_list.indexOf(category[0][0].label) !== -1) {
+      annoHeader.click();
+    }
     // create highlight area
     var highlights = $('<div/>', {
       class: "hwt-highlights hwt-content"
@@ -739,19 +743,18 @@ function renderHighlights() {
     // do each annotation for current category
     for (let anno of category) {
       // add annotation to label
-      $('.anno-group[value="' + anno.label + '"]').append(
+      $('.anno-group[value="' + anno[0].label + '"]').append(
         $('<li/>', {
           class: 'annotation hoverWhite',
-          style: 'background-color: ' + tagModel.getColor(anno.label),
-          value: annoNum
-        }).text(anno.content.trunc(20, true).escapeHtml())
+          style: 'background-color: ' + tagModel.getColor(anno[0].label),
+          value: anno[1]
+        }).text(anno[0].content.trunc(20, true).escapeHtml())
       );
 
       // Add text before highlight then the highlight itself
-      newText += text.substring(lastIndex, anno.range.startPosition);
-      newText += '<mark class="highlight label_' + anno.label + '" value="' + annoNum + '" style="padding: ' + padding + 'px 0;">' + text.substring(anno.range.startPosition, anno.range.endPosition) + '</mark>';
-      lastIndex = anno.range.endPosition;;
-      annoNum += 1;
+      newText += text.substring(lastIndex, anno[0].range.startPosition);
+      newText += '<mark class="highlight label_' + anno[0].label + '" value="' + anno[1] + '" style="padding: ' + padding + 'px 0;">' + text.substring(anno[0].range.startPosition, anno[0].range.endPosition) + '</mark>';
+      lastIndex = anno[0].range.endPosition;
     }
     //update padding size
     padding += offset;
@@ -778,11 +781,13 @@ function renderHighlights() {
   }
 }
 
+// clears selected text
 function clearSelection() {
   var selection = window.getSelection ? window.getSelection() : document.selection ? document.selection : null;
   if (selection) selection.empty ? selection.empty() : selection.removeAllRanges();
 }
 
+// scroll to position of annotation
 function jumpToAnno(num) {
   $(window).scrollTop($('.highlight[value="' + num + '"]').offset().top);
 }
@@ -792,7 +797,9 @@ String.prototype.escapeHtml = function () {
   return this.replace(/<|>/g, "_");
 };
 
-// truncate string and add ellipsis // truncAfterWord will only truncate on spaces // returns entire word if string contains no spaces
+// truncate string and add ellipsis
+// truncAfterWord will only truncate on spaces
+// returns entire word, up to n characters, if string contains no spaces
 String.prototype.trunc = function (n, truncAfterWord = false) {
   if (this.length <= n) { return this; }
   let subString = this.substr(0, n - 1);
