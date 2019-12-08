@@ -22,8 +22,6 @@ def change_label(label_name, index):
     time.sleep(2)
     driver.execute_script("$('#label-selected').attr('value','" + label_name + "');")
     time.sleep(1)
-    #driver.execute_script("tagModel.renameCategory('" + label_name + "');")
-    time.sleep(1)
     driver.execute_script("document.getElementsByClassName('label-name')[" + index + "].innerHTML = '" + label_name + "';")
     time.sleep(1)
 
@@ -39,7 +37,9 @@ def search_to_add_or_delete_label(label_name, search_text):
 chrome_options = Options()
 chrome_options.add_experimental_option("detach", True)
 
-driver = webdriver.Chrome("/home/tug3260/TAG/automation/chromedriver", chrome_options=chrome_options)
+# Change the path to where you have ChromeDriver installed
+# Default location - automation folder
+driver = webdriver.Chrome("automation/chromedriver", chrome_options=chrome_options)
 driver.maximize_window()
 
 # Open up TAG Home Page
@@ -54,6 +54,7 @@ time.sleep(2)
 
 # ML HIGHLIGHT AUTOMATION
 driver.find_element_by_id("add-document").click()
+# Test waits for you to upload the text/Zip file of your choice
 new_doc_added = WebDriverWait(driver,20).until(EC.presence_of_element_located((By.ID, "doc-selected")))
 time.sleep(2)
 driver.find_element_by_id("annotateBtn").click()
@@ -68,8 +69,12 @@ driver.refresh()
 time.sleep(5)
 
 # MANUAL HIGHLIGHT AUTOMATION
+# news1.txt was used to runs these tests
+# If you desire to run these tests on a different text file, you can change the first parameter in change_label() and change the parameters in
+# search_to_add_or_delete_label() to better reflect the contents of the text file you are using
 # Add a test document
 driver.find_element_by_id("add-document").click()
+# Test waits for you to upload the text/Zip file of your choice
 new_doc_added = WebDriverWait(driver,20).until(EC.presence_of_element_located((By.ID, "doc-selected")))
 time.sleep(2)
 
