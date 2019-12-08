@@ -10,12 +10,12 @@ import time
 def index(request):
     # get request
     if request.method == 'GET':
-        noInputResponse = 'Welcome to the our totally working api! \n'
-        noInputResponse += 'To use our API, send a POST request with a JSON file attached as "jsonUpload" in form data'
-        return HttpResponse(noInputResponse)
+        no_input_response = 'Welcome to the our totally working api! \n'
+        no_input_response += 'To use our API, send a POST request with a JSON file attached as "jsonUpload" in form data'
+        return HttpResponse(no_input_response)
     # post request
     elif request.method == 'POST':
-        startTime = time.time()
+        start_time = time.time()
         # get file
         xfile = request.FILES['jsonUpload']
         # did get input
@@ -27,9 +27,9 @@ def index(request):
 
         print("Preparing to run main Capstone_backend (spacy stuff)")
 
-        # Launch Pretrained Model Annotation
-        outputFromML = main(data)
-        endTime = time.time()
-        print("Elapsed Time: " + str(endTime-startTime))
+        # Launch Pre-trained Model Annotation
+        output_from_ml = main(data)
+        end_time = time.time()
+        print("Elapsed Time: " + str(end_time-start_time))
 
-        return HttpResponse(outputFromML, content_type='application/json')
+        return HttpResponse(output_from_ml, content_type='application/json')

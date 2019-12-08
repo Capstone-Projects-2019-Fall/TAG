@@ -62,10 +62,17 @@
             <button id="downloadBtn" class="bButton">Download</button>
             <button id="annotateBtn" class="bButton">Annotate</button>
         </div>
+
         <div id="dlContainer" class="btnGrpContainer">
-            <button id="dlZip" class="dlButton">Download Zip</button>
-            <button id="dlJson" class="dlButton">Download Json</button>
+            <button id="dlZip" class="dlButton">Download All JSONs (.zip)</button>
+            <button id="dlJson" class="dlButton">Download This JSON</button>
         </div>
+
+        <div id="annotateContainer" class="btnGrpContainer">
+            <button id="annAll" class="annButton">Annotate All Documents</button>
+            <button id="annThis" class="annButton">Annotate This Document</button>
+        </div>
+
     </div>
     <div id="center" class="container"></div>
     <div id="centerContainer" class="container">
@@ -79,14 +86,13 @@
         <h1>Annotations</h1>
         <hr>
         <div id="recentArea">
-            <h2>Most Recent Highlight</h6>
+            <h2>Most Recent Highlight</h2>
                 <ul class="anno-group">
                     <li id="recent" class="annotation hoverWhite"></li>
                 </ul>
                 <hr>
         </div>
         <div id='anno-list'></div>
-    </div>
     </div>
 
     <!-- No display -->
