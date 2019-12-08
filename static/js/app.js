@@ -351,11 +351,20 @@ $("#label-list").on('blur', '.label-name', function () {
     return;
   }
 
-  //check if user clicked off menu without first giving a label name
+  //check for whitespace
   if (newLabelName === "") {
-    console.log('Aborting: Category name was not specified');
-    deleteLabel();
-    return;
+    //check if its a new label
+    if (tagModel.currentCategory === "init") {
+      console.log('Aborting: Category name was not specified');
+      deleteLabel();
+      return;
+    }
+    else {
+      console.log("Aborting: No name entered, restoring old label name");
+      alert("Please enter a label name!");
+      $(this).text(tagModel.currentCategory);
+      return;
+    }
   }
 
   //if this label already exists
