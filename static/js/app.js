@@ -605,6 +605,9 @@ function addLabel(name = 'init') {
   tagModel.currentCategory = name;
   $('#label-selected').attr('id', '');
 
+   //if we used default name, show white space, else show the name provided
+   let displayName = (name == 'init') ? '' : name;
+
   // create label div
   var newLabel = $('<div/>', {
     class: 'hoverWhite label',
@@ -619,7 +622,7 @@ function addLabel(name = 'init') {
   ).append(
     $('<div/>', {
       class: 'label-name'
-    }).text('')
+    }).text(displayName)
   );
 
   //add to the label list
