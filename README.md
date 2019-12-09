@@ -104,6 +104,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- AUTHORS -->
 ## Authors
+
 - Matthew Anthony
 - Nicolas Gonzalez
 - Keith Hudock
