@@ -35,12 +35,19 @@ class TagModel {
     this.currentDoc = this.openDocs[0];
   }
 
+  // ----- text ----- //
+  getContent(start, end = null) {
+    return end == null ?
+      this.currentDoc.text.substring(start - 1, start)
+      :
+      this.currentDoc.text.substring(start, end);
+  }
 
 
   // ----- annotations ----- //
   addAnnotation(range, category) {
     //validate annotation first, throw error if dumbo
-    let content = this.currentDoc.text.substring(range.startPosition, range.endPosition);
+    let content = this.getContent(range.startPosition, range.endPosition);
     let annotationToAdd = new Annotation(range, content, category);
     console.log("Adding annotation: '" + annotationToAdd.content + "' to: [" + category + "]");
     return this.currentDoc.sortedPush(annotationToAdd);
@@ -67,8 +74,8 @@ class TagModel {
   // ----- Categories ----- //
   addCategory(name, color) {
     let newCategory = new Category(name, color);
-    console.log("Adding category: [" + newCategory.name + "]");
     this.categories.push(newCategory);
+    console.log("Added category: [" + newCategory.name + "] to the TagModel");
   }
 
   categoryIndex(name) {
