@@ -345,13 +345,13 @@ $("#label-list").on('keypress', '.label-name', function (e) {
 });
 
 //stopped editing label name
-$("#label-list").on('blur', '.label-name', function () {
+$('#label-list').on('blur', '.label-name', function () {
   //disable editing
   this.contentEditable = false;
 
   //fix whitespace and create new label name with no spaces (class names can't have spaces)
-  let newLabelName = $(this).text().trim().replace(/\s+/g, "_").replace(/<|>/g, '');
-  $(this).text(newLabelName);
+  let newLabelName = $(this).text().trim().replace(/\s+/g, "_").replace(/<|>|&/g, '');
+  $(this).text($(this).text().trim());
 
   //check if the name is the same as previous
   if (newLabelName === tagModel.currentCategory) {
@@ -377,23 +377,18 @@ $("#label-list").on('blur', '.label-name', function () {
 
   //if this label already exists
   if ((tagModel.categoryIndex(newLabelName) >= 0)) {
-    //and if there's no open document, then just delete the label
-    if (tagModel.currentDoc === null) {
+    //if its a new label, then just delete it and have user try again
+    if (tagModel.currentCategory === "init") {
       console.log('Aborting label name change: already exists: "' + newLabelName + '"');
       alert("This label already exists! Please try again.");
       deleteLabel();
       return;
     }
-    //if there is a document, check for existing annotations
+    //otherwise, its a genuine name change and we will have to restore the label name
     else {
-      var hasAnnotations = tagModel.checkIfLabelHasAnnotations(tagModel.currentCategory);
-
-      //if it has annotations, then restore the old label name
-      //if it doesnt, then we can just delete the html div and have the user start over
-      hasAnnotations ? $(this).text(tagModel.currentCategory) : deleteLabel();
-
       console.log('Aborting label name change: already exists: "' + newLabelName + '"');
       alert("This label already exists! Please try again.");
+      $(this).text(tagModel.currentCategory);
       return
     }
   }
