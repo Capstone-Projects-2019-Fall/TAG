@@ -1,7 +1,7 @@
   <h1 align="center">TAG</h1>
 
   <p align="center">
-    🤖 A Text Annotation GUI powered by machine learning 🤖
+    🤖 A Text Annotation GUI powered by machine learning  🤖
   </p>
 
 
@@ -76,7 +76,8 @@ Use it here: http://tagweb.pythonanywhere.com
 	- Click an annotation to scroll to its position in the document
 10. When finished annotating, you can download the condensed results as a JSON by hovering over 'Download' in the bottom left of the screen
 	- Options include a .zip of all the open documents or just a singular .json of the current document
-
+11. Training
+	- To create your own offline spaCy models and train them on data sets, see our related open-source project, [TAG-Local](https://github.com/cis-cs-capstone-course/TAG-Local)
 
 
 
@@ -106,7 +107,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Authors
 
 - Matthew Anthony
-- Nicolas Gonzalez
+- Nicholas Gonzalez
 - Keith Hudock
 - Tony Mark
 - Leo Vergnetti
