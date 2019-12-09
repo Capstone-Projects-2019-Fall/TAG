@@ -296,12 +296,14 @@ textArea.on('contextmenu', function (e) {
 
 // create new label
 $('#add-label').on('click', function () {
-  var newLabel = makeRandName();
-  console.log("CSS: Creating new category: [" + newLabel + "]");
-  let label = addLabel(newLabel);
-  let labelname = label.children(".label-name");
-  labelname[0].contentEditable = true;
-  labelname.focus().selectText();
+  console.log("Generating a new label...");
+
+  let label = addLabel();
+  let labelName = label.children(".label-name");
+
+  //let user type name
+  labelName[0].contentEditable = true;
+  labelName.focus().selectText();
 });
 
 //change the document's label context
@@ -348,36 +350,67 @@ $("#label-list").on('blur', '.label-name', function () {
   this.contentEditable = false;
 
   //fix whitespace and create new label name with no spaces (class names can't have spaces)
-  let newName = $(this).text().trim().replace(/\s+/g, "_").replace(/<|>/g, '');
-  $(this).text(newName);
-  console.log("Attempting to change label name from " + tagModel.currentCategory + " to " + newName);
+  let newLabelName = $(this).text().trim().replace(/\s+/g, "_").replace(/<|>/g, '');
+  $(this).text(newLabelName);
 
   //check if the name is the same as previous
-  if (newName === tagModel.currentCategory) {
+  if (newLabelName === tagModel.currentCategory) {
     console.log('Aborting: Category is the same name as before');
     return;
   }
 
-  //check for valid label name
-  if ((tagModel.categoryIndex(newName) >= 0) || newName === '') {
-    console.log('Aborting: Invalid label name: "' + newName + '"');
-    $(this).text(tagModel.currentCategory);
-    return;
+  //check for whitespace
+  if (newLabelName === "") {
+    //check if its a new label
+    if (tagModel.currentCategory === "init") {
+      console.log('Aborting: Category name was not specified');
+      deleteLabel();
+      return;
+    }
+    else {
+      console.log("Aborting: No name entered, restoring old label name");
+      alert("Please enter a label name!");
+      $(this).text(tagModel.currentCategory);
+      return;
+    }
+  }
+
+  //if this label already exists
+  if ((tagModel.categoryIndex(newLabelName) >= 0)) {
+    //and if there's no open document, then just delete the label
+    if (tagModel.currentDoc === null) {
+      console.log('Aborting label name change: already exists: "' + newLabelName + '"');
+      alert("This label already exists! Please try again.");
+      deleteLabel();
+      return;
+    }
+    //if there is a document, check for existing annotations
+    else {
+      var hasAnnotations = tagModel.checkIfLabelHasAnnotations(tagModel.currentCategory);
+
+      //if it has annotations, then restore the old label name
+      //if it doesnt, then we can just delete the html div and have the user start over
+      hasAnnotations ? $(this).text(tagModel.currentCategory) : deleteLabel();
+
+      console.log('Aborting label name change: already exists: "' + newLabelName + '"');
+      alert("This label already exists! Please try again.");
+      return
+    }
   }
 
   // update styling for category
   $('#' + tagModel.currentCategory + '-style').remove();
   $('head').append(
     $('<style/>', {
-      id: newName + '-style',
-      html: '.hwt-content .label_' + newName + ' {background-color:' + tagModel.getColor(tagModel.currentCategory) + ';}'
+      id: newLabelName + '-style',
+      html: '.hwt-content .label_' + newLabelName + ' {background-color:' + tagModel.getColor(tagModel.currentCategory) + ';}'
     })
   );
 
   // update category name in list
-  $('#label-selected').attr('value', newName);
+  $('#label-selected').attr('value', newLabelName);
 
-  tagModel.renameCategory(newName);
+  tagModel.renameCategory(newLabelName);
   renderHighlights();
 });
 
@@ -479,14 +512,7 @@ delete_menu.on('click', 'li', function () {
   }
   // delete label
   else if ($(this).hasClass('delete-label')) {
-    tagModel.deleteCategory();
-    console.log('Category Deleted');
-    resize();
-    $('#label-selected').remove();
-    if (tagModel.currentDoc != null) {
-      $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
-    }
-    mostRecentIndex = -1;
+    deleteLabel();
   }
   // delete document
   else if ($(this).hasClass('delete-doc')) {
@@ -546,55 +572,65 @@ function addDoc(doc) {
   doc_list.scrollTop(doc_list.prop('scrollHeight'));
 }
 
-//add new label
-function addLabel(name, color = null) {
-  if (tagModel.categoryIndex(name) === -1) {
-    if (color === null) {
-      color = makeRandColor();
-    }
-    tagModel.addCategory(name, color);
-
-    // add highlight rule to page
-    $('head').append(
-      $('<style/>', {
-        id: name + '-style',
-        class: 'highlight-style',
-        html: '.hwt-content .label_' + name + ' {background-color: ' + color + ';}'
-      })
-    );
-
-    // select new category
-    tagModel.currentCategory = name;
-    $('#label-selected').attr('id', '');
-
-    // add category to page
-    var newLabel = $('<div/>', {
-      class: 'hoverWhite label',
-      id: 'label-selected',
-      value: name,
-      style: "background-color: " + color
-    }).append(
-      $('<img/>', {
-        class: 'colorChange',
-        src: 'static/images/dropper.png',
-      })
-    ).append(
-      $('<div/>', {
-        class: 'label-name'
-      }).text(name)
-    );
-
-    $("#label-list").append(newLabel);
-
-    // go to new label's position
-    $("#label-list").scrollTop($("#label-list").prop('scrollHeight'));
-
-    // first color => make current category the color
-    tagModel.currentCategory = name;
-    $('.label[value=' + name + ']').attr('id', 'label-selected');
-  } else {
-    console.log('Failed to add label "' + name + '": label already exists!');
+//delete category from model and html
+function deleteLabel() {
+  console.log('Deleting label: [' + tagModel.currentCategory + ']');
+  tagModel.deleteCategory();
+  resize();
+  $('#label-selected').remove();
+  if (tagModel.currentDoc != null && tagModel.currentCategory !== null) {
+    $('.label[value="' + tagModel.currentCategory + '"]').attr('id', 'label-selected');
   }
+  mostRecentIndex = -1;
+}
+
+//add new label
+function addLabel(name = 'init') {
+  //generate random color
+  var color = makeRandColor();
+
+  //add initialization category to the model
+  tagModel.addCategory(name, color);
+
+  // add highlight rule to page
+  $('head').append(
+    $('<style/>', {
+      id: name + '-style',
+      class: 'highlight-style',
+      html: '.hwt-content .label_' + name + ' {background-color: ' + color + ';}'
+    })
+  );
+
+  //select the new category
+  tagModel.currentCategory = name;
+  $('#label-selected').attr('id', '');
+
+  // create label div
+  var newLabel = $('<div/>', {
+    class: 'hoverWhite label',
+    id: 'label-selected',
+    value: name,
+    style: "background-color: " + color
+  }).append(
+    $('<img/>', {
+      class: 'colorChange',
+      src: 'static/images/dropper.png',
+    })
+  ).append(
+    $('<div/>', {
+      class: 'label-name'
+    }).text('')
+  );
+
+  //add to the label list
+  $("#label-list").append(newLabel);
+
+  // go to new label's position
+  $("#label-list").scrollTop($("#label-list").prop('scrollHeight'));
+
+  // first color => make current category the color
+  $('.label[value=' + name + ']').attr('id', 'label-selected');
+
   return newLabel;
 }
 
@@ -606,11 +642,6 @@ function resize() {
   textArea.height('auto');
   textArea.height(textArea.prop('scrollHeight') + 1);
   higlight.css('height', textArea.height);
-}
-
-// generate random name
-function makeRandName() {
-  return parseInt(Math.random() * Math.pow(10, 14)).toString(36);
 }
 
 // generate random color

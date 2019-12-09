@@ -74,8 +74,8 @@ class TagModel {
   // ----- Categories ----- //
   addCategory(name, color) {
     let newCategory = new Category(name, color);
-    console.log("Adding category: [" + newCategory.name + "]");
     this.categories.push(newCategory);
+    console.log("Added category: [" + newCategory.name + "] to the TagModel");
   }
 
   categoryIndex(name) {
